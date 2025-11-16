@@ -1,204 +1,208 @@
 #pragma once
 
+namespace MidiNotes {
+
 // Octave 0 (lowest octave)
-#define C0 0
-#define Cs0 1
-#define Db0 1
-#define D0 2
-#define Ds0 3
-#define Eb0 3
-#define E0 4
-#define F0 5
-#define Fs0 6
-#define Gb0 6
-#define G0 7
-#define Gs0 8
-#define Ab0 8
-#define A0 9
-#define As0 10
-#define Bb0 10
-#define B0 11
+constexpr int C0 = 0;
+constexpr int Cs0 = 1;
+constexpr int Db0 = 1;
+constexpr int D0 = 2;
+constexpr int Ds0 = 3;
+constexpr int Eb0 = 3;
+constexpr int E0 = 4;
+constexpr int F0 = 5;
+constexpr int Fs0 = 6;
+constexpr int Gb0 = 6;
+constexpr int G0 = 7;
+constexpr int Gs0 = 8;
+constexpr int Ab0 = 8;
+constexpr int A0 = 9;
+constexpr int As0 = 10;
+constexpr int Bb0 = 10;
+constexpr int B0 = 11;
 
 // Octave 1
-#define C1 12
-#define Cs1 13
-#define Db1 13
-#define D1 14
-#define Ds1 15
-#define Eb1 15
-#define E1 16
-#define F1 17
-#define Fs1 18
-#define Gb1 18
-#define G1 19
-#define Gs1 20
-#define Ab1 20
-#define A1 21
-#define As1 22
-#define Bb1 22
-#define B1 23
+constexpr int C1 = 12;
+constexpr int Cs1 = 13;
+constexpr int Db1 = 13;
+constexpr int D1 = 14;
+constexpr int Ds1 = 15;
+constexpr int Eb1 = 15;
+constexpr int E1 = 16;
+constexpr int F1 = 17;
+constexpr int Fs1 = 18;
+constexpr int Gb1 = 18;
+constexpr int G1 = 19;
+constexpr int Gs1 = 20;
+constexpr int Ab1 = 20;
+constexpr int A1 = 21;
+constexpr int As1 = 22;
+constexpr int Bb1 = 22;
+constexpr int B1 = 23;
 
 // Octave 2
-#define C2 24
-#define Cs2 25
-#define Db2 25
-#define D2 26
-#define Ds2 27
-#define Eb2 27
-#define E2 28
-#define F2 29
-#define Fs2 30
-#define Gb2 30
-#define G2 31
-#define Gs2 32
-#define Ab2 32
-#define A2 33
-#define As2 34
-#define Bb2 34
-#define B2 35
+constexpr int C2 = 24;
+constexpr int Cs2 = 25;
+constexpr int Db2 = 25;
+constexpr int D2 = 26;
+constexpr int Ds2 = 27;
+constexpr int Eb2 = 27;
+constexpr int E2 = 28;
+constexpr int F2 = 29;
+constexpr int Fs2 = 30;
+constexpr int Gb2 = 30;
+constexpr int G2 = 31;
+constexpr int Gs2 = 32;
+constexpr int Ab2 = 32;
+constexpr int A2 = 33;
+constexpr int As2 = 34;
+constexpr int Bb2 = 34;
+constexpr int B2 = 35;
 
 // Octave 3
-#define C3 36
-#define Cs3 37
-#define Db3 37
-#define D3 38
-#define Ds3 39
-#define Eb3 39
-#define E3 40
-#define F3 41
-#define Fs3 42
-#define Gb3 42
-#define G3 43
-#define Gs3 44
-#define Ab3 44
-#define A3 45
-#define As3 46
-#define Bb3 46
-#define B3 47
+constexpr int C3 = 36;
+constexpr int Cs3 = 37;
+constexpr int Db3 = 37;
+constexpr int D3 = 38;
+constexpr int Ds3 = 39;
+constexpr int Eb3 = 39;
+constexpr int E3 = 40;
+constexpr int F3 = 41;
+constexpr int Fs3 = 42;
+constexpr int Gb3 = 42;
+constexpr int G3 = 43;
+constexpr int Gs3 = 44;
+constexpr int Ab3 = 44;
+constexpr int A3 = 45;
+constexpr int As3 = 46;
+constexpr int Bb3 = 46;
+constexpr int B3 = 47;
 
 // Octave 4 (Middle C)
-#define C4 48
-#define Cs4 49
-#define Db4 49
-#define D4 50
-#define Ds4 51
-#define Eb4 51
-#define E4 52
-#define F4 53
-#define Fs4 54
-#define Gb4 54
-#define G4 55
-#define Gs4 56
-#define Ab4 56
-#define A4 57
-#define As4 58
-#define Bb4 58
-#define B4 59
+constexpr int C4 = 48;
+constexpr int Cs4 = 49;
+constexpr int Db4 = 49;
+constexpr int D4 = 50;
+constexpr int Ds4 = 51;
+constexpr int Eb4 = 51;
+constexpr int E4 = 52;
+constexpr int F4 = 53;
+constexpr int Fs4 = 54;
+constexpr int Gb4 = 54;
+constexpr int G4 = 55;
+constexpr int Gs4 = 56;
+constexpr int Ab4 = 56;
+constexpr int A4 = 57;
+constexpr int As4 = 58;
+constexpr int Bb4 = 58;
+constexpr int B4 = 59;
 
 // Octave 5
-#define C5 60
-#define Cs5 61
-#define Db5 61
-#define D5 62
-#define Ds5 63
-#define Eb5 63
-#define E5 64
-#define F5 65
-#define Fs5 66
-#define Gb5 66
-#define G5 67
-#define Gs5 68
-#define Ab5 68
-#define A5 69
-#define As5 70
-#define Bb5 70
-#define B5 71
+constexpr int C5 = 60;
+constexpr int Cs5 = 61;
+constexpr int Db5 = 61;
+constexpr int D5 = 62;
+constexpr int Ds5 = 63;
+constexpr int Eb5 = 63;
+constexpr int E5 = 64;
+constexpr int F5 = 65;
+constexpr int Fs5 = 66;
+constexpr int Gb5 = 66;
+constexpr int G5 = 67;
+constexpr int Gs5 = 68;
+constexpr int Ab5 = 68;
+constexpr int A5 = 69;
+constexpr int As5 = 70;
+constexpr int Bb5 = 70;
+constexpr int B5 = 71;
 
 // Octave 6
-#define C6 72
-#define Cs6 73
-#define Db6 73
-#define D6 74
-#define Ds6 75
-#define Eb6 75
-#define E6 76
-#define F6 77
-#define Fs6 78
-#define Gb6 78
-#define G6 79
-#define Gs6 80
-#define Ab6 80
-#define A6 81
-#define As6 82
-#define Bb6 82
-#define B6 83
+constexpr int C6 = 72;
+constexpr int Cs6 = 73;
+constexpr int Db6 = 73;
+constexpr int D6 = 74;
+constexpr int Ds6 = 75;
+constexpr int Eb6 = 75;
+constexpr int E6 = 76;
+constexpr int F6 = 77;
+constexpr int Fs6 = 78;
+constexpr int Gb6 = 78;
+constexpr int G6 = 79;
+constexpr int Gs6 = 80;
+constexpr int Ab6 = 80;
+constexpr int A6 = 81;
+constexpr int As6 = 82;
+constexpr int Bb6 = 82;
+constexpr int B6 = 83;
 
 // Octave 7
-#define C7 84
-#define Cs7 85
-#define Db7 85
-#define D7 86
-#define Ds7 87
-#define Eb7 87
-#define E7 88
-#define F7 89
-#define Fs7 90
-#define Gb7 90
-#define G7 91
-#define Gs7 92
-#define Ab7 92
-#define A7 93
-#define As7 94
-#define Bb7 94
-#define B7 95
+constexpr int C7 = 84;
+constexpr int Cs7 = 85;
+constexpr int Db7 = 85;
+constexpr int D7 = 86;
+constexpr int Ds7 = 87;
+constexpr int Eb7 = 87;
+constexpr int E7 = 88;
+constexpr int F7 = 89;
+constexpr int Fs7 = 90;
+constexpr int Gb7 = 90;
+constexpr int G7 = 91;
+constexpr int Gs7 = 92;
+constexpr int Ab7 = 92;
+constexpr int A7 = 93;
+constexpr int As7 = 94;
+constexpr int Bb7 = 94;
+constexpr int B7 = 95;
 
 // Octave 8
-#define C8 96
-#define Cs8 97
-#define Db8 97
-#define D8 98
-#define Ds8 99
-#define Eb8 99
-#define E8 100
-#define F8 101
-#define Fs8 102
-#define Gb8 102
-#define G8 103
-#define Gs8 104
-#define Ab8 104
-#define A8 105
-#define As8 106
-#define Bb8 106
-#define B8 107
+constexpr int C8 = 96;
+constexpr int Cs8 = 97;
+constexpr int Db8 = 97;
+constexpr int D8 = 98;
+constexpr int Ds8 = 99;
+constexpr int Eb8 = 99;
+constexpr int E8 = 100;
+constexpr int F8 = 101;
+constexpr int Fs8 = 102;
+constexpr int Gb8 = 102;
+constexpr int G8 = 103;
+constexpr int Gs8 = 104;
+constexpr int Ab8 = 104;
+constexpr int A8 = 105;
+constexpr int As8 = 106;
+constexpr int Bb8 = 106;
+constexpr int B8 = 107;
 
 // Octave 9
-#define C9 108
-#define Cs9 109
-#define Db9 109
-#define D9 110
-#define Ds9 111
-#define Eb9 111
-#define E9 112
-#define F9 113
-#define Fs9 114
-#define Gb9 114
-#define G9 115
-#define Gs9 116
-#define Ab9 116
-#define A9 117
-#define As9 118
-#define Bb9 118
-#define B9 119
+constexpr int C9 = 108;
+constexpr int Cs9 = 109;
+constexpr int Db9 = 109;
+constexpr int D9 = 110;
+constexpr int Ds9 = 111;
+constexpr int Eb9 = 111;
+constexpr int E9 = 112;
+constexpr int F9 = 113;
+constexpr int Fs9 = 114;
+constexpr int Gb9 = 114;
+constexpr int G9 = 115;
+constexpr int Gs9 = 116;
+constexpr int Ab9 = 116;
+constexpr int A9 = 117;
+constexpr int As9 = 118;
+constexpr int Bb9 = 118;
+constexpr int B9 = 119;
 
 // Octave 10 (highest octave)
-#define C10 120
-#define Cs10 121
-#define Db10 121
-#define D10 122
-#define Ds10 123
-#define Eb10 123
-#define E10 124
-#define F10 125
-#define Fs10 126
-#define Gb10 126
-#define G10 127
+constexpr int C10 = 120;
+constexpr int Cs10 = 121;
+constexpr int Db10 = 121;
+constexpr int D10 = 122;
+constexpr int Ds10 = 123;
+constexpr int Eb10 = 123;
+constexpr int E10 = 124;
+constexpr int F10 = 125;
+constexpr int Fs10 = 126;
+constexpr int Gb10 = 126;
+constexpr int G10 = 127;
+
+} // namespace MidiNotes
