@@ -1,0 +1,61 @@
+# CMAKE -----------------------------------------------
+# CMake build directories (all generated)
+build/
+x86/
+
+# Visual Studio generated files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.opensdf
+*.sdf
+*.suo
+
+# CMake cache and intermediate files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+C
+Makefile
+CMakeTestfile.cmake
+
+# Build output binaries (not needed in repo)
+*.exe
+*.dll
+*.pdb
+*.lib
+*.exp
+*.ilk
+*.obj
+*.o
+*.dylib
+*.mxe64
+*.mxe64.dll
+
+# macOS junk
+.DS_Store
+*.DS_Store
+
+# IDEs
+.vs
+.vscode/
+.idea/
+*.code-workspace
+
+# Python / scripts (optional)
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Backup files
+*~
+
+# Only keep source code and essential build scripts
+!source/
+!scripts/
+!README.md
+!LICENSE
