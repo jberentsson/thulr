@@ -83,10 +83,10 @@ macro(library_template PROJECT_LIBRARIES)
     # Unit Tests
     #############################################################
 
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../scripts/cmake/AddTests.cmake)
-        include(${CMAKE_CURRENT_SOURCE_DIR}/../scripts/cmake/AddTests.cmake)
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/AddTests.cmake)
+        include(${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/AddTests.cmake)
     else()
-        message("NEi ekki til!")
+        message("The CMake config for the unit tests is not available.")
     endif()
 
     #############################################################

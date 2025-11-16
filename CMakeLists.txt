@@ -1,6 +1,17 @@
 cmake_minimum_required(VERSION 3.19)
 project("Thula" VERSION 1.0.0 LANGUAGES C CXX)
 
+# The binaries that will be made.
+set(SHARED_DIRS 
+    BinaryCounter
+    Counter
+    Keyboard
+    NCounter
+    Quantizer
+    ShiftRegister
+    Multiplex
+)
+
 if(MSVC)
     # Use static runtime for both Debug and Release
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
@@ -56,19 +67,10 @@ endif()
 # Build the project
 #############################################################
 
-set(SHARED_DIRS 
-    BinaryCounter
-    Counter
-    Keyboard
-    NCounter
-    Quantizer
-    ShiftRegister
-)
-
 foreach (project_dir ${SHARED_DIRS})
-    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${project_dir}/CMakeLists.txt")
+    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/source/${project_dir}/CMakeLists.txt")
         message("Generating: ${project_dir}")
-        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/${project_dir})
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/source/${project_dir})
     endif ()
 endforeach ()
 

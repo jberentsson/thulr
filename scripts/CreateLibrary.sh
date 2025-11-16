@@ -21,7 +21,7 @@ if [ $# -eq 0 ]; then
 else
     # Set the variables.
     NEW_LIBRARY_NAME=$1
-    NEW_LIBRARY_DIRECTORY="$NEW_LIBRARY_NAME"
+    NEW_LIBRARY_DIRECTORY="source/$NEW_LIBRARY_NAME"
     NEW_LIBRARY_PATH="$NEW_LIBRARY_DIRECTORY/$NEW_LIBRARY_NAME"
 
     if [ ! -d $NEW_LIBRARY_DIRECTORY ]; then

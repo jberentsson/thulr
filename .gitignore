@@ -21,6 +21,9 @@ C
 Makefile
 CMakeTestfile.cmake
 
+# CTest files
+Testing/
+
 # Build output binaries (not needed in repo)
 *.exe
 *.dll
