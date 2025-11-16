@@ -7,3 +7,6 @@ tidy:
 
 format:
 	clang-format -i source/*/*.{hpp,cpp}
+
+test:
+	cd build && ctest -C Release --output-on-failure
