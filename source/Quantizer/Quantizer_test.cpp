@@ -1,9 +1,12 @@
-#include "../Misc/NoteValues.hpp"
+#include "Utils/NoteValues.hpp"
 #include "Quantizer.hpp"
 #include <catch2/catch.hpp>
 #include <iostream>
 #include "Quantizer.hpp"
-#include "../Utils/NoteValues.hpp"
+
+using namespace MidiNotes;
+
+enum class Note : int { ON, OFF };
 
 SCENARIO("create a new instance") {
   Quantizer qt = Quantizer();
@@ -36,7 +39,7 @@ SCENARIO("one note"){
         }
     }
   }
-}
+
 
 SCENARIO("two notes"){
     Quantizer qt = Quantizer();
@@ -66,7 +69,7 @@ SCENARIO("two notes"){
         }
     }
   }
-}
+
 
 SCENARIO("edge cases") {
     Quantizer qt = Quantizer();
@@ -84,7 +87,7 @@ SCENARIO("edge cases") {
         }
     }
   }
-}
+
 
 SCENARIO("twelve notes mode") {
     Quantizer qt = Quantizer();
@@ -107,7 +110,7 @@ SCENARIO("twelve notes mode") {
         }
     }
   }
-}
+
 
 SCENARIO("debug test") {
     Quantizer qt = Quantizer();
@@ -126,7 +129,7 @@ SCENARIO("debug test") {
         }
     }
   }
-}
+
 
 SCENARIO("set the range") {
     Quantizer qt = Quantizer();
@@ -144,4 +147,4 @@ SCENARIO("set the range") {
         }
     }
   }
-}
+

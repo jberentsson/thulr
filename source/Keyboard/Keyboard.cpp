@@ -38,7 +38,7 @@ int Keyboard::note(int pitch, int velocity) {
     }
     
     return 0;
-  }
+  
 
   if (velocity > 0) {
     // Note ON
@@ -69,7 +69,7 @@ int Keyboard::clearNotesByPitchClass(int pitch) {
             ++it;
         }
     }
-  }
+  
 
   return clearedCount;
 }

@@ -1,5 +1,8 @@
+#include <catch2/catch.hpp>
 #include "Keyboard.hpp"
 #include "../Utils/NoteValues.hpp"
+
+using namespace MidiNotes;
 
 TEST_CASE("Keyboard basic functionality") {
     Keyboard keyboard;

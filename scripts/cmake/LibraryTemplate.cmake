@@ -59,8 +59,9 @@ macro(library_template PROJECT_LIBRARIES)
     target_include_directories(${PROJECT_NAME}_test PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../
+        #${CMAKE_CURRENT_SOURCE_DIR}/../../
         #${CMAKE_CURRENT_SOURCE_DIR}/../extern
+        ${CMAKE_PROJECT_ROOT}/source
     )
 
     # Force static runtime for test executable
