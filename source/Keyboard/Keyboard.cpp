@@ -1,12 +1,10 @@
-#include <iostream>
 #include "Keyboard.hpp"
+#include <iostream>
 
-int Keyboard::getPitchClass(int pitch) const {
-    return pitch % OCTAVE;
-}
+int Keyboard::getPitchClass(int pitch) const { return pitch % OCTAVE; }
 
 int Keyboard::clampPitchToRange(int pitch) {
-    return std::max(rangeLow, std::min(pitch, rangeHigh));
+  return std::max(rangeLow, std::min(pitch, rangeHigh));
 }
 
 int Keyboard::randomizeNote(int pitch) {
@@ -40,6 +38,23 @@ int Keyboard::note(int pitch, int velocity) {
     }
     
     return 0;
+  }
+
+  if (velocity > 0) {
+    // Note ON
+    int processedPitch = randomizeNote(pitch);
+
+    if (processedPitch >= 0 && processedPitch <= 127) {
+      activeNotes.push_back(
+          std::make_unique<ActiveNote>(pitch, processedPitch, velocity));
+      return 1;
+    }
+  } else {
+    // Note OFF
+    return clearNotesByPitchClass(pitch);
+  }
+
+  return 0;
 }
 
 int Keyboard::clearNotesByPitchClass(int pitch) {
@@ -54,8 +69,9 @@ int Keyboard::clearNotesByPitchClass(int pitch) {
             ++it;
         }
     }
-    
-    return clearedCount;
+  }
+
+  return clearedCount;
 }
 
 int Keyboard::removeAll() {
@@ -69,8 +85,7 @@ void Keyboard::updateRange(int low, int high) {
     this->rangeHigh = high;
 }
 
-void Keyboard::setRandomRange(int low, int high) {
-}
+void Keyboard::setRandomRange(int low, int high) {}
 
 const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getActiveNotes() const {
     return this->activeNotes;

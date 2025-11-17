@@ -13,6 +13,8 @@ set(SHARED_DIRS
     Constants
 )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(MSVC)
     # Use static runtime for both Debug and Release
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

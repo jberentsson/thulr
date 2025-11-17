@@ -1,16 +1,16 @@
-#include <iostream>
 #include "Quantizer.hpp"
+#include <iostream>
 
-Quantizer::Quantizer(){
-    this->clear();
-    this->range_low = 0;
-    this->range_high = KEYBOARD_SIZE - 1;
+Quantizer::Quantizer() {
+  this->clear();
+  this->range_low = 0;
+  this->range_high = KEYBOARD_SIZE - 1;
 }
 
-Quantizer::~Quantizer(){
-}
+Quantizer::~Quantizer() {}
 
 int Quantizer::quantize(int n) {
+<<<<<<< HEAD
     // Check if the note is in range.
     if (n < 0 || n >= KEYBOARD_SIZE) {
         return INVALID_NOTE;
@@ -46,12 +46,45 @@ int Quantizer::round_up(int n) {
         if (this->keyboard[i] == Note::ON) {
             return i;
         }
+=======
+  // Check if the note is in range.
+  if (n < 0 || n >= KEYBOARD_SIZE) {
+    return INVALID_NOTE;
+  }
+
+  // If current note is already a valid key.
+  if (this->keyboard[n] == 1) {
+    return n;
+  }
+
+  // Round depending on what rounding mode is active.
+  if (this->round_direction == RoundDirection::UP) {
+    return this->round_up(n);
+  }
+
+  return this->round_down(n);
+}
+
+int Quantizer::round_up(int n) {
+  // Search up from n.
+  for (int i = n + 1; i < KEYBOARD_SIZE; i++) {
+    // We have reached the high limit.
+    if (i > this->range_high) {
+      return this->round_down(n);
+>>>>>>> 1df950b89d1a5cc04b7a7befd778fe420ea4d224
     }
 
-    return INVALID_NOTE;
+    // We have found the correct note.
+    if (this->keyboard[i] == 1) {
+      return i;
+    }
+  }
+
+  return INVALID_NOTE;
 }
 
 int Quantizer::round_down(int n) {
+<<<<<<< HEAD
     // Search down from n.
     for (int i = n - 1; i >= 0; i--) {
         // We have reached the low limit.
@@ -63,45 +96,79 @@ int Quantizer::round_down(int n) {
         if (this->keyboard[i] == Note::ON) {
             return i;
         }
+=======
+  // Search down from n.
+  for (int i = n - 1; i >= 0; i--) {
+    // We have reached the low limit.
+    if (i < this->range_low) {
+      return this->round_up(n);
+>>>>>>> 1df950b89d1a5cc04b7a7befd778fe420ea4d224
     }
 
-    return INVALID_NOTE;
+    // We have found the correct note.
+    if (this->keyboard[i] == 1) {
+      return i;
+    }
+  }
+
+  return INVALID_NOTE;
 }
 
-int Quantizer::set_range(int l, int h){
-    // Set the quantizer output range.
-    this->range_high = h;
-    this->range_low = l;
-    return 0;
+int Quantizer::set_range(int l, int h) {
+  // Set the quantizer output range.
+  this->range_high = h;
+  this->range_low = l;
+  return 0;
 }
 
+<<<<<<< HEAD
 int Quantizer::clear(){
     // Clear all set notes from the keyboard.
     for(int i = 0; i < KEYBOARD_SIZE; i++){
         this->keyboard[i] = Note::OFF;
     }
+=======
+int Quantizer::clear() {
+  // Clear all set notes from the keyboard.
+  for (int i = 0; i < KEYBOARD_SIZE; i++) {
+    this->keyboard[i] = 0;
+  }
+>>>>>>> 1df950b89d1a5cc04b7a7befd778fe420ea4d224
 
-    this->note_count = 0;
-    return 0;
+  this->note_count = 0;
+  return 0;
 }
 
+<<<<<<< HEAD
 Quantizer::Note Quantizer::get_note(int n){
     // Check if the note has been set.
     if (n < 0 || n >= KEYBOARD_SIZE) {
         return Note::OFF;
     }
+=======
+int Quantizer::get_note(int n) {
+  // Check if the note has been set.
+  if (n < 0 || n >= KEYBOARD_SIZE) {
+    return 0;
+  }
+>>>>>>> 1df950b89d1a5cc04b7a7befd778fe420ea4d224
 
-    return this->keyboard[n];
+  return this->keyboard[n];
 }
 
-int Quantizer::add_note(int n){
-    // Add note to the keyboard.
+int Quantizer::add_note(int n) {
+  // Add note to the keyboard.
 
-    // Return error if the note value is out of range.
-    if (n < 0 || n >= KEYBOARD_SIZE) {
-        return -1;
-    }
+  // Return error if the note value is out of range.
+  if (n < 0 || n >= KEYBOARD_SIZE) {
+    return -1;
+  }
 
+  // Depending on the mode add the note or notes to the keyboard.
+  if (this->mode == QuantizeMode::TWELVE_NOTES) {
+    int degree = n % OCTAVE_SIZE;
+
+<<<<<<< HEAD
     // Depending on the mode add the note or notes to the keyboard.
     if(this->mode == QuantizeMode::TWELVE_NOTES){
         int degree = n % OCTAVE_SIZE;
@@ -116,18 +183,30 @@ int Quantizer::add_note(int n){
         }
     } else {
         this->keyboard[n] = Note::ON;
+=======
+    // Add this note degree in every octave
+    for (int octave = 0; octave < KEYBOARD_OCTAVES; octave++) {
+      int current_note = (OCTAVE_SIZE * octave) + degree;
+      if (current_note < KEYBOARD_SIZE) {
+        this->keyboard[current_note] = 1;
+>>>>>>> 1df950b89d1a5cc04b7a7befd778fe420ea4d224
         this->note_count++;
+      }
     }
+  } else {
+    this->keyboard[n] = 1;
+    this->note_count++;
+  }
 
-    return 0;
+  return 0;
 }
 
-int Quantizer::set_round_direction(RoundDirection direction){
-    this->round_direction = direction;
-    return 0;
+int Quantizer::set_round_direction(RoundDirection direction) {
+  this->round_direction = direction;
+  return 0;
 }
 
-int Quantizer::set_mode(QuantizeMode mode){
-    this->mode = mode;
-    return 0;
+int Quantizer::set_mode(QuantizeMode mode) {
+  this->mode = mode;
+  return 0;
 }
