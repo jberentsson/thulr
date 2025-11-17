@@ -1,18 +1,19 @@
 #include <catch2/catch.hpp>
 #include "Keyboard.hpp"
+#include "../Utils/NoteValues.hpp"
 
 TEST_CASE("Keyboard basic functionality") {
     Keyboard keyboard;
     
     SECTION("Note on adds a note") {
-        int result = keyboard.note(60, 100);
+        int result = keyboard.note(C5, 100);
         REQUIRE(result == 1);
         REQUIRE(keyboard.getActiveNotes().size() == 1);
     }
     
     SECTION("Note off clears notes by pitch class") {
-        keyboard.note(60, 100); // C4
-        keyboard.note(72, 100); // C5
+        keyboard.note(C4, 100);
+        keyboard.note(C5, 100);
         REQUIRE(keyboard.getActiveNotes().size() == 2);
         
         int cleared = keyboard.clearNotesByPitchClass(60);
@@ -21,8 +22,8 @@ TEST_CASE("Keyboard basic functionality") {
     }
     
     SECTION("Remove all clears all notes") {
-        keyboard.note(60, 100);
-        keyboard.note(64, 100);
+        keyboard.note(C5, 100);
+        keyboard.note(E5, 100);
         REQUIRE(keyboard.getActiveNotes().size() == 2);
         
         int cleared = keyboard.removeAll();

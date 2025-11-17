@@ -12,35 +12,13 @@
 #define RANGE_HIGH   127
 #define MIN_OCTAVE   0
 #define MAX_OCTAVE   10
-
-class ActiveNote {
-    private:
-        int m_originalPitch;
-        int m_processedPitch;
-        int m_velocity;
-
-    public:
-        ActiveNote(int originalPitch, int processedPitch, int velocity) 
-            : m_originalPitch(originalPitch), m_processedPitch(processedPitch), m_velocity(velocity) {
-        }
-
-        int originalPitch() const {
-            return m_originalPitch;
-        }
-
-        int pitch() const {
-            return m_processedPitch;
-        }
-
-        int velocity() const {
-            return m_velocity;
-        }
-};
+#define OCTAVE       12
 
 class Keyboard {
     private:
-        static const int OCTAVE = 12;
-        std::vector<std::unique_ptr<ActiveNote>> activeNotes;
+        using ActiveNote = AbstractActiveNote;
+
+        std::vector<std::unique_ptr<Keyboard::ActiveNote>> activeNotes;
         int rangeLow = RANGE_LOW;
         int rangeHigh = RANGE_HIGH;
         int minOctave = MIN_OCTAVE;
@@ -51,7 +29,7 @@ class Keyboard {
         int randomizeNote(int pitch);
 
     public:
-        Keyboard(int low = 0, int high = 127);
+        Keyboard(int low = RANGE_LOW, int high = RANGE_HIGH);
         
         int note(int pitch, int velocity);
         

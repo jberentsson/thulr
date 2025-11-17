@@ -17,10 +17,15 @@ int Quantizer::quantize(int n) {
     }
     
     // If current note is already a valid key.
-    if (this->keyboard[n] == 1) {
+    if (this->keyboard[n] == Note::ON) {
         return n;
     }
     
+    // Return the rounded value.
+    return this->round(n);
+}
+
+int Quantizer::round(int n){
     // Round depending on what rounding mode is active.
     if (this->round_direction == RoundDirection::UP) {
         return this->round_up(n);
@@ -38,7 +43,7 @@ int Quantizer::round_up(int n) {
         }
 
         // We have found the correct note.
-        if (this->keyboard[i] == 1) {
+        if (this->keyboard[i] == Note::ON) {
             return i;
         }
     }
@@ -55,7 +60,7 @@ int Quantizer::round_down(int n) {
         }
 
         // We have found the correct note.
-        if (this->keyboard[i] == 1) {
+        if (this->keyboard[i] == Note::ON) {
             return i;
         }
     }
@@ -73,17 +78,17 @@ int Quantizer::set_range(int l, int h){
 int Quantizer::clear(){
     // Clear all set notes from the keyboard.
     for(int i = 0; i < KEYBOARD_SIZE; i++){
-        this->keyboard[i] = 0;
+        this->keyboard[i] = Note::OFF;
     }
 
     this->note_count = 0;
     return 0;
 }
 
-int Quantizer::get_note(int n){
+Quantizer::Note Quantizer::get_note(int n){
     // Check if the note has been set.
     if (n < 0 || n >= KEYBOARD_SIZE) {
-        return 0;
+        return Note::OFF;
     }
 
     return this->keyboard[n];
@@ -105,12 +110,12 @@ int Quantizer::add_note(int n){
         for (int octave = 0; octave < KEYBOARD_OCTAVES; octave++){
             int current_note = (OCTAVE_SIZE * octave) + degree;
             if (current_note < KEYBOARD_SIZE) {
-                this->keyboard[current_note] = 1;
+                this->keyboard[current_note] = Note::ON;
                 this->note_count++;
             }
         }
     } else {
-        this->keyboard[n] = 1;
+        this->keyboard[n] = Note::ON;
         this->note_count++;
     }
 

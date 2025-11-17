@@ -10,6 +10,7 @@ set(SHARED_DIRS
     Quantizer
     ShiftRegister
     Multiplex
+    Constants
 )
 
 if(MSVC)
