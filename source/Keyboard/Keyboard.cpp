@@ -2,6 +2,8 @@
 #include "../Utils/MIDI.hpp"
 #include <iostream>
 
+using namespace MIDI;
+
 int Keyboard::getPitchClass(int pitch) const { return pitch % MIDI::OCTAVE; }
 
 int Keyboard::clampPitchToRange(int pitch) {

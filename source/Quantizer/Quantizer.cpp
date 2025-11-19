@@ -45,9 +45,14 @@ int Quantizer::round_up(int n) {
         if (this->keyboard[i]) {
             return i;
         }
-    }
 
-    return INVALID_NOTE;
+    // We have found the correct note.
+    if (this->keyboard[i] == 1) {
+      return i;
+    }
+  }
+
+  return INVALID_NOTE;
 }
 
 int Quantizer::round_down(int n) {
@@ -83,8 +88,12 @@ int Quantizer::clear() {
         this->keyboard[i] = false;
     }
 
-    this->note_count = 0;
-    return 0;
+  // Return error if the note value is out of range.
+  //if (n < 0 || n >= KEYBOARD_SIZE) {
+  //  return -1;
+  //}
+
+  return 0;
 }
 
 Quantizer::Note Quantizer::get_note(int n) {
@@ -120,9 +129,9 @@ int Quantizer::add_note(int n) {
         // ALL_NOTES mode - just add the single note
         this->keyboard[n] = true;
         this->note_count++;
-    }
+      }
 
-    return 0;
+  return 0;
 }
 
 int Quantizer::set_round_direction(RoundDirection direction) {

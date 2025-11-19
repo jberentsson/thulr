@@ -17,8 +17,8 @@ SCENARIO("one note"){
     Quantizer qt = Quantizer();
     qt.set_mode(Quantizer::QuantizeMode::ALL_NOTES);
 
-    GIVEN("note is added"){
-        REQUIRE(qt.add_note(C4) == 0);
+  GIVEN("note is added") {
+    REQUIRE(qt.add_note(C4) == 0);
 
         WHEN("we quantize nearby notes"){
             THEN("notes quantize correctly"){
@@ -45,9 +45,9 @@ SCENARIO("two notes"){
     Quantizer qt = Quantizer();
     qt.set_mode(Quantizer::QuantizeMode::ALL_NOTES);
 
-    GIVEN("notes are added"){
-        REQUIRE(qt.add_note(C4) == 0);
-        REQUIRE(qt.add_note(G4) == 0);
+  GIVEN("notes are added") {
+    REQUIRE(qt.add_note(C4) == 0);
+    REQUIRE(qt.add_note(G4) == 0);
 
         WHEN("we quantize nearby notes"){
             THEN("notes are quantized correctly"){
@@ -75,26 +75,26 @@ SCENARIO("edge cases") {
     Quantizer qt = Quantizer();
     qt.set_mode(Quantizer::QuantizeMode::ALL_NOTES);
 
-    GIVEN("boundary notes are added") {
-        qt.add_note(C0);
-        qt.add_note(G10);
+  GIVEN("boundary notes are added") {
+    qt.add_note(C0);
+    qt.add_note(G10);
 
-        THEN("boundary notes work correctly") {
-            REQUIRE(qt.quantize(C0) == 0);
-            REQUIRE(qt.quantize(G10) == G10);
-            REQUIRE(qt.quantize(C0 - 1) == -1);   // Invalid low
-            REQUIRE(qt.quantize(G10 + 1) == -1);  // Invalid high
-        }
+    THEN("boundary notes work correctly") {
+      REQUIRE(qt.quantize(C0) == 0);
+      REQUIRE(qt.quantize(G10) == G10);
+      REQUIRE(qt.quantize(C0 - 1) == -1);  // Invalid low
+      REQUIRE(qt.quantize(G10 + 1) == -1); // Invalid high
     }
   }
+}
 
 
 SCENARIO("twelve notes mode") {
     Quantizer qt = Quantizer();
     qt.set_mode(Quantizer::QuantizeMode::TWELVE_NOTES);
 
-    GIVEN("C3 is added") {
-        qt.add_note(C4);
+  GIVEN("C3 is added") {
+    qt.add_note(C4);
 
         THEN("all C notes are active across octaves") {
             REQUIRE(qt.get_note(C0) == Quantizer::Note::ON);
@@ -132,7 +132,7 @@ SCENARIO("debug test") {
 
 
 SCENARIO("set the range") {
-    Quantizer qt = Quantizer();
+  Quantizer qt = Quantizer();
 
     qt.set_mode(Quantizer::QuantizeMode::TWELVE_NOTES);
     qt.set_round_direction(Quantizer::RoundDirection::DOWN);
