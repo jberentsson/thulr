@@ -23,7 +23,7 @@ class Keyboard {
         int randomizeNote(int pitch);
 
     public:
-        enum : std::Uint8T{            
+        enum : std::uint8_t {            
             MIN_CAPACITY = 2,
             MAX_CAPACITY = 5,
             RANGE_LOW = 0,
