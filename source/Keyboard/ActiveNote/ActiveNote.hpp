@@ -2,24 +2,24 @@
 
 class AbstractActiveNote {
     private:
-        int m_originalPitch;
-        int m_processedPitch;
-        int m_velocity;
+        int mOriginalPitch;
+        int mProcessedPitch;
+        int mVelocity;
 
     public:
         AbstractActiveNote(int originalPitch, int processedPitch, int velocity) 
-            : m_originalPitch(originalPitch), m_processedPitch(processedPitch), m_velocity(velocity) {
+            : mOriginalPitch(originalPitch), mProcessedPitch(processedPitch), mVelocity(velocity) {
         }
 
         virtual int originalPitch() const {
-            return m_originalPitch;
+            return mOriginalPitch;
         }
 
         virtual int pitch() const {
-            return m_processedPitch;
+            return mProcessedPitch;
         }
 
         virtual int velocity() const {
-            return m_velocity;
+            return mVelocity;
         }
 };
