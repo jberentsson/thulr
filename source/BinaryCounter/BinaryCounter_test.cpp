@@ -11,15 +11,15 @@ SCENARIO("Back And Forth") {
   BinaryCounter c = BinaryCounter(4);
   REQUIRE(c.direction() == 1);
   REQUIRE(c.value() == 0);
-  REQUIRE(c.toggle_direction() == 0);
-  REQUIRE(c.step() == 15);
-  REQUIRE(c.toggle_direction() == 1);
+  REQUIRE(c.toggleDirection() == 0);
+  REQUIRE(c.step() == 3);
+  REQUIRE(c.toggleDirection() == 1);
   REQUIRE(c.step() == 0);
   REQUIRE(c.value() == 0);
 }
 
 SCENARIO("Preset") {
-  BinaryCounter c = BinaryCounter(4);
+  BinaryCounter c = BinaryCounter(16);
   REQUIRE(c.value() == 0);
   REQUIRE(c.set(6) == 6);
   REQUIRE(c.set(10) == 10);

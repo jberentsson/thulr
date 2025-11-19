@@ -10,6 +10,7 @@ set(SHARED_DIRS
     Quantizer
     ShiftRegister
     Multiplex
+    Constants
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

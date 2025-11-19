@@ -22,7 +22,7 @@ SCENARIO("fresh instance") {
   WHEN("push data to register") {
     // Write all ones to the inactive register.
     for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.data_input(1) == 1);
+      REQUIRE(sr.dataInput(1) == 1);
       REQUIRE(sr.step() == i);
     }
 
@@ -41,7 +41,7 @@ SCENARIO("fresh instance") {
 
     // Write zeros to the new inactive register.
     for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.data_input(0) == 0);
+      REQUIRE(sr.dataInput(0) == 0);
       REQUIRE(sr.step() == i);
     }
 
@@ -74,7 +74,7 @@ SCENARIO("with a custom size") {
   WHEN("push data to register") {
     // Write data to inactive register.
     for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.data_input(1) == 1);
+      REQUIRE(sr.dataInput(1) == 1);
       REQUIRE(sr.step() == i);
     }
 
@@ -99,7 +99,7 @@ SCENARIO("test manual activate function") {
   WHEN("using activate to manually swap registers") {
     // Write partial data.
     for (int i = 0; i < 4; i++) {
-      sr.data_input(1);
+      sr.dataInput(1);
       sr.step();
     }
 
@@ -125,35 +125,35 @@ SCENARIO("test manual activate function") {
 SCENARIO("test the data through functionality") {
   ShiftRegister sr = ShiftRegister();
 
-  WHEN("add data to the register and check data_through") {
+  WHEN("add data to the register and check dataThrough") {
     // Fill the inactive register first
     for (int i = 0; i < sr.size(); i++) {
       // 1,2,3,4,5,6,7,8
-      sr.data_input(i + 1);
+      sr.dataInput(i + 1);
       sr.step();
     }
 
     // Activate to swap.
     sr.activate();
 
-    // Fill the NEW inactive register to trigger data_through.
+    // Fill the NEW inactive register to trigger dataThrough.
     for (int i = 0; i < sr.size(); i++) {
       // 9,10,11,12,13,14,15,16
-      sr.data_input(9 + i);
+      sr.dataInput(9 + i);
       sr.step();
     }
 
-    // Write one more to trigger data_through.
-    sr.data_input(17);
+    // Write one more to trigger dataThrough.
+    sr.dataInput(17);
     sr.step();
 
-    // data_through should show the oldest value from active register.
-    REQUIRE(sr.data_through() == 9);
+    // dataThrough should show the oldest value from active register.
+    REQUIRE(sr.dataThrough() == 9);
 
     // Write another to see the next oldest value.
-    sr.data_input(18);
+    sr.dataInput(18);
     sr.step();
-    REQUIRE(sr.data_through() == 10);
+    REQUIRE(sr.dataThrough() == 10);
   }
 }
 
@@ -164,23 +164,23 @@ SCENARIO("test the bias function") {
     // Fill inactive register
     for (int i = 1; i <= 8; i++) {
       // 10,20,30,...,80
-      sr.data_input(i * 10);
+      sr.dataInput(i * 10);
       sr.step();
     }
 
     sr.activate();
 
-    // Fill to trigger data_through
+    // Fill to trigger dataThrough
     for (int i = 1; i <= 8; i++) {
-      sr.data_input(80 + i * 10);
+      sr.dataInput(80 + i * 10);
       sr.step();
     }
 
-    REQUIRE(sr.data_through() == 0);
-    sr.data_input(160);
+    REQUIRE(sr.dataThrough() == 0);
+    sr.dataInput(160);
     sr.step();
 
-    REQUIRE(sr.data_through() == 90);
+    REQUIRE(sr.dataThrough() == 90);
 
     REQUIRE(sr.get(0) == 10);
     REQUIRE(sr.get(1) == 20);
@@ -199,7 +199,7 @@ SCENARIO("test continuous data flow") {
   WHEN("continuous data stream") {
     // Simple test: fill, activate, verify.
     for (int i = 1; i <= 4; i++) {
-      sr.data_input(i);
+      sr.dataInput(i);
       sr.step();
     }
 
@@ -214,7 +214,7 @@ SCENARIO("test continuous data flow") {
 
     // Write new data but don't activate yet.
     for (int i = 5; i <= 8; i++) {
-      sr.data_input(i);
+      sr.dataInput(i);
       sr.step();
     }
 
