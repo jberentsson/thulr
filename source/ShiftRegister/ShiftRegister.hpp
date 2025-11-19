@@ -5,7 +5,7 @@
 
 class ShiftRegister {
 public:
-  enum {
+  enum : std::uint8_t {
     DEFAULT_BIT_SIZE = 8,
     REGISTER_COUNT = 2
   };
