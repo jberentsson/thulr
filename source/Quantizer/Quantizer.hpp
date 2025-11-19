@@ -1,12 +1,14 @@
 #pragma once
 
-#define OCTAVE_SIZE 12
-#define KEYBOARD_SIZE 128
-#define KEYBOARD_OCTAVES 10
-#define INVALID_NOTE -1
-
 class Quantizer {
 public:
+    enum {
+        OCTAVE_SIZE = 12,
+        KEYBOARD_SIZE = 128,
+        KEYBOARD_OCTAVES = 10,
+        INVALID_NOTE = -1
+    };
+    
     enum class RoundDirection : int { UP, DOWN };
     enum class QuantizeMode : int { TWELVE_NOTES, ALL_NOTES };
     enum class Note : int { OFF, ON };
