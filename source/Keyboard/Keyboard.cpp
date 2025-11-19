@@ -90,7 +90,7 @@ void Keyboard::updateRange(int low, int high) {
 
 void Keyboard::setRandomRange(int low, int high) {}
 
-const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getactiveNotes_() const {
+const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getActiveNotes() const {
     return this->activeNotes_;
 }
 

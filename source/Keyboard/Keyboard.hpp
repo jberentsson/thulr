@@ -43,7 +43,7 @@ class Keyboard {
         static int maxCapacity() { return MAX_CAPACITY; }
         static int minCapacity() { return MIN_CAPACITY; }
 
-        [[nodiscard]] const std::vector<std::unique_ptr<ActiveNote>> &getactiveNotes_() const;
+        [[nodiscard]] const std::vector<std::unique_ptr<ActiveNote>> &getActiveNotes() const;
 
         void debugPrintActiveNotes() const;
 };
