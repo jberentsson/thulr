@@ -1,81 +1,76 @@
 #include "ShiftRegister.hpp"
 #include <iostream>
 
-ShiftRegister::ShiftRegister() {
-  this->clear_register(0);
-  this->clear_register(1);
-}
-
 ShiftRegister::ShiftRegister(int n) {
-  this->bits = n;
-  this->clear_register(0);
-  this->clear_register(1);
+  this->bits_ = n;
+  this->clearRegister(0);
+  this->clearRegister(1);
 }
 
 int ShiftRegister::step() {
-  this->bias = this->calculate_bias();
+  this->bias_ = this->calculateBias();
 
   // Store the oldest value.
-  if (this->index >= this->bits) {
+  if (this->index_ >= this->bits_) {
     // Read from the active register.
-    this->current_through = this->data[!this->active_register][this->bias];
+    this->currentThrough_ = this->data_[!this->activeRegister_][this->bias_];
   }
 
   // Store current input in inactive register.
-  if (this->bias >= 0 && this->active_register >= 0) {
-    this->data[!this->active_register][this->bias] = this->current_input;
+  if (this->bias_ >= 0 && this->activeRegister_ >= 0) {
+    this->data_[!this->activeRegister_][this->bias_] = this->currentInput_;
   }
 
   // If there is no through at the moment.
-  if (this->index < this->bits) {
-    this->current_through = 0;
+  if (this->index_ < this->bits_) {
+    this->currentThrough_ = 0;
   }
 
-  return this->index++;
+  return this->index_++;
 }
 
 int ShiftRegister::get(int i) {
   // Simple circular buffer access
-  if (this->active_register >= 0) {
-    return this->data[this->active_register][i % this->bits];
+  if (this->activeRegister_ >= 0) {
+    return this->data_[this->activeRegister_][i % this->bits_];
   }
 
   // TODO: Fix this we want null here.
   return -1;
 }
 
-int ShiftRegister::calculate_bias() {
+int ShiftRegister::calculateBias() {
   // Calculate the index when the register has overflowed.
-  return this->index % this->bits;
+  return this->index_ % this->bits_;
 }
 
-int ShiftRegister::data_input(int v) {
-  this->current_input = v;
-  return this->current_input;
+int ShiftRegister::dataInput(int v) {
+  this->currentInput_ = v;
+  return this->currentInput_;
 }
 
-int ShiftRegister::data_through() {
+int ShiftRegister::dataThrough() {
   // Data through.
-  return this->current_through;
+  return this->currentThrough_;
 }
 
 int ShiftRegister::activate() {
   // Swap registers.
-  this->active_register = !this->active_register;
+  this->activeRegister_ = !this->activeRegister_;
 
   // Clear the new inactive register.
-  this->clear_register(!this->active_register);
+  this->clearRegister(!this->activeRegister_);
 
-  this->index = 0;
-  this->bias = 0;
+  this->index_ = 0;
+  this->bias_ = 0;
 
-  return this->active_register;
+  return this->activeRegister_;
 }
 
-int ShiftRegister::clear_register(int r) {
+int ShiftRegister::clearRegister(int r) {
   // Clear a register.
   for (int i = 0; i < this->size(); i++) {
-    this->data[r][i] = 0;
+    this->data_[r][i] = 0;
   }
 
   return r;

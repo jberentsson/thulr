@@ -4,68 +4,68 @@
 
 int Counter::reset() {
   // Reset counter to zero.
-  this->counter = this->first_step;
-  return this->counter;
+  this->counter_ = this->firstStep_;
+  return this->counter_;
 }
 
 int Counter::forward() {
   // Step forward.
-  this->counter++;
+  this->counter_++;
 
-  if (this->counter >= this->max_value) {
-    this->counter = this->first_step;
+  if (this->counter_ >= this->maxValue_) {
+    this->counter_ = this->firstStep_;
   }
 
-  return this->counter;
+  return this->counter_;
 }
 
 int Counter::back() {
   // Step backwards.
-  if (this->counter == this->first_step) {
-    this->counter = this->max_value - 1;
+  if (this->counter_ == this->firstStep_) {
+    this->counter_ = this->maxValue_ - 1;
   } else {
-    this->counter--;
+    this->counter_--;
   }
 
-  return this->counter;
+  return this->counter_;
 }
 
-int Counter::toggle_direction() {
+int Counter::toggleDirection() {
   // Toggle the counter direction.
-  this->dir = !this->dir;
-  return this->dir;
+  this->dir_ = !this->dir_;
+  return this->dir_;
 }
 
-int Counter::set_direction(int d) {
+int Counter::setDirection(int d) {
   // Set the counter direction.
-  this->dir = d;
-  return this->dir;
+  this->dir_ = d;
+  return this->dir_;
 }
 
-int Counter::set(int val) {
+unsigned int Counter::set(unsigned int val) {
   // Set the counter value.
-  if (0 <= val && val < this->max_value) {
-    this->counter = val;
+  if (0 <= val && val < this->maxValue_) {
+    this->counter_ = val;
   }
 
-  return this->counter;
+  return this->counter_;
 }
 
 int Counter::preset() {
   // Set the counter to the preset value.
-  this->counter = this->preset_value - 1;
-  return this->counter;
+  this->counter_ = this->presetValue_ - 1;
+  return this->counter_;
 }
 
-int Counter::set_preset(int p) {
+unsigned int Counter::setPreset(unsigned int p) {
   // Set a new preset value.
-  this->preset_value = p;
-  return this->preset_value;
+  this->presetValue_ = p;
+  return this->presetValue_;
 }
 
 int Counter::step() {
   // Trigger next step.
-  if (this->dir) {
+  if (this->dir_) {
     return this->forward();
   }
 
@@ -74,12 +74,12 @@ int Counter::step() {
 
 int Counter::enable() {
   // Enable or disable the output.
-  this->is_enabled = !this->is_enabled;
-  return this->is_enabled;
+  this->isEnabled_ = !this->isEnabled_;
+  return this->isEnabled_;
 }
 
-int Counter::set_max_value(int m) {
+unsigned int Counter::setMaxValue(unsigned int m) {
   // Set the maximum value for the counter.
-  this->max_value = m;
-  return this->max_value;
+  this->maxValue_ = m;
+  return this->maxValue_;
 }

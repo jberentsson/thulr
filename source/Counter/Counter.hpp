@@ -7,31 +7,31 @@
 
 class Counter {
 protected:
-  unsigned int is_enabled = 1;
-  unsigned int dir = 1;
-  unsigned int first_step = 0;
-  unsigned int counter = 0;
-  unsigned int max_value = MAX_VALUE;
-  unsigned int preset_value = 0;
+  unsigned int isEnabled_ = 1;
+  unsigned int dir_ = 1;
+  unsigned int firstStep_ = 0;
+  unsigned int counter_ = 0;
+  unsigned int maxValue_ = MAX_VALUE;
+  unsigned int presetValue_ = 0;
 
 public:
   Counter() {};
-  Counter(int n) { this->max_value = n; }
+  Counter(int n) { this->maxValue_ = n; }
 
-  virtual int direction() { return this->dir; }
-  virtual int get_direction() { return this->dir; }
-  virtual int value() { return this->counter; }
-  virtual int set(int val);
-  virtual int set_max_value(int m);
+  virtual int direction() { return this->dir_; }
+  virtual int getDirection() { return this->dir_; }
+  virtual unsigned int value() { return this->counter_; }
+  virtual unsigned int set(unsigned int val);
+  virtual unsigned int setMaxValue(unsigned int m);
   virtual int forward();
   virtual int preset();
   virtual int enable();
-  virtual int set_preset(int p);
+  virtual unsigned int setPreset(unsigned int p);
   virtual int reset();
   virtual int back();
   virtual int step();
-  virtual int set_direction(int d);
-  virtual int toggle_direction();
+  virtual int setDirection(int d);
+  virtual int toggleDirection();
 
   virtual ~Counter() = default;
 };

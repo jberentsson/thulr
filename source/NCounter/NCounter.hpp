@@ -10,4 +10,5 @@ public:
   using Counter::reset;
   using Counter::step;
   using Counter::value;
+  using Counter::setPreset;
 };

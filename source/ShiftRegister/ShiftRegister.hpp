@@ -5,27 +5,28 @@
 
 class ShiftRegister {
 public:
-  ShiftRegister();
+  ShiftRegister() = default;
   ShiftRegister(int n);
-  ~ShiftRegister() {};
+  ~ShiftRegister() = default;
 
   int step();
-  int data_input(int v);
-  int data_through();
+  int dataInput(int v);
+  int dataThrough();
   int get(int i);
-  int size() { return this->bits; }
+  int size() { return this->bits_; }
   int activate();
-  int get_bias();
-  int calculate_bias();
+  int getBias();
+  int calculateBias();
+  int currentInput();
 
 private:
-  int clear_register(int r);
+  int clearRegister(int r);
 
-  int bits = DEFAULT_BIT_SIZE;
-  int data[REGISTER_COUNT][DEFAULT_BIT_SIZE] = {};
-  int active_register = 0;
-  int current_input = 0;
-  int index = 0;
-  int current_through = 0;
-  int bias = 0;
+  int bits_ = DEFAULT_BIT_SIZE;
+  int data_[REGISTER_COUNT][DEFAULT_BIT_SIZE] = {};
+  int activeRegister_ = 0;
+  int currentInput_ = 0;
+  int index_ = 0;
+  int currentThrough_ = 0;
+  int bias_ = 0;
 };

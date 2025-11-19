@@ -2,14 +2,14 @@
 #include <cmath>
 
 BinaryCounter::BinaryCounter(int n) {
-  // TODO: We get an error here.Call to virtual method set_max_value during
+  // TODO: We get an error here.Call to virtual method setMaxValue during
   // construction bypasses virtual dispatch.
-  this->set_max_value(n);
+  this->setMaxValue(n);
 }
 
-int BinaryCounter::set_max_value(int n) {
-  this->max_value = std::pow(2, n);
-  return this->max_value;
-}
+//unsigned int BinaryCounter::setMaxValue(int n) {
+//  this->maxValue_ = std::pow(2, n);
+//  return this->maxValue_;
+//}
 
-int BinaryCounter::get_max_value() { return this->max_value; }
+unsigned int BinaryCounter::getMaxValue() { return this->maxValue_; }
