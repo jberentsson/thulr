@@ -1,10 +1,15 @@
 #pragma once
 
-#define DEFAULT_BIT_SIZE 8
-#define REGISTER_COUNT 2
+#include <array>
+#include <cstdint>
 
 class ShiftRegister {
 public:
+  enum {
+    DEFAULT_BIT_SIZE = 8,
+    REGISTER_COUNT = 2
+  };
+
   ShiftRegister() = default;
   ShiftRegister(int n);
   ~ShiftRegister() = default;
@@ -13,7 +18,7 @@ public:
   int dataInput(int v);
   int dataThrough();
   int get(int i);
-  int size() { return this->bits_; }
+  [[nodiscard]] int size() const { return this->bits_; }
   int activate();
   int getBias();
   int calculateBias();
@@ -23,7 +28,7 @@ private:
   int clearRegister(int r);
 
   int bits_ = DEFAULT_BIT_SIZE;
-  int data_[REGISTER_COUNT][DEFAULT_BIT_SIZE] = {};
+  std::array<std::array<uint32_t, DEFAULT_BIT_SIZE>, REGISTER_COUNT> data_ = {};
   int activeRegister_ = 0;
   int currentInput_ = 0;
   int index_ = 0;

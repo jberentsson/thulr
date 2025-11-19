@@ -1,7 +1,7 @@
 #include "BinaryCounter.hpp"
 #include <cmath>
 
-BinaryCounter::BinaryCounter(int n) {
+BinaryCounter::BinaryCounter(unsigned int n) {
   // TODO: We get an error here.Call to virtual method setMaxValue during
   // construction bypasses virtual dispatch.
   this->setMaxValue(n);
@@ -12,4 +12,4 @@ BinaryCounter::BinaryCounter(int n) {
 //  return this->maxValue_;
 //}
 
-unsigned int BinaryCounter::getMaxValue() { return this->maxValue_; }
+unsigned int BinaryCounter::getMaxValue() { return this->maxValue; }

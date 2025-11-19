@@ -1,3 +1,3 @@
 #include "NCounter.hpp"
 
-NCounter::NCounter(int n) { this->maxValue_ = n; }
+NCounter::NCounter(unsigned int n) { this->maxValue = n; }

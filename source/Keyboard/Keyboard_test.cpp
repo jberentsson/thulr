@@ -10,27 +10,27 @@ TEST_CASE("Keyboard basic functionality") {
     SECTION("Note on adds a note") {
         int result = keyboard.note(C5, 100);
         REQUIRE(result == 1);
-        REQUIRE(keyboard.getActiveNotes().size() == 1);
+        REQUIRE(keyboard.getactiveNotes_().size() == 1);
     }
     
     SECTION("Note off clears notes by pitch class") {
         keyboard.note(C4, 100);
         keyboard.note(C5, 100);
-        REQUIRE(keyboard.getActiveNotes().size() == 2);
+        REQUIRE(keyboard.getactiveNotes_().size() == 2);
         
         int cleared = keyboard.clearNotesByPitchClass(60);
         REQUIRE(cleared == 2);
-        REQUIRE(keyboard.getActiveNotes().size() == 0);
+        REQUIRE(keyboard.getactiveNotes_().size() == 0);
     }
     
     SECTION("Remove all clears all notes") {
         keyboard.note(C5, 100);
         keyboard.note(E5, 100);
-        REQUIRE(keyboard.getActiveNotes().size() == 2);
+        REQUIRE(keyboard.getactiveNotes_().size() == 2);
         
         int cleared = keyboard.removeAll();
         REQUIRE(cleared == 2);
-        REQUIRE(keyboard.getActiveNotes().size() == 0);
+        REQUIRE(keyboard.getactiveNotes_().size() == 0);
     }
     
     SECTION("Range setting works") {

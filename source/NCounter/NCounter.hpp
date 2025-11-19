@@ -4,7 +4,7 @@
 
 class NCounter : public Counter {
 public:
-  NCounter(int n);
+  NCounter(unsigned int n);
 
   using Counter::enable;
   using Counter::reset;

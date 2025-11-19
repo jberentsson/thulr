@@ -4,8 +4,8 @@
 
 class BinaryCounter : public Counter {
 public:
-  BinaryCounter();
-  BinaryCounter(int n);
+  BinaryCounter() = default;
+  BinaryCounter(unsigned int n);
 
   unsigned int getMaxValue();
   //unsigned int setMaxValue(int n);

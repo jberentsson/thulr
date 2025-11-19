@@ -4,68 +4,68 @@
 
 int Counter::reset() {
   // Reset counter to zero.
-  this->counter_ = this->firstStep_;
-  return this->counter_;
+  this->counter = this->firstStep;
+  return this->counter;
 }
 
 int Counter::forward() {
   // Step forward.
-  this->counter_++;
+  this->counter++;
 
-  if (this->counter_ >= this->maxValue_) {
-    this->counter_ = this->firstStep_;
+  if (this->counter >= this->maxValue) {
+    this->counter = this->firstStep;
   }
 
-  return this->counter_;
+  return this->counter;
 }
 
 int Counter::back() {
   // Step backwards.
-  if (this->counter_ == this->firstStep_) {
-    this->counter_ = this->maxValue_ - 1;
+  if (this->counter == this->firstStep) {
+    this->counter = this->maxValue - 1;
   } else {
-    this->counter_--;
+    this->counter--;
   }
 
-  return this->counter_;
+  return this->counter;
 }
 
 int Counter::toggleDirection() {
   // Toggle the counter direction.
-  this->dir_ = !this->dir_;
-  return this->dir_;
+  this->dir = !this->dir;
+  return this->dir;
 }
 
 int Counter::setDirection(int d) {
   // Set the counter direction.
-  this->dir_ = d;
-  return this->dir_;
+  this->dir = d;
+  return this->dir;
 }
 
 unsigned int Counter::set(unsigned int val) {
   // Set the counter value.
-  if (0 <= val && val < this->maxValue_) {
-    this->counter_ = val;
+  if (0 <= val && val < this->maxValue) {
+    this->counter = val;
   }
 
-  return this->counter_;
+  return this->counter;
 }
 
 int Counter::preset() {
   // Set the counter to the preset value.
-  this->counter_ = this->presetValue_ - 1;
-  return this->counter_;
+  this->counter = this->presetValue - 1;
+  return this->counter;
 }
 
 unsigned int Counter::setPreset(unsigned int p) {
   // Set a new preset value.
-  this->presetValue_ = p;
-  return this->presetValue_;
+  this->presetValue = p;
+  return this->presetValue;
 }
 
 int Counter::step() {
   // Trigger next step.
-  if (this->dir_) {
+  if (this->dir) {
     return this->forward();
   }
 
@@ -74,12 +74,12 @@ int Counter::step() {
 
 int Counter::enable() {
   // Enable or disable the output.
-  this->isEnabled_ = !this->isEnabled_;
-  return this->isEnabled_;
+  this->isEnabled = !this->isEnabled;
+  return this->isEnabled;
 }
 
 unsigned int Counter::setMaxValue(unsigned int m) {
   // Set the maximum value for the counter.
-  this->maxValue_ = m;
-  return this->maxValue_;
+  this->maxValue = m;
+  return this->maxValue;
 }

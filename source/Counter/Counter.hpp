@@ -2,25 +2,27 @@
 
 #include <cmath>
 
-// TODO: Find a better number.
-#define MAX_VALUE 10
-
 class Counter {
 protected:
-  unsigned int isEnabled_ = 1;
-  unsigned int dir_ = 1;
-  unsigned int firstStep_ = 0;
-  unsigned int counter_ = 0;
-  unsigned int maxValue_ = MAX_VALUE;
-  unsigned int presetValue_ = 0;
+  enum {
+    // TODO: Find a better number.
+    MAX_VALUE = 10
+  };
+
+  unsigned int isEnabled = 1;
+  unsigned int dir = 1;
+  unsigned int firstStep = 0;
+  unsigned int counter = 0;
+  unsigned int maxValue = MAX_VALUE;
+  unsigned int presetValue = 0;
 
 public:
-  Counter() {};
-  Counter(int n) { this->maxValue_ = n; }
+  Counter() = default;
+  Counter(int n) { this->maxValue = n; }
 
-  virtual int direction() { return this->dir_; }
-  virtual int getDirection() { return this->dir_; }
-  virtual unsigned int value() { return this->counter_; }
+  virtual unsigned int direction() { return this->dir; }
+  virtual unsigned int getDirection() { return this->dir; }
+  virtual unsigned int value() { return this->counter; }
   virtual unsigned int set(unsigned int val);
   virtual unsigned int setMaxValue(unsigned int m);
   virtual int forward();
