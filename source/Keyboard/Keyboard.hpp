@@ -45,5 +45,5 @@ class Keyboard {
 
         [[nodiscard]] const std::vector<std::unique_ptr<ActiveNote>> &getactiveNotes_() const;
 
-        void debugPrintactiveNotes_() const;
+        void debugPrintActiveNotes() const;
 };

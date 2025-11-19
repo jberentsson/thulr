@@ -94,7 +94,7 @@ const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getactiveNot
     return this->activeNotes_;
 }
 
-void Keyboard::debugPrintactiveNotes_() const {
+void Keyboard::debugPrintActiveNotes() const {
     std::cout << "Active notes: " << this->activeNotes_.size() << std::endl;
     for (const auto& note : this->activeNotes_) {
         std::cout << "  Original: " << note->originalPitch() 
