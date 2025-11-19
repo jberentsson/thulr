@@ -5,23 +5,25 @@
 #include <ctime>
 #include <memory>
 #include <vector>
+#include <cstdint>
 
 class Keyboard {
     private:
         using ActiveNote = AbstractActiveNote;
 
         std::vector<std::unique_ptr<Keyboard::ActiveNote>> activeNotes_;
+        
         int rangeLow_ = RANGE_LOW;
         int rangeHigh_ = RANGE_HIGH;
         int minOctave_ = MIN_OCTAVE;
         int maxOctave_ = MAX_OCTAVE;
 
-  int getPitchClass(int pitch) const;
-  int clampPitchToRange(int pitch);
-  int randomizeNote(int pitch);
+        [[nodiscard]] int getPitchClass(int pitch) const;
+        int clampPitchToRange(int pitch);
+        int randomizeNote(int pitch);
 
     public:
-        enum {            
+        enum : std::Uint8T{            
             MIN_CAPACITY = 2,
             MAX_CAPACITY = 5,
             RANGE_LOW = 0,
