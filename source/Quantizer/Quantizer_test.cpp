@@ -1,10 +1,10 @@
-#include "Utils/NoteValues.hpp"
+#include "Utils/MIDI.hpp"
 #include "Quantizer.hpp"
 #include <catch2/catch.hpp>
 #include <iostream>
 #include "Quantizer.hpp"
 
-using namespace MidiNotes;
+using namespace MIDI::Notes;
 
 enum class Note : int { ON, OFF };
 
@@ -28,13 +28,13 @@ SCENARIO("one note"){
                 qt.set_round_direction(Quantizer::RoundDirection::UP);
                 REQUIRE(qt.quantize(B3) == C4);
                 qt.set_round_direction(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(Cs4) == C4);
+                REQUIRE(qt.quantize(CS4) == C4);
 
                 // Test round up.
                 qt.set_round_direction(Quantizer::RoundDirection::UP);
                 REQUIRE(qt.quantize(B3) == C4);
                 qt.set_round_direction(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(Cs4) == C4);
+                REQUIRE(qt.quantize(CS4) == C4);
             }
         }
     }
@@ -143,7 +143,7 @@ SCENARIO("set the range") {
         
         THEN("verify basic functionality") {
             REQUIRE(qt.quantize(B1) == C2);
-            REQUIRE(qt.quantize(Ds3) == C3);
+            REQUIRE(qt.quantize(DS3) == C3);
         }
     }
   }

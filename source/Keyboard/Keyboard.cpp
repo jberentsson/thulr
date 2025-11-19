@@ -1,7 +1,8 @@
 #include "Keyboard.hpp"
+#include "../Utils/MIDI.hpp"
 #include <iostream>
 
-int Keyboard::getPitchClass(int pitch) const { return pitch % OCTAVE; }
+int Keyboard::getPitchClass(int pitch) const { return pitch % MIDI::OCTAVE; }
 
 int Keyboard::clampPitchToRange(int pitch) {
   return std::max(rangeLow, std::min(pitch, rangeHigh));

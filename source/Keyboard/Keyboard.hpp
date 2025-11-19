@@ -12,7 +12,6 @@
 #define RANGE_HIGH   127
 #define MIN_OCTAVE   0
 #define MAX_OCTAVE   10
-#define OCTAVE       12
 
 class Keyboard {
     private:
