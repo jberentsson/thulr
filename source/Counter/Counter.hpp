@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cmath>
+#include <cstdint>
 
 class Counter {
 protected:
-  enum {
+  enum : std::uint8_t {
     // TODO: Find a better number.
     MAX_VALUE = 10
   };
