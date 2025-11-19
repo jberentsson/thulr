@@ -1,4 +1,4 @@
-#include "Utils/MIDI.hpp"
+#include "../Utils/MIDI.hpp"
 #include "Quantizer.hpp"
 #include <catch2/catch.hpp>
 #include <iostream>
