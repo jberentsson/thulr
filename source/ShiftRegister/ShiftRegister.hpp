@@ -17,7 +17,7 @@ public:
   int step();
   int dataInput(int v);
   int dataThrough();
-  int get(int i);
+  std::uint64_t get(int i);
   [[nodiscard]] int size() const { return this->bits_; }
   int activate();
   int getBias();
