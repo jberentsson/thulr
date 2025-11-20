@@ -18,23 +18,23 @@ SCENARIO("one note"){
     qt.set_mode(Quantizer::QuantizeMode::ALL_NOTES);
 
   GIVEN("note is added") {
-    REQUIRE(qt.add_note(C4) == 0);
+    REQUIRE(qt.add_note(NoteC4) == 0);
 
         WHEN("we quantize nearby notes"){
             THEN("notes quantize correctly"){
-                REQUIRE(qt.quantize(C4) == C4);
+                REQUIRE(qt.quantize(NoteC4) == NoteC4);
                 
                 // Test round down.
                 qt.set_round_direction(Quantizer::RoundDirection::UP);
-                REQUIRE(qt.quantize(B3) == C4);
+                REQUIRE(qt.quantize(NoteB3) == NoteC4);
                 qt.set_round_direction(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(CS4) == C4);
+                REQUIRE(qt.quantize(NoteCS4) == NoteC4);
 
                 // Test round up.
                 qt.set_round_direction(Quantizer::RoundDirection::UP);
-                REQUIRE(qt.quantize(B3) == C4);
+                REQUIRE(qt.quantize(NoteB3) == NoteC4);
                 qt.set_round_direction(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(CS4) == C4);
+                REQUIRE(qt.quantize(NoteCS4) == NoteC4);
             }
         }
     }
@@ -46,25 +46,25 @@ SCENARIO("two notes"){
     qt.set_mode(Quantizer::QuantizeMode::ALL_NOTES);
 
   GIVEN("notes are added") {
-    REQUIRE(qt.add_note(C4) == 0);
-    REQUIRE(qt.add_note(G4) == 0);
+    REQUIRE(qt.add_note(NoteC4) == 0);
+    REQUIRE(qt.add_note(NoteG4) == 0);
 
         WHEN("we quantize nearby notes"){
             THEN("notes are quantized correctly"){
-                REQUIRE(qt.quantize(C4) == C4);
-                REQUIRE(qt.quantize(G4) == G4);
+                REQUIRE(qt.quantize(NoteC4) == NoteC4);
+                REQUIRE(qt.quantize(NoteG4) == NoteG4);
                 
                 qt.set_round_direction(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(D4) == C4);
+                REQUIRE(qt.quantize(NoteD4) == NoteC4);
                 
                 qt.set_round_direction(Quantizer::RoundDirection::UP);
-                REQUIRE(qt.quantize(D4) == G4);
+                REQUIRE(qt.quantize(NoteD4) == NoteG4);
                 
                 qt.set_round_direction(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(F4) == C4);
+                REQUIRE(qt.quantize(NoteF4) == NoteC4);
                 
                 qt.set_round_direction(Quantizer::RoundDirection::UP);
-                REQUIRE(qt.quantize(F4) == G4);
+                REQUIRE(qt.quantize(NoteF4) == NoteG4);
             }
         }
     }
@@ -76,14 +76,14 @@ SCENARIO("edge cases") {
     qt.set_mode(Quantizer::QuantizeMode::ALL_NOTES);
 
   GIVEN("boundary notes are added") {
-    qt.add_note(C0);
-    qt.add_note(G10);
+    qt.add_note(NoteC0);
+    qt.add_note(NoteG10);
 
     THEN("boundary notes work correctly") {
-      REQUIRE(qt.quantize(C0) == 0);
-      REQUIRE(qt.quantize(G10) == G10);
-      REQUIRE(qt.quantize(C0 - 1) == -1);  // Invalid low
-      REQUIRE(qt.quantize(G10 + 1) == -1); // Invalid high
+      REQUIRE(qt.quantize(NoteC0) == 0);
+      REQUIRE(qt.quantize(NoteG10) == NoteG10);
+      REQUIRE(qt.quantize(NoteC0 - 1) == -1);  // Invalid low
+      REQUIRE(qt.quantize(NoteG10 + 1) == -1); // Invalid high
     }
   }
 }
@@ -94,19 +94,19 @@ SCENARIO("twelve notes mode") {
     qt.set_mode(Quantizer::QuantizeMode::TWELVE_NOTES);
 
   GIVEN("C3 is added") {
-    qt.add_note(C4);
+    qt.add_note(NoteC4);
 
         THEN("all C notes are active across octaves") {
-            REQUIRE(qt.get_note(C0) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C1) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C2) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C3) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C4) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C5) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C6) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C7) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C8) == Quantizer::Note::ON);
-            REQUIRE(qt.get_note(C9) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC0) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC1) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC2) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC3) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC4) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC5) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC6) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC7) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC8) == Quantizer::Note::ON);
+            REQUIRE(qt.get_note(NoteC9) == Quantizer::Note::ON);
         }
     }
   }
@@ -117,15 +117,15 @@ SCENARIO("debug test") {
     qt.set_mode(Quantizer::QuantizeMode::ALL_NOTES);
 
     GIVEN("note C4 is added") {
-        qt.add_note(C4);
+        qt.add_note(NoteC4);
         
         THEN("verify basic functionality") {
             qt.set_round_direction(Quantizer::RoundDirection::UP);
-            int result = qt.quantize(B3);
+            int result = qt.quantize(NoteB3);
             
-            REQUIRE(qt.get_note(C4) == Quantizer::Quantizer::Note::ON);  // Should be active
-            REQUIRE(qt.get_note(B3) == Quantizer::Quantizer::Note::OFF); // Should be inactive
-            REQUIRE(result == C4);                 // Should find note C4
+            REQUIRE(qt.get_note(NoteC4) == Quantizer::Quantizer::Note::ON);  // Should be active
+            REQUIRE(qt.get_note(NoteB3) == Quantizer::Quantizer::Note::OFF); // Should be inactive
+            REQUIRE(result == NoteC4);                 // Should find note C4
         }
     }
   }
@@ -136,14 +136,14 @@ SCENARIO("set the range") {
 
     qt.set_mode(Quantizer::QuantizeMode::TWELVE_NOTES);
     qt.set_round_direction(Quantizer::RoundDirection::DOWN);
-    qt.set_range(C2, C3);
+    qt.set_range(NoteC2, NoteC3);
 
     GIVEN("note C4 is added") {
-        qt.add_note(C2);
+        qt.add_note(NoteC2);
         
         THEN("verify basic functionality") {
-            REQUIRE(qt.quantize(B1) == C2);
-            REQUIRE(qt.quantize(DS3) == C3);
+            REQUIRE(qt.quantize(NoteB1) == NoteC2);
+            REQUIRE(qt.quantize(NoteDS3) == NoteC3);
         }
     }
   }

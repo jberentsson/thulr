@@ -8,14 +8,14 @@ TEST_CASE("Keyboard basic functionality") {
     Keyboard keyboard;
     
     SECTION("Note on adds a note") {
-        int result = keyboard.note(C5, 100);
+        int result = keyboard.note(NoteC5, 100);
         REQUIRE(result == 1);
         REQUIRE(keyboard.getActiveNotes().size() == 1);
     }
     
     SECTION("Note off clears notes by pitch class") {
-        keyboard.note(C4, 100);
-        keyboard.note(C5, 100);
+        keyboard.note(NoteC4, 100);
+        keyboard.note(NoteC5, 100);
         REQUIRE(keyboard.getActiveNotes().size() == 2);
         
         int cleared = keyboard.clearNotesByPitchClass(60);
@@ -24,8 +24,8 @@ TEST_CASE("Keyboard basic functionality") {
     }
     
     SECTION("Remove all clears all notes") {
-        keyboard.note(C5, 100);
-        keyboard.note(E5, 100);
+        keyboard.note(NoteC5, 100);
+        keyboard.note(NoteE5, 100);
         REQUIRE(keyboard.getActiveNotes().size() == 2);
         
         int cleared = keyboard.removeAll();

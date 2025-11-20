@@ -2,12 +2,12 @@
 #include <catch2/catch.hpp>
 #include <iostream>
 
-SCENARIO("create a new instance") {
+SCENARIO("create a new instance") { // NOLINT
   ShiftRegister sr = ShiftRegister();
   REQUIRE(true);
 }
 
-SCENARIO("fresh instance") {
+SCENARIO("fresh instance") { // NOLINT
   ShiftRegister sr = ShiftRegister();
 
   REQUIRE(true);
@@ -60,7 +60,7 @@ SCENARIO("fresh instance") {
   }
 }
 
-SCENARIO("with a custom size") {
+SCENARIO("with a custom size") { // NOLINT
   ShiftRegister sr = ShiftRegister(5);
 
   REQUIRE(true);
@@ -93,7 +93,7 @@ SCENARIO("with a custom size") {
   }
 }
 
-SCENARIO("test manual activate function") {
+SCENARIO("test manual activate function") { // NOLINT
   ShiftRegister sr = ShiftRegister();
 
   WHEN("using activate to manually swap registers") {
@@ -122,7 +122,7 @@ SCENARIO("test manual activate function") {
   }
 }
 
-SCENARIO("test the data through functionality") {
+SCENARIO("test the data through functionality") { // NOLINT
   ShiftRegister sr = ShiftRegister();
 
   WHEN("add data to the register and check dataThrough") {
@@ -157,7 +157,7 @@ SCENARIO("test the data through functionality") {
   }
 }
 
-SCENARIO("test the bias function") {
+SCENARIO("test the bias function") { // NOLINT
   ShiftRegister sr = ShiftRegister();
 
   WHEN("we add more data than the register can handle") {
@@ -193,7 +193,7 @@ SCENARIO("test the bias function") {
   }
 }
 
-SCENARIO("test continuous data flow") {
+SCENARIO("test continuous data flow") { // NOLINT
   ShiftRegister sr = ShiftRegister(4);
 
   WHEN("continuous data stream") {
