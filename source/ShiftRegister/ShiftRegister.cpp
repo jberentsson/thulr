@@ -29,7 +29,7 @@ int ShiftRegister::step() {
   return this->index_++;
 }
 
-int ShiftRegister::get(int i) {
+std::uint64_t ShiftRegister::get(int i) {
   // Simple circular buffer access
   if (this->activeRegister_ >= 0) {
     return this->data_[this->activeRegister_][i % this->bits_];

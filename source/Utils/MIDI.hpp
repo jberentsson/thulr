@@ -1,7 +1,24 @@
 #pragma once
 
+#include <cstdint>
+#include <stdexcept>
+
 namespace MIDI {
     constexpr int OCTAVE = 12;
+
+    class Note {
+    private:
+        uint8_t value_;
+        
+    public:        
+        // MIDI Note Datatype
+        constexpr Note() : value_(0) {}
+        constexpr explicit Note(uint8_t note) : value_(note) {
+            if (note > 127) {
+                throw std::out_of_range("MIDI note must be between 0-127");
+            }
+        }
+    };
 
     namespace Notes {
         // Octave 0 (lowest octave)

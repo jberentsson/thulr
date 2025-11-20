@@ -1,13 +1,13 @@
 #include "BinaryCounter.hpp"
 #include <catch2/catch.hpp>
 
-SCENARIO("Test Initialize") {
+SCENARIO("Test Initialize") { // NOLINT 
   BinaryCounter c = BinaryCounter(8);
 
   REQUIRE(true);
 }
 
-SCENARIO("Back And Forth") {
+SCENARIO("Back And Forth") { // NOLINT 
   BinaryCounter c = BinaryCounter(4);
   REQUIRE(c.direction() == 1);
   REQUIRE(c.value() == 0);
@@ -18,7 +18,7 @@ SCENARIO("Back And Forth") {
   REQUIRE(c.value() == 0);
 }
 
-SCENARIO("Preset") {
+SCENARIO("Preset") { // NOLINT 
   BinaryCounter c = BinaryCounter(16);
   REQUIRE(c.value() == 0);
   REQUIRE(c.set(6) == 6);
