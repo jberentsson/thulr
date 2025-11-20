@@ -5,6 +5,11 @@
 
 namespace MIDI {
     constexpr int OCTAVE = 12;
+    constexpr int OCTAVE_SIZE = 12;
+    constexpr int KEYBOARD_SIZE = 128;
+    constexpr int KEYBOARD_OCTAVES = 10;
+    constexpr int RANGE_LOW = 0;
+    constexpr int RANGE_HIGH = 127;
 
     class Note {
     private:
@@ -14,7 +19,7 @@ namespace MIDI {
         // MIDI Note Datatype
         constexpr Note() : value_(0) {}
         constexpr explicit Note(uint8_t note) : value_(note) {
-            if (note > 127) {
+            if (note > RANGE_HIGH) {
                 throw std::out_of_range("MIDI note must be between 0-127");
             }
         }

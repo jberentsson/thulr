@@ -11,9 +11,9 @@ SCENARIO("Back And Forth") { // NOLINT
   BinaryCounter c = BinaryCounter(4);
   REQUIRE(c.direction() == 1);
   REQUIRE(c.value() == 0);
-  REQUIRE(c.toggleDirection() == 0);
+  REQUIRE(c.toggleDirection() == Counter::Direction::REVERSE);
   REQUIRE(c.step() == 3);
-  REQUIRE(c.toggleDirection() == 1);
+  REQUIRE(c.toggleDirection() == Counter::Direction::FORWARD);
   REQUIRE(c.step() == 0);
   REQUIRE(c.value() == 0);
 }

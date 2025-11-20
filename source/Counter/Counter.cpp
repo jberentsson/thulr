@@ -30,15 +30,20 @@ int Counter::back() {
   return this->counter;
 }
 
-int Counter::toggleDirection() {
+Counter::Direction Counter::toggleDirection() {
   // Toggle the counter direction.
-  this->dir = !this->dir;
+  if (this->dir == Direction::FORWARD){
+    this->dir = Direction::REVERSE;
+  } else {
+    this->dir = Direction::FORWARD;
+  }
+
   return this->dir;
 }
 
-int Counter::setDirection(int d) {
+Counter::Direction Counter::setDirection(Direction direction) {
   // Set the counter direction.
-  this->dir = d;
+  this->dir = direction;
   return this->dir;
 }
 

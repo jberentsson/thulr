@@ -1,11 +1,10 @@
 #pragma once
 
+#include "../Utils/MIDI.hpp"
+
 class Quantizer {
 public:
     enum {
-        OCTAVE_SIZE = 12,
-        KEYBOARD_SIZE = 128,
-        KEYBOARD_OCTAVES = 10,
         INVALID_NOTE = -1
     };
     
@@ -28,7 +27,7 @@ public:
     int set_mode(QuantizeMode mode);
 
 private:
-    bool keyboard[KEYBOARD_SIZE];
+    bool keyboard[MIDI::KEYBOARD_SIZE];
     int range_low = 0;
     int range_high = 0;
     int note_count = 0;

@@ -4,14 +4,14 @@
 Quantizer::Quantizer() {
     this->clear();
     this->range_low = 0;
-    this->range_high = KEYBOARD_SIZE - 1;
+    this->range_high = MIDI::KEYBOARD_SIZE - 1;
 }
 
 Quantizer::~Quantizer() {}
 
 int Quantizer::quantize(int n) {
     // Check if the note is in range.
-    if (n < 0 || n >= KEYBOARD_SIZE) {
+    if (n < 0 || n >= MIDI::KEYBOARD_SIZE) {
         return INVALID_NOTE;
     }
     
@@ -35,7 +35,7 @@ int Quantizer::round(int n) {
 
 int Quantizer::round_up(int n) {
     // Search up from n.
-    for (int i = n + 1; i < KEYBOARD_SIZE; i++) {
+    for (int i = n + 1; i < MIDI::KEYBOARD_SIZE; i++) {
         // We have reached the high limit.
         if (i > this->range_high) {
             return this->round_down(n);
@@ -74,7 +74,7 @@ int Quantizer::round_down(int n) {
 
 int Quantizer::set_range(int l, int h) {
     // Set the quantizer output range.
-    if (l >= 0 && l < KEYBOARD_SIZE && h >= 0 && h < KEYBOARD_SIZE && l <= h) {
+    if (l >= 0 && l < MIDI::KEYBOARD_SIZE && h >= 0 && h < MIDI::KEYBOARD_SIZE && l <= h) {
         this->range_low = l;
         this->range_high = h;
         return 0;
@@ -84,21 +84,21 @@ int Quantizer::set_range(int l, int h) {
 
 int Quantizer::clear() {
     // Clear all set notes from the keyboard.
-    for (int i = 0; i < KEYBOARD_SIZE; i++) {
+    for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
         this->keyboard[i] = false;
     }
 
-  // Return error if the note value is out of range.
-  //if (n < 0 || n >= KEYBOARD_SIZE) {
-  //  return -1;
-  //}
+    // Return error if the note value is out of range.
+    //if (n < 0 || n >= KEYBOARD_SIZE) {
+    //  return -1;
+    //}
 
-  return 0;
+    return 0;
 }
 
 Quantizer::Note Quantizer::get_note(int n) {
     // Check if the note has been set.
-    if (n < 0 || n >= KEYBOARD_SIZE) {
+    if (n < 0 || n >= MIDI::KEYBOARD_SIZE) {
         return Note::OFF;
     }
 
@@ -109,18 +109,18 @@ int Quantizer::add_note(int n) {
     // Add note to the keyboard.
 
     // Return error if the note value is out of range.
-    if (n < 0 || n >= KEYBOARD_SIZE) {
+    if (n < 0 || n >= MIDI::KEYBOARD_SIZE) {
         return -1;
     }
 
     // Depending on the mode add the note or notes to the keyboard.
     if (this->mode == QuantizeMode::TWELVE_NOTES) {
-        int degree = n % OCTAVE_SIZE;
+        int degree = n % MIDI::OCTAVE_SIZE;
         
         // Add this note degree in every octave
-        for (int octave = 0; octave < KEYBOARD_OCTAVES; octave++) {
-            int current_note = (OCTAVE_SIZE * octave) + degree;
-            if (current_note < KEYBOARD_SIZE) {
+        for (int octave = 0; octave < MIDI::KEYBOARD_OCTAVES; octave++) {
+            int current_note = (MIDI::OCTAVE_SIZE * octave) + degree;
+            if (current_note < MIDI::KEYBOARD_SIZE) {
                 this->keyboard[current_note] = true;
                 this->note_count++;
             }
