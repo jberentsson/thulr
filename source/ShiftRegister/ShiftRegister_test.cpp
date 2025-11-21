@@ -4,12 +4,12 @@
 #include "ShiftRegister.cpp" // NOLINT
 
 SCENARIO("create a new instance") { // NOLINT
-  ShiftRegister shiftRegisterTest = ShiftRegister();
+  auto shiftRegisterTest = ShiftRegister();
   REQUIRE(true);
 }
 
 SCENARIO("fresh instance") { // NOLINT
-  ShiftRegister shiftRegisterTest = ShiftRegister();
+  auto shiftRegisterTest = ShiftRegister();
 
   REQUIRE(true);
 
@@ -62,7 +62,7 @@ SCENARIO("fresh instance") { // NOLINT
 }
 
 SCENARIO("with a custom size") { // NOLINT
-  ShiftRegister shiftRegisterTest = ShiftRegister(5);
+  auto shiftRegisterTest = ShiftRegister(5); // NOLINT
 
   REQUIRE(true);
 
@@ -95,7 +95,7 @@ SCENARIO("with a custom size") { // NOLINT
 }
 
 SCENARIO("test manual activate function") { // NOLINT
-  ShiftRegister shiftRegisterTest = ShiftRegister();
+  auto  shiftRegisterTest = ShiftRegister();
 
   WHEN("using activate to manually swap registers") {
     // Write partial data.
@@ -124,7 +124,7 @@ SCENARIO("test manual activate function") { // NOLINT
 }
 
 SCENARIO("test the data through functionality") { // NOLINT
-  ShiftRegister shiftRegisterTest = ShiftRegister();
+  auto  shiftRegisterTest = ShiftRegister();
 
   WHEN("add data to the register and check dataThrough") {
     // Fill the inactive register first
@@ -140,12 +140,12 @@ SCENARIO("test the data through functionality") { // NOLINT
     // Fill the NEW inactive register to trigger dataThrough.
     for (int i = 0; i < shiftRegisterTest.size(); i++) {
       // 9,10,11,12,13,14,15,16
-      shiftRegisterTest.dataInput(9 + i);
+      shiftRegisterTest.dataInput(9 + i); // NOLINT
       shiftRegisterTest.step();
     }
 
     // Write one more to trigger dataThrough.
-    shiftRegisterTest.dataInput(17);
+    shiftRegisterTest.dataInput(17); // NOLINT
     shiftRegisterTest.step();
 
     // dataThrough should show the oldest value from active register.
@@ -159,13 +159,13 @@ SCENARIO("test the data through functionality") { // NOLINT
 }
 
 SCENARIO("test the bias function") { // NOLINT
-  ShiftRegister shiftRegisterTest = ShiftRegister();
+  auto shiftRegisterTest = ShiftRegister();
 
   WHEN("we add more data than the register can handle") {
     // Fill inactive register
     for (int i = 1; i <= 8; i++) {
       // 10,20,30,...,80
-      shiftRegisterTest.dataInput(i * 10);
+      shiftRegisterTest.dataInput(i * 10); // NOLINT
       shiftRegisterTest.step();
     }
 
@@ -178,7 +178,7 @@ SCENARIO("test the bias function") { // NOLINT
     }
 
     REQUIRE(shiftRegisterTest.dataThrough() == 0);
-    shiftRegisterTest.dataInput(160);
+    shiftRegisterTest.dataInput(160); // NOLINT
     shiftRegisterTest.step();
 
     REQUIRE(shiftRegisterTest.dataThrough() == 90);
@@ -195,7 +195,7 @@ SCENARIO("test the bias function") { // NOLINT
 }
 
 SCENARIO("test continuous data flow") { // NOLINT
-  ShiftRegister shiftRegisterTest = ShiftRegister(4);
+  auto shiftRegisterTest = ShiftRegister(4);
 
   WHEN("continuous data stream") {
     // Simple test: fill, activate, verify.
