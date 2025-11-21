@@ -3,14 +3,17 @@
 #include "../Utils/MIDI.hpp"
 
 class Quantizer {
-public:
+  public:
     enum : uint8_t {
         INVALID_NOTE = 255
     };
-    
-    enum class RoundDirection : uint8_t { UP, DOWN };
-    enum class QuantizeMode : uint8_t { TWELVE_NOTES, ALL_NOTES };
-    enum class Note : uint8_t { OFF, ON };
+
+    enum class RoundDirection : uint8_t { UP,
+                                          DOWN };
+    enum class QuantizeMode : uint8_t { TWELVE_NOTES,
+                                        ALL_NOTES };
+    enum class Note : uint8_t { OFF,
+                                ON };
 
     Quantizer();
     ~Quantizer() = default;
@@ -26,7 +29,7 @@ public:
     auto setRoundDirection(RoundDirection direction) -> RoundDirection;
     auto setMode(QuantizeMode mode) -> QuantizeMode;
 
-private:
+  private:
     bool keyboard[MIDI::KEYBOARD_SIZE];
     int range_low = 0;
     int range_high = 0;

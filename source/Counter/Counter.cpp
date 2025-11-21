@@ -32,7 +32,7 @@ auto Counter::back() -> unsigned int {
 
 auto Counter::toggleDirection() -> Counter::Direction {
     // Toggle the counter direction.
-    if (this->dir == Direction::FORWARD){
+    if (this->dir == Direction::FORWARD) {
         this->dir = Direction::REVERSE;
     } else {
         this->dir = Direction::FORWARD;
@@ -79,7 +79,7 @@ auto Counter::step() -> unsigned int {
 
 auto Counter::enable() -> unsigned int {
     // Enable or disable the output.
-    this->isEnabled = (unsigned int) !(bool) this->isEnabled;
+    this->isEnabled = (unsigned int)!(bool)this->isEnabled;
     return this->isEnabled;
 }
 

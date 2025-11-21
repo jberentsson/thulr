@@ -2,44 +2,44 @@
 #include "../Utils/MIDI.hpp"
 #include "ActiveNote/ActiveNote.hpp"
 #include <algorithm>
+#include <cstdint>
 #include <cstdlib>
 #include <ctime>
 #include <memory>
 #include <vector>
-#include <cstdint>
 
 class Keyboard {
-    private:        
-        int rangeLow_ = MIDI::RANGE_LOW;
-        int rangeHigh_ = MIDI::RANGE_HIGH;
-        int minOctave_ = MIDI::RANGE_LOW;
-        int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
+  private:
+    int rangeLow_ = MIDI::RANGE_LOW;
+    int rangeHigh_ = MIDI::RANGE_HIGH;
+    int minOctave_ = MIDI::RANGE_LOW;
+    int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
 
-        [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
-        
-        auto randomizeNote(int pitch) -> int;
+    [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
 
-    public:
-        enum : std::uint8_t {            
-            MIN_CAPACITY = 2,
-            MAX_CAPACITY = 5,
-        };
+    auto randomizeNote(int pitch) -> int;
 
-        using ActiveNote = AbstractActiveNote;
-        std::vector<std::unique_ptr<Keyboard::ActiveNote>> activeNotes_;
+  public:
+    enum : std::uint8_t {
+        MIN_CAPACITY = 2,
+        MAX_CAPACITY = 5,
+    };
 
-        Keyboard(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
-        
-        auto note(int pitch, int velocity) -> int;
-        auto clearNotesByPitchClass(int pitch) -> int;
-        auto removeAll() -> unsigned int;
+    using ActiveNote = AbstractActiveNote;
+    std::vector<std::unique_ptr<Keyboard::ActiveNote>> activeNotes_;
 
-        void updateRange(int low, int high);
-        void setRandomRange(int low, int high);
+    Keyboard(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
 
-        static auto getPitchClass(int pitch) -> int;
-        static auto maxCapacity() -> int { return MAX_CAPACITY; }
-        static auto minCapacity() -> int { return MIN_CAPACITY; }
+    auto note(int pitch, int velocity) -> int;
+    auto clearNotesByPitchClass(int pitch) -> int;
+    auto removeAll() -> unsigned int;
 
-        [[nodiscard]] auto getActiveNotes() -> const std::vector<std::unique_ptr<ActiveNote>>&;
+    void updateRange(int low, int high);
+    void setRandomRange(int low, int high);
+
+    static auto getPitchClass(int pitch) -> int;
+    static auto maxCapacity() -> int { return MAX_CAPACITY; }
+    static auto minCapacity() -> int { return MIN_CAPACITY; }
+
+    [[nodiscard]] auto getActiveNotes() -> const std::vector<std::unique_ptr<ActiveNote>> &;
 };

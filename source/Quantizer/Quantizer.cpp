@@ -13,13 +13,13 @@ auto Quantizer::quantize(int noteValue) -> int {
     if (noteValue < MIDI::RANGE_LOW || noteValue > MIDI::RANGE_HIGH) {
         return INVALID_NOTE;
     }
-    
+
     // If current note is already a valid key.
     if (this->keyboard[noteValue]) {
-        std::cout << "Note is already a valid key. note:" << noteValue <<"\n";
+        std::cout << "Note is already a valid key. note:" << noteValue << "\n";
         return noteValue;
     }
-    
+
     // Return the rounded value.
     return this->round(noteValue);
 }
@@ -29,7 +29,7 @@ auto Quantizer::round(int noteValue) -> int {
     if (this->round_direction == RoundDirection::UP) {
         return this->roundUp(noteValue);
     }
-    
+
     return this->roundDown(noteValue);
 }
 
@@ -50,7 +50,7 @@ auto Quantizer::roundUp(int noteValue) -> int {
     return INVALID_NOTE;
 }
 
-auto Quantizer::roundDown(int noteValue) -> int{
+auto Quantizer::roundDown(int noteValue) -> int {
     // Search down from n.
     for (int i = noteValue - 1; i >= 0; i--) {
         // We have reached the low limit.
@@ -63,7 +63,7 @@ auto Quantizer::roundDown(int noteValue) -> int{
             return i;
         }
     }
-    
+
     return INVALID_NOTE;
 }
 
@@ -81,8 +81,8 @@ auto Quantizer::setRange(int rangeLow, int rangeHigh) -> int {
 auto Quantizer::clear() -> int {
     // Clear all set notes from the keyboard.
     int index = 0;
-    
-    for(auto& key : this->keyboard) {
+
+    for (auto &key : this->keyboard) {
         key = false;
         index++;
     }
@@ -114,7 +114,7 @@ auto Quantizer::addNote(int noteValue) -> int {
     // Depending on the mode add the note or notes to the keyboard.
     if (this->mode == QuantizeMode::TWELVE_NOTES) {
         int degree = noteValue % MIDI::OCTAVE;
-        
+
         // Add this note degree in every octave
         for (int octave = 0; octave < MIDI::KEYBOARD_OCTAVES; octave++) {
             int current_note = (MIDI::OCTAVE * octave) + degree;
@@ -127,9 +127,9 @@ auto Quantizer::addNote(int noteValue) -> int {
         // ALL_NOTES mode - just add the single note
         this->keyboard[noteValue] = true;
         this->note_count++;
-      }
+    }
 
-  return 0;
+    return 0;
 }
 
 auto Quantizer::setRoundDirection(RoundDirection direction) -> RoundDirection {

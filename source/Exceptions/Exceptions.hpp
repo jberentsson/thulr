@@ -4,7 +4,7 @@
 #include <string>
 
 class NotImplementedException : public std::exception {
-public:
+  public:
     // Construct with given error message:
     NotImplementedException(
         const char *error = "Functionality not yet implemented!") {
@@ -12,15 +12,14 @@ public:
     }
 
     // Provided for compatibility with std::exception.
-   [[nodiscard]] auto what() -> const char * { return errorMessage.c_str(); }
+    [[nodiscard]] auto what() -> const char * { return errorMessage.c_str(); }
 
-private:
+  private:
     std::string errorMessage;
 };
 
-
 class NoteOutOfRangeException : public std::exception {
-public:
+  public:
     // Construct with given error message:
     NoteOutOfRangeException(
         const char *error = "MIDI note must be between 0-127") {
@@ -30,6 +29,6 @@ public:
     // Provided for compatibility with std::exception.
     [[nodiscard]] auto what() -> const char * { return errorMessage.c_str(); }
 
-private:
+  private:
     std::string errorMessage;
 };

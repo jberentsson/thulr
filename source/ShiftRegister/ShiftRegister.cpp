@@ -7,7 +7,7 @@ ShiftRegister::ShiftRegister(int n) {
     this->clearRegister(1);
 }
 
-auto ShiftRegister::clearRegister(int registerID) -> int{
+auto ShiftRegister::clearRegister(int registerID) -> int {
     // Clear a register.
     for (int i = 0; i < this->size(); i++) {
         this->data_[registerID][i] = 0;
@@ -22,12 +22,12 @@ auto ShiftRegister::step() -> int {
     // Store the oldest value.
     if (this->index_ >= this->bits_) {
         // Read from the active register.
-        this->currentThrough_ = this->data_[(unsigned int) !(bool) this->activeRegister_][this->bias_];
+        this->currentThrough_ = this->data_[(unsigned int)!(bool)this->activeRegister_][this->bias_];
     }
 
     // Store current input in inactive register.
     if (this->bias_ >= 0 && this->activeRegister_ >= 0) {
-        this->data_[(unsigned int) !(bool) this->activeRegister_][this->bias_] = this->currentInput_;
+        this->data_[(unsigned int)!(bool)this->activeRegister_][this->bias_] = this->currentInput_;
     }
 
     // If there is no through at the moment.
@@ -48,7 +48,7 @@ auto ShiftRegister::get(int index) -> int {
     return -1;
 }
 
-auto ShiftRegister::calculateBias() const -> int{
+auto ShiftRegister::calculateBias() const -> int {
     // Calculate the index when the register has overflowed.
     return this->index_ % this->bits_;
 }
@@ -65,10 +65,10 @@ auto ShiftRegister::dataThrough() const -> int {
 
 auto ShiftRegister::activate() -> unsigned int {
     // Swap registers.
-    this->activeRegister_ = (unsigned int) !(bool) this->activeRegister_;
+    this->activeRegister_ = (unsigned int)!(bool)this->activeRegister_;
 
     // Clear the new inactive register.
-    this->clearRegister((int) !(bool) this->activeRegister_);
+    this->clearRegister((int)!(bool)this->activeRegister_);
 
     this->index_ = 0;
     this->bias_ = 0;

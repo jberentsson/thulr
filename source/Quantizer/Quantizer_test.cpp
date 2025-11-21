@@ -5,42 +5,42 @@
 
 using namespace MIDI::Notes;
 
-enum class Note : uint8_t { ON, OFF };
+enum class Note : uint8_t { ON,
+                            OFF };
 
 SCENARIO("create a new instance") {
     Quantizer quantizer = Quantizer();
     REQUIRE(true);
 }
 
-SCENARIO("one note"){
+SCENARIO("one note") {
     Quantizer quantizer = Quantizer();
     quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
 
     GIVEN("note is added") {
         REQUIRE(quantizer.addNote(NoteC4) == 0);
 
-            WHEN("we quantize nearby notes"){
-                THEN("notes quantize correctly"){
-                    REQUIRE(quantizer.quantize(NoteC4) == NoteC4);
-                    
-                    // Test round down.
-                    quantizer.setRoundDirection(Quantizer::RoundDirection::UP);
-                    REQUIRE(quantizer.quantize(NoteB3) == NoteC4);
-                    quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
-                    REQUIRE(quantizer.quantize(NoteCS4) == NoteC4);
+        WHEN("we quantize nearby notes") {
+            THEN("notes quantize correctly") {
+                REQUIRE(quantizer.quantize(NoteC4) == NoteC4);
 
-                    // Test round up.
-                    quantizer.setRoundDirection(Quantizer::RoundDirection::UP);
-                    REQUIRE(quantizer.quantize(NoteB3) == NoteC4);
-                    quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
-                    REQUIRE(quantizer.quantize(NoteCS4) == NoteC4);
+                // Test round down.
+                quantizer.setRoundDirection(Quantizer::RoundDirection::UP);
+                REQUIRE(quantizer.quantize(NoteB3) == NoteC4);
+                quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
+                REQUIRE(quantizer.quantize(NoteCS4) == NoteC4);
+
+                // Test round up.
+                quantizer.setRoundDirection(Quantizer::RoundDirection::UP);
+                REQUIRE(quantizer.quantize(NoteB3) == NoteC4);
+                quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
+                REQUIRE(quantizer.quantize(NoteCS4) == NoteC4);
             }
         }
     }
 }
 
-
-SCENARIO("two notes"){
+SCENARIO("two notes") {
     Quantizer quantizer = Quantizer();
     quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
 
@@ -48,20 +48,20 @@ SCENARIO("two notes"){
         REQUIRE(quantizer.addNote(NoteC4) == 0);
         REQUIRE(quantizer.addNote(NoteG4) == 0);
 
-        WHEN("we quantize nearby notes"){
-            THEN("notes are quantized correctly"){
+        WHEN("we quantize nearby notes") {
+            THEN("notes are quantized correctly") {
                 REQUIRE(quantizer.quantize(NoteC4) == NoteC4);
                 REQUIRE(quantizer.quantize(NoteG4) == NoteG4);
-                
+
                 quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
                 REQUIRE(quantizer.quantize(NoteD4) == NoteC4);
-                
+
                 quantizer.setRoundDirection(Quantizer::RoundDirection::UP);
                 REQUIRE(quantizer.quantize(NoteD4) == NoteG4);
-                
+
                 quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
                 REQUIRE(quantizer.quantize(NoteF4) == NoteC4);
-                
+
                 quantizer.setRoundDirection(Quantizer::RoundDirection::UP);
                 REQUIRE(quantizer.quantize(NoteF4) == NoteG4);
             }
@@ -108,28 +108,26 @@ SCENARIO("twelve notes mode") {
     }
 }
 
-
 SCENARIO("debug test") {
     Quantizer quantizer = Quantizer();
     quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
 
     GIVEN("note C4 is added") {
         quantizer.addNote(NoteC4);
-        
+
         THEN("verify basic functionality") {
             quantizer.setRoundDirection(Quantizer::RoundDirection::UP);
             int result = quantizer.quantize(NoteB3);
-            
+
             REQUIRE(quantizer.getNote(NoteC4) == Quantizer::Quantizer::Note::ON);  // Should be active
             REQUIRE(quantizer.getNote(NoteB3) == Quantizer::Quantizer::Note::OFF); // Should be inactive
-            REQUIRE(result == NoteC4);                 // Should find note C4
+            REQUIRE(result == NoteC4);                                             // Should find note C4
         }
     }
 }
 
-
 SCENARIO("set the range") {
-  Quantizer quantizer = Quantizer();
+    Quantizer quantizer = Quantizer();
 
     quantizer.setMode(Quantizer::QuantizeMode::TWELVE_NOTES);
     quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
@@ -137,7 +135,7 @@ SCENARIO("set the range") {
 
     GIVEN("note C4 is added") {
         quantizer.addNote(NoteC2);
-        
+
         THEN("verify basic functionality") {
             REQUIRE(quantizer.quantize(NoteB1) == NoteC2);
             REQUIRE(quantizer.quantize(NoteDS3) == NoteC3);
