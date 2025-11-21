@@ -12,7 +12,7 @@ public:
     }
 
     // Provided for compatibility with std::exception.
-   [[nodiscard]] const char *what() const noexcept { return errorMessage.c_str(); }
+   [[nodiscard]] auto what() -> const char * { return errorMessage.c_str(); }
 
 private:
     std::string errorMessage;
@@ -28,7 +28,7 @@ public:
     }
 
     // Provided for compatibility with std::exception.
-    [[nodiscard]] const char *what() const noexcept { return errorMessage.c_str(); }
+    [[nodiscard]] auto what() -> const char * { return errorMessage.c_str(); }
 
 private:
     std::string errorMessage;

@@ -38,7 +38,7 @@ auto ShiftRegister::step() -> int {
     return this->index_++;
 }
 
-auto ShiftRegister::get(int index) -> uint64_t {
+auto ShiftRegister::get(int index) -> int {
     // Simple circular buffer access
     if (this->activeRegister_ >= 0) {
         return this->data_[this->activeRegister_][index % this->bits_];
@@ -53,12 +53,12 @@ auto ShiftRegister::calculateBias() const -> int{
     return this->index_ % this->bits_;
 }
 
-auto ShiftRegister::dataInput(uint64_t value) -> uint64_t {
+auto ShiftRegister::dataInput(int value) -> int {
     this->currentInput_ = value;
     return this->currentInput_;
 }
 
-auto ShiftRegister::dataThrough() const -> uint64_t {
+auto ShiftRegister::dataThrough() const -> int {
     // Data through.
     return this->currentThrough_;
 }
