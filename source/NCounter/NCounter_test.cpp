@@ -2,27 +2,27 @@
 #include <catch2/catch.hpp>
 
 SCENARIO("Test Initialize") {
-  NCounter c = NCounter(10);
+    NCounter counter = NCounter(10); // NOLINT
 
-  REQUIRE(true);
+    REQUIRE(true);
 }
 
 SCENARIO("Test Reset") {
-  NCounter c = NCounter(10);
+    NCounter counter = NCounter(10); // NOLINT
 
-  REQUIRE(c.value() == 0);
+    REQUIRE(counter.value() == 0);
 
-  REQUIRE(c.step() == 1);
-  REQUIRE(c.step() == 2);
+    REQUIRE(counter.step() == 1);
+    REQUIRE(counter.step() == 2);
 
-  REQUIRE(c.value() == 2);
+    REQUIRE(counter.value() == 2);
 
-  REQUIRE(c.step() == 3);
-  REQUIRE(c.reset() == 0);
+    REQUIRE(counter.step() == 3);
+    REQUIRE(counter.reset() == 0);
 
-  REQUIRE(c.value() == 0);
-  REQUIRE(c.step() == 1);
-  REQUIRE(c.value() == 1);
+    REQUIRE(counter.value() == 0);
+    REQUIRE(counter.step() == 1);
+    REQUIRE(counter.value() == 1);
 
-  REQUIRE(c.reset() == 0);
+    REQUIRE(counter.reset() == 0);
 }

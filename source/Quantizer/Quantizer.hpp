@@ -1,34 +1,36 @@
 #pragma once
 
+#include "../Utils/MIDI.hpp"
+
 class Quantizer {
-public:
-    enum {
-        OCTAVE_SIZE = 12,
-        KEYBOARD_SIZE = 128,
-        KEYBOARD_OCTAVES = 10,
-        INVALID_NOTE = -1
+  public:
+    enum : uint8_t {
+        INVALID_NOTE = 255
     };
-    
-    enum class RoundDirection : int { UP, DOWN };
-    enum class QuantizeMode : int { TWELVE_NOTES, ALL_NOTES };
-    enum class Note : int { OFF, ON };
+
+    enum class RoundDirection : uint8_t { UP,
+                                          DOWN };
+    enum class QuantizeMode : uint8_t { TWELVE_NOTES,
+                                        ALL_NOTES };
+    enum class Note : uint8_t { OFF,
+                                ON };
 
     Quantizer();
-    ~Quantizer();
+    ~Quantizer() = default;
 
-    int quantize(int n);
-    int add_note(int n);
-    int set_range(int l, int h);
-    int clear();
-    Note get_note(int n);
-    int round(int n);
-    int round_up(int n);
-    int round_down(int n);
-    int set_round_direction(RoundDirection direction);
-    int set_mode(QuantizeMode mode);
+    auto quantize(int noteValue) -> int;
+    auto addNote(int noteValue) -> int;
+    auto setRange(int rangeLow, int rangeHigh) -> int;
+    auto clear() -> int;
+    auto getNote(int noteValue) -> Note;
+    auto round(int noteValue) -> int;
+    auto roundUp(int noteValue) -> int;
+    auto roundDown(int noteValue) -> int;
+    auto setRoundDirection(RoundDirection direction) -> RoundDirection;
+    auto setMode(QuantizeMode mode) -> QuantizeMode;
 
-private:
-    bool keyboard[KEYBOARD_SIZE];
+  private:
+    bool keyboard[MIDI::KEYBOARD_SIZE];
     int range_low = 0;
     int range_high = 0;
     int note_count = 0;

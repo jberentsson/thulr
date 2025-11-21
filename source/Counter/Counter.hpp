@@ -4,37 +4,44 @@
 #include <cstdint>
 
 class Counter {
-protected:
-  enum : std::uint8_t {
-    // TODO: Find a better number.
-    MAX_VALUE = 10
-  };
+  protected:
+    enum : std::uint8_t {
+        // TODO: Find a better number.
+        MAX_VALUE = 10
+    };
 
-  unsigned int isEnabled = 1;
-  unsigned int dir = 1;
-  unsigned int firstStep = 0;
-  unsigned int counter = 0;
-  unsigned int maxValue = MAX_VALUE;
-  unsigned int presetValue = 0;
+  public:
+    enum Direction : bool {
+        FORWARD = true,
+        REVERSE = false,
+    };
 
-public:
-  Counter() = default;
-  Counter(int n) { this->maxValue = n; }
+  protected:
+    unsigned int isEnabled = 1;
+    Direction dir = Direction::FORWARD;
+    unsigned int firstStep = 0;
+    unsigned int counter = 0;
+    unsigned int maxValue = MAX_VALUE;
+    unsigned int presetValue = 0;
 
-  virtual unsigned int direction() { return this->dir; }
-  virtual unsigned int getDirection() { return this->dir; }
-  virtual unsigned int value() { return this->counter; }
-  virtual unsigned int set(unsigned int val);
-  virtual unsigned int setMaxValue(unsigned int m);
-  virtual int forward();
-  virtual int preset();
-  virtual int enable();
-  virtual unsigned int setPreset(unsigned int p);
-  virtual int reset();
-  virtual int back();
-  virtual int step();
-  virtual int setDirection(int d);
-  virtual int toggleDirection();
+  public:
+    Counter() = default;
+    Counter(int n) { this->maxValue = n; }
 
-  virtual ~Counter() = default;
+    virtual auto direction() -> Direction { return this->dir; }
+    virtual auto getDirection() -> Direction { return this->dir; }
+    virtual auto value() -> unsigned int { return this->counter; }
+    virtual auto set(unsigned int value) -> unsigned int;
+    virtual auto setMaxValue(unsigned int maxValue) -> unsigned int;
+    virtual auto forward() -> unsigned int;
+    virtual auto preset() -> unsigned int;
+    virtual auto enable() -> unsigned int;
+    virtual auto setPreset(unsigned int presetValue) -> unsigned int;
+    virtual auto reset() -> unsigned int;
+    virtual auto back() -> unsigned int;
+    virtual auto step() -> unsigned int;
+    virtual auto setDirection(Direction newDirection) -> Direction;
+    virtual auto toggleDirection() -> Direction;
+
+    virtual ~Counter() = default;
 };
