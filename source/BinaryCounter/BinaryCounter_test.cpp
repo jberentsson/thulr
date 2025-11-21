@@ -2,13 +2,13 @@
 #include <catch2/catch.hpp>
 
 SCENARIO("Test Initialize") { // NOLINT 
-  BinaryCounter c = BinaryCounter(8);
+  BinaryCounter c = BinaryCounter(8); // NOLINT
 
   REQUIRE(true);
 }
 
 SCENARIO("Back And Forth") { // NOLINT 
-  BinaryCounter c = BinaryCounter(4);
+  BinaryCounter c = BinaryCounter(4); // NOLINT
   REQUIRE(c.direction() == 1);
   REQUIRE(c.value() == 0);
   REQUIRE(c.toggleDirection() == Counter::Direction::REVERSE);
@@ -19,7 +19,7 @@ SCENARIO("Back And Forth") { // NOLINT
 }
 
 SCENARIO("Preset") { // NOLINT 
-  BinaryCounter c = BinaryCounter(16);
+  BinaryCounter c = BinaryCounter(16); // NOLINT
   REQUIRE(c.value() == 0);
   REQUIRE(c.set(6) == 6);
   REQUIRE(c.set(10) == 10);

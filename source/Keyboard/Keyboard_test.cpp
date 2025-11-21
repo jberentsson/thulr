@@ -18,7 +18,7 @@ TEST_CASE("Keyboard basic functionality") {
         keyboard.note(NoteC5, 100); // NOLINT
         REQUIRE(keyboard.getActiveNotes().size() == 2);
         
-        int cleared = keyboard.clearNotesByPitchClass(60);
+        int cleared = keyboard.clearNotesByPitchClass(60); // NOLINT
         REQUIRE(cleared == 2);
         REQUIRE(keyboard.getActiveNotes().size() == 0);
     }

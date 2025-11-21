@@ -2,13 +2,13 @@
 #include <catch2/catch.hpp>
 
 SCENARIO("Test Initialize") {
-  Counter c = Counter(10);
+  Counter c = Counter(10); // NOLINT
 
   REQUIRE(true);
 }
 
 SCENARIO("Test Back Step") {
-  Counter c = Counter(10);
+  Counter c = Counter(10); // NOLINT
 
   for (int i = 0; i < 10; i++) {
     c.back();
@@ -18,11 +18,11 @@ SCENARIO("Test Back Step") {
 }
 
 SCENARIO("Test Forward Step") {
-  Counter c = Counter(10);
+  Counter c = Counter(10); // NOLINT
 
   c.direction();
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) { // NOLINT
     c.forward();
   }
 
@@ -30,7 +30,7 @@ SCENARIO("Test Forward Step") {
 }
 
 SCENARIO("Test Reset") {
-  Counter c = Counter(10);
+  Counter c = Counter(10); // NOLINT
 
   REQUIRE(c.value() == 0);
 

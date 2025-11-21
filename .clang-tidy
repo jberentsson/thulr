@@ -1,0 +1,47 @@
+# .clang-tidy
+Checks: >
+  readability-*,
+  modernize-*,
+  performance-*,
+  bugprone-*,
+  -modernize-avoid-c-arrays,
+  -readability-identifier-naming,
+  -bugprone-chained-comparison,
+  -llvmlibc-restrict-system-libc-headers,
+  -cppcoreguidelines-use-enum-class
+WarningsAsErrors: ''
+HeaderFilterRegex: 'source/(projects|thulr)/(seidr|source)'
+SystemHeaders: false
+FormatStyle: none
+CheckOptions:
+  - key: modernize-use-using.CheckTemplateTypedefs
+    value: '1'
+  - key: modernize-loop-convert.MaxCopySize
+    value: '16'
+  - key: modernize-use-nullptr.NullMacros
+    value: 'NULL'
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.UnionCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
+  - key: readability-identifier-naming.MemberCase
+    value: camelBack
+  - key: readability-identifier-naming.ConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.ConstantMemberCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: _
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+

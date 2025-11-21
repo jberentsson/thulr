@@ -4,232 +4,232 @@
 #include "ShiftRegister.cpp" // NOLINT
 
 SCENARIO("create a new instance") { // NOLINT
-  ShiftRegister sr = ShiftRegister();
+  ShiftRegister shiftRegister = ShiftRegister();
   REQUIRE(true);
 }
 
 SCENARIO("fresh instance") { // NOLINT
-  ShiftRegister sr = ShiftRegister();
+  ShiftRegister shiftRegister = ShiftRegister();
 
   REQUIRE(true);
 
   WHEN("all bits are unset") {
     // Check if all the outputs are all zero.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 0);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 0);
     }
   }
 
   WHEN("push data to register") {
     // Write all ones to the inactive register.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.dataInput(1) == 1);
-      REQUIRE(sr.step() == i);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.dataInput(1) == 1);
+      REQUIRE(shiftRegister.step() == i);
     }
 
     // Data should not be visible yet (no activate called).
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 0);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 0);
     }
 
     // Manually activate to swap registers.
-    REQUIRE(sr.activate() == 1);
+    REQUIRE(shiftRegister.activate() == 1);
 
     // Now data should be visible.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 1);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 1);
     }
 
     // Write zeros to the new inactive register.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.dataInput(0) == 0);
-      REQUIRE(sr.step() == i);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.dataInput(0) == 0);
+      REQUIRE(shiftRegister.step() == i);
     }
 
     // Data should still show ones.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 1);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 1);
     }
 
     // Activate again to swap.
-    REQUIRE(sr.activate() == 0);
+    REQUIRE(shiftRegister.activate() == 0);
 
     // Now should see zeros.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 0);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 0);
     }
   }
 }
 
 SCENARIO("with a custom size") { // NOLINT
-  ShiftRegister sr = ShiftRegister(5);
+  ShiftRegister shiftRegister = ShiftRegister(5);
 
   REQUIRE(true);
 
   WHEN("all bits are unset") {
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 0);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 0);
     }
   }
 
   WHEN("push data to register") {
     // Write data to inactive register.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.dataInput(1) == 1);
-      REQUIRE(sr.step() == i);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.dataInput(1) == 1);
+      REQUIRE(shiftRegister.step() == i);
     }
 
     // Data not visible yet.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 0);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 0);
     }
 
     // Activate to swap.
-    REQUIRE(sr.activate() == 1);
+    REQUIRE(shiftRegister.activate() == 1);
 
     // Now data visible.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 1);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 1);
     }
   }
 }
 
 SCENARIO("test manual activate function") { // NOLINT
-  ShiftRegister sr = ShiftRegister();
+  ShiftRegister shiftRegister = ShiftRegister();
 
   WHEN("using activate to manually swap registers") {
     // Write partial data.
     for (int i = 0; i < 4; i++) {
-      sr.dataInput(1);
-      sr.step();
+      shiftRegister.dataInput(1);
+      shiftRegister.step();
     }
 
     // Data not visible.
-    for (int i = 0; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 0);
+    for (int i = 0; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 0);
     }
 
     // Manually activate.
-    REQUIRE(sr.activate() == 1);
+    REQUIRE(shiftRegister.activate() == 1);
 
     // Now partial data should be visible.
     for (int i = 0; i < 4; i++) {
-      REQUIRE(sr.get(i) == 1);
+      REQUIRE(shiftRegister.get(i) == 1);
     }
     // Remaining positions should be zero.
-    for (int i = 4; i < sr.size(); i++) {
-      REQUIRE(sr.get(i) == 0);
+    for (int i = 4; i < shiftRegister.size(); i++) {
+      REQUIRE(shiftRegister.get(i) == 0);
     }
   }
 }
 
 SCENARIO("test the data through functionality") { // NOLINT
-  ShiftRegister sr = ShiftRegister();
+  ShiftRegister shiftRegister = ShiftRegister();
 
   WHEN("add data to the register and check dataThrough") {
     // Fill the inactive register first
-    for (int i = 0; i < sr.size(); i++) {
+    for (int i = 0; i < shiftRegister.size(); i++) {
       // 1,2,3,4,5,6,7,8
-      sr.dataInput(i + 1);
-      sr.step();
+      shiftRegister.dataInput(i + 1);
+      shiftRegister.step();
     }
 
     // Activate to swap.
-    sr.activate();
+    shiftRegister.activate();
 
     // Fill the NEW inactive register to trigger dataThrough.
-    for (int i = 0; i < sr.size(); i++) {
+    for (int i = 0; i < shiftRegister.size(); i++) {
       // 9,10,11,12,13,14,15,16
-      sr.dataInput(9 + i);
-      sr.step();
+      shiftRegister.dataInput(9 + i);
+      shiftRegister.step();
     }
 
     // Write one more to trigger dataThrough.
-    sr.dataInput(17);
-    sr.step();
+    shiftRegister.dataInput(17);
+    shiftRegister.step();
 
     // dataThrough should show the oldest value from active register.
-    REQUIRE(sr.dataThrough() == 9);
+    REQUIRE(shiftRegister.dataThrough() == 9);
 
     // Write another to see the next oldest value.
-    sr.dataInput(18);
-    sr.step();
-    REQUIRE(sr.dataThrough() == 10);
+    shiftRegister.dataInput(18);
+    shiftRegister.step();
+    REQUIRE(shiftRegister.dataThrough() == 10);
   }
 }
 
 SCENARIO("test the bias function") { // NOLINT
-  ShiftRegister sr = ShiftRegister();
+  ShiftRegister shiftRegister = ShiftRegister();
 
   WHEN("we add more data than the register can handle") {
     // Fill inactive register
     for (int i = 1; i <= 8; i++) {
       // 10,20,30,...,80
-      sr.dataInput(i * 10);
-      sr.step();
+      shiftRegister.dataInput(i * 10);
+      shiftRegister.step();
     }
 
-    sr.activate();
+    shiftRegister.activate();
 
     // Fill to trigger dataThrough
     for (int i = 1; i <= 8; i++) {
-      sr.dataInput(80 + i * 10);
-      sr.step();
+      shiftRegister.dataInput(80 + i * 10);
+      shiftRegister.step();
     }
 
-    REQUIRE(sr.dataThrough() == 0);
-    sr.dataInput(160);
-    sr.step();
+    REQUIRE(shiftRegister.dataThrough() == 0);
+    shiftRegister.dataInput(160);
+    shiftRegister.step();
 
-    REQUIRE(sr.dataThrough() == 90);
+    REQUIRE(shiftRegister.dataThrough() == 90);
 
-    REQUIRE(sr.get(0) == 10);
-    REQUIRE(sr.get(1) == 20);
-    REQUIRE(sr.get(2) == 30);
-    REQUIRE(sr.get(3) == 40);
-    REQUIRE(sr.get(4) == 50);
-    REQUIRE(sr.get(5) == 60);
-    REQUIRE(sr.get(6) == 70);
-    REQUIRE(sr.get(7) == 80);
+    REQUIRE(shiftRegister.get(0) == 10);
+    REQUIRE(shiftRegister.get(1) == 20);
+    REQUIRE(shiftRegister.get(2) == 30);
+    REQUIRE(shiftRegister.get(3) == 40);
+    REQUIRE(shiftRegister.get(4) == 50);
+    REQUIRE(shiftRegister.get(5) == 60);
+    REQUIRE(shiftRegister.get(6) == 70);
+    REQUIRE(shiftRegister.get(7) == 80);
   }
 }
 
 SCENARIO("test continuous data flow") { // NOLINT
-  ShiftRegister sr = ShiftRegister(4);
+  ShiftRegister shiftRegister = ShiftRegister(4);
 
   WHEN("continuous data stream") {
     // Simple test: fill, activate, verify.
     for (int i = 1; i <= 4; i++) {
-      sr.dataInput(i);
-      sr.step();
+      shiftRegister.dataInput(i);
+      shiftRegister.step();
     }
 
     // Activate to make data visible.
-    sr.activate();
+    shiftRegister.activate();
 
     // Verify we can read the data we wrote.
-    REQUIRE(sr.get(0) == 1);
-    REQUIRE(sr.get(1) == 2);
-    REQUIRE(sr.get(2) == 3);
-    REQUIRE(sr.get(3) == 4);
+    REQUIRE(shiftRegister.get(0) == 1);
+    REQUIRE(shiftRegister.get(1) == 2);
+    REQUIRE(shiftRegister.get(2) == 3);
+    REQUIRE(shiftRegister.get(3) == 4);
 
     // Write new data but don't activate yet.
-    for (int i = 5; i <= 8; i++) {
-      sr.dataInput(i);
-      sr.step();
+    for (int i = 5; i <= 8; i++) { // NOLINT
+      shiftRegister.dataInput(i);
+      shiftRegister.step();
     }
 
     // Should still see old data.
-    REQUIRE(sr.get(0) == 1);
-    REQUIRE(sr.get(1) == 2);
-    REQUIRE(sr.get(2) == 3);
-    REQUIRE(sr.get(3) == 4);
+    REQUIRE(shiftRegister.get(0) == 1);
+    REQUIRE(shiftRegister.get(1) == 2);
+    REQUIRE(shiftRegister.get(2) == 3);
+    REQUIRE(shiftRegister.get(3) == 4);
 
     // Now activate to see new data.
-    sr.activate();
-    REQUIRE(sr.get(0) == 5);
-    REQUIRE(sr.get(1) == 6);
-    REQUIRE(sr.get(2) == 7);
-    REQUIRE(sr.get(3) == 8);
+    shiftRegister.activate();
+    REQUIRE(shiftRegister.get(0) == 5);
+    REQUIRE(shiftRegister.get(1) == 6);
+    REQUIRE(shiftRegister.get(2) == 7);
+    REQUIRE(shiftRegister.get(3) == 8);
   }
 }
