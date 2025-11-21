@@ -19,9 +19,9 @@ class Keyboard {
         int minOctave_ = MIDI::RANGE_LOW;
         int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
 
-        [[nodiscard]] int getPitchClass(int pitch) const;
-        int clampPitchToRange(int pitch);
-        int randomizeNote(int pitch);
+        [[nodiscard]] auto getPitchClass(int pitch) const -> int;
+        auto clampPitchToRange(int pitch) -> int;
+        auto randomizeNote(int pitch) -> int;
 
     public:
         enum : std::uint8_t {            
@@ -31,16 +31,16 @@ class Keyboard {
 
         Keyboard(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
         
-        int note(int pitch, int velocity);
+        auto note(int pitch, int velocity) -> int;
         
-        int clearNotesByPitchClass(int pitch);
-        int removeAll();
+        auto clearNotesByPitchClass(int pitch) -> int;
+        auto removeAll() -> int;
 
         void updateRange(int low, int high);
         void setRandomRange(int low, int high);
 
-        static int maxCapacity() { return MAX_CAPACITY; }
-        static int minCapacity() { return MIN_CAPACITY; }
+        static auto maxCapacity() -> int { return MAX_CAPACITY; }
+        static auto minCapacity() -> int { return MIN_CAPACITY; }
 
         [[nodiscard]] const std::vector<std::unique_ptr<ActiveNote>> &getActiveNotes() const;
 

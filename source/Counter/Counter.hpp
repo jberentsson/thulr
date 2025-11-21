@@ -28,20 +28,20 @@ public:
   Counter() = default;
   Counter(int n) { this->maxValue = n; }
 
-  virtual Direction direction() { return this->dir; }
-  virtual Direction getDirection() { return this->dir; }
-  virtual unsigned int value() { return this->counter; }
-  virtual unsigned int set(unsigned int value);
-  virtual unsigned int setMaxValue(unsigned int maxValue);
-  virtual int forward();
-  virtual int preset();
-  virtual int enable();
-  virtual unsigned int setPreset(unsigned int presetValue);
-  virtual int reset();
-  virtual int back();
-  virtual int step();
-  virtual Direction setDirection(Direction d);
-  virtual Direction toggleDirection();
+  virtual auto direction() -> Direction { return this->dir; }
+  virtual auto getDirection() -> Direction { return this->dir; }
+  virtual auto value() -> unsigned int { return this->counter; }
+  virtual auto set(unsigned int value) -> unsigned int;
+  virtual auto setMaxValue(unsigned int maxValue) -> unsigned int;
+  virtual auto forward() -> int;
+  virtual auto preset() -> int;
+  virtual auto enable() -> int;
+  virtual auto  setPreset(unsigned int presetValue) -> unsigned int;
+  virtual auto reset() -> int;
+  virtual auto back() -> int;
+  virtual auto step() -> int;
+  virtual auto setDirection(Direction d) -> Direction;
+  virtual auto toggleDirection() -> Direction;
 
   virtual ~Counter() = default;
 };

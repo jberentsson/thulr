@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Exceptions/Exceptions.hpp"
+
 #include <cstdint>
 #include <stdexcept>
 
@@ -20,10 +22,12 @@ namespace MIDI {
         constexpr Note() : value_(0) {}
         constexpr explicit Note(uint8_t note) : value_(note) {
             if (note > RANGE_HIGH) {
-                throw std::out_of_range("MIDI note must be between 0-127");
+                throw NoteOutOfRangeException();
             }
         }
     };
+
+    class Velocity : public Note {};
 
     namespace Notes {
         // Octave 0 (lowest octave)

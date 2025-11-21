@@ -13,18 +13,18 @@ public:
     enum class Note : int { OFF, ON };
 
     Quantizer();
-    ~Quantizer();
+    ~Quantizer() = default;
 
-    int quantize(int n);
-    int add_note(int n);
-    int set_range(int l, int h);
-    int clear();
-    Note get_note(int n);
-    int round(int n);
-    int round_up(int n);
-    int round_down(int n);
-    int set_round_direction(RoundDirection direction);
-    int set_mode(QuantizeMode mode);
+    auto quantize(int n) -> int;
+    auto addNote(int n) -> int;
+    auto setRange(int l, int h) -> int;
+    auto clear() -> int;
+    auto getNote(int n) -> Note;
+    auto round(int n) -> int;
+    auto roundUp(int n) -> int;
+    auto roundDown(int n) -> int;
+    auto setRoundDirection(RoundDirection direction) -> RoundDirection;
+    auto setMode(QuantizeMode mode) -> QuantizeMode;
 
 private:
     bool keyboard[MIDI::KEYBOARD_SIZE];

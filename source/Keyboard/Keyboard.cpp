@@ -4,13 +4,13 @@
 
 using namespace MIDI;
 
-int Keyboard::getPitchClass(int pitch) const { return pitch % MIDI::OCTAVE; }
+auto Keyboard::getPitchClass(int pitch) const -> int { return pitch % MIDI::OCTAVE; }
 
-int Keyboard::clampPitchToRange(int pitch) {
+auto Keyboard::clampPitchToRange(int pitch) -> int {
   return std::max(rangeLow_, std::min(pitch, rangeHigh_));
 }
 
-int Keyboard::randomizeNote(int pitch) {
+auto Keyboard::randomizeNote(int pitch) -> int {
     if (pitch < RANGE_LOW || pitch > RANGE_HIGH) {
         return -1;
     }
@@ -22,7 +22,7 @@ Keyboard::Keyboard(int low, int high) : rangeLow_(low), rangeHigh_(high) {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
-int Keyboard::note(int pitch, int velocity) {
+auto Keyboard::note(int pitch, int velocity) -> int {
     if (pitch < RANGE_LOW || pitch > RANGE_HIGH || velocity < RANGE_LOW || velocity > RANGE_HIGH) {
         return 0;
     }
@@ -47,7 +47,7 @@ int Keyboard::note(int pitch, int velocity) {
     // Note ON
     int processedPitch = randomizeNote(pitch);
 
-    if (processedPitch >= 0 && processedPitch <= 127) {
+    if (processedPitch >= MIDI::RANGE_LOW && processedPitch <= MIDI::RANGE_HIGH) {
       activeNotes_.push_back(
           std::make_unique<ActiveNote>(pitch, processedPitch, velocity));
       return 1;
@@ -60,7 +60,7 @@ int Keyboard::note(int pitch, int velocity) {
   return 0;
 }
 
-int Keyboard::clearNotesByPitchClass(int pitch) {
+auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
     int clearedCount = 0;
     int targetPitchClass = getPitchClass(pitch);
     
@@ -77,7 +77,7 @@ int Keyboard::clearNotesByPitchClass(int pitch) {
   return clearedCount;
 }
 
-int Keyboard::removeAll() {
+auto Keyboard::removeAll() -> int {
     int count = this->activeNotes_.size();
     this->activeNotes_.clear();
     return count;
@@ -95,10 +95,10 @@ const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getActiveNot
 }
 
 void Keyboard::debugPrintActiveNotes() const {
-    std::cout << "Active notes: " << this->activeNotes_.size() << std::endl;
+    std::cout << "Active notes: " << this->activeNotes_.size() << "\n";
     for (const auto& note : this->activeNotes_) {
         std::cout << "  Original: " << note->originalPitch() 
                   << " -> Processed: " << note->pitch() 
-                  << " Velocity: " << note->velocity() << std::endl;
+                  << " Velocity: " << note->velocity() << "\n";
     }
 }

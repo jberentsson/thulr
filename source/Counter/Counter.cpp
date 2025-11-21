@@ -2,13 +2,13 @@
 #include "../Exceptions/Exceptions.hpp"
 #include <type_traits>
 
-int Counter::reset() {
+auto Counter::reset() -> int {
   // Reset counter to zero.
   this->counter = this->firstStep;
   return this->counter;
 }
 
-int Counter::forward() {
+auto Counter::forward() -> int {
   // Step forward.
   this->counter++;
 
@@ -19,7 +19,7 @@ int Counter::forward() {
   return this->counter;
 }
 
-int Counter::back() {
+auto Counter::back() -> int {
   // Step backwards.
   if (this->counter == this->firstStep) {
     this->counter = this->maxValue - 1;
@@ -30,7 +30,7 @@ int Counter::back() {
   return this->counter;
 }
 
-Counter::Direction Counter::toggleDirection() {
+auto Counter::toggleDirection() -> Counter::Direction {
   // Toggle the counter direction.
   if (this->dir == Direction::FORWARD){
     this->dir = Direction::REVERSE;
@@ -41,13 +41,13 @@ Counter::Direction Counter::toggleDirection() {
   return this->dir;
 }
 
-Counter::Direction Counter::setDirection(Direction direction) {
+auto Counter::setDirection(Direction direction) -> Counter::Direction {
   // Set the counter direction.
   this->dir = direction;
   return this->dir;
 }
 
-unsigned int Counter::set(unsigned int val) {
+auto Counter::set(unsigned int val) -> unsigned int {
   // Set the counter value.
   if (0 <= val && val < this->maxValue) {
     this->counter = val;
@@ -56,19 +56,19 @@ unsigned int Counter::set(unsigned int val) {
   return this->counter;
 }
 
-int Counter::preset() {
+auto Counter::preset() -> int {
   // Set the counter to the preset value.
   this->counter = this->presetValue - 1;
   return this->counter;
 }
 
-unsigned int Counter::setPreset(unsigned int p) {
+auto Counter::setPreset(unsigned int p) -> unsigned int {
   // Set a new preset value.
   this->presetValue = p;
   return this->presetValue;
 }
 
-int Counter::step() {
+auto Counter::step() -> int {
   // Trigger next step.
   if (this->dir) {
     return this->forward();
@@ -77,13 +77,13 @@ int Counter::step() {
   return this->back();
 }
 
-int Counter::enable() {
+auto Counter::enable() -> int {
   // Enable or disable the output.
   this->isEnabled = !this->isEnabled;
   return this->isEnabled;
 }
 
-unsigned int Counter::setMaxValue(unsigned int m) {
+auto Counter::setMaxValue(unsigned int m) -> unsigned int {
   // Set the maximum value for the counter.
   this->maxValue = m;
   return this->maxValue;

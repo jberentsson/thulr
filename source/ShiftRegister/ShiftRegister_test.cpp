@@ -1,6 +1,7 @@
-#include "ShiftRegister.cpp"
 #include <catch2/catch.hpp>
 #include <iostream>
+#include "ShiftRegister.hpp"
+#include "ShiftRegister.cpp" // NOLINT
 
 SCENARIO("create a new instance") { // NOLINT
   ShiftRegister sr = ShiftRegister();
