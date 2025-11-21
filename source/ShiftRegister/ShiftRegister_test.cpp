@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp> // NOLINT 
+#include <catch2/catch.hpp>
 #include <iostream>
 #include "ShiftRegister.hpp"
 #include "ShiftRegister.cpp" // NOLINT

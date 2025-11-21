@@ -1,5 +1,5 @@
 #include "BinaryCounter.hpp"
-#include <catch2/catch.hpp> // NOLINT 
+#include <catch2/catch.hpp>
 
 SCENARIO("Test Initialize") { // NOLINT 
   BinaryCounter c = BinaryCounter(8);
