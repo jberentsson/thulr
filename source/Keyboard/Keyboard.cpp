@@ -4,7 +4,7 @@
 
 using namespace MIDI;
 
-auto Keyboard::getPitchClass(int pitch) -> const int { return pitch % MIDI::OCTAVE; }
+auto Keyboard::getPitchClass(int pitch) -> int { return pitch % MIDI::OCTAVE; }
 
 auto Keyboard::clampPitchToRange(int pitch) const -> int {
   return std::max(rangeLow_, std::min(pitch, rangeHigh_));
