@@ -2,6 +2,9 @@ all:
 	cmake -B build
 	cmake --build build --config Release
 
+clean:
+	rm -rf build
+
 tidy:
 	clang-tidy source/**/*.{cpp,hpp} -- std=c++17 -Ibuild/_deps/catch2-src/single_include
 
