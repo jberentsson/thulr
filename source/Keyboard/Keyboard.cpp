@@ -72,7 +72,7 @@ void Keyboard::updateRange(int low, int high) { // NOLINT
 
 void Keyboard::setRandomRange(int low, int high) {} // NOLINT 
 
-const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getActiveNotes() const {
+const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getActiveNotes() const { // NOLINT 
     return this->activeNotes_;
 }
 

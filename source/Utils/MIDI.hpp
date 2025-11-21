@@ -7,7 +7,6 @@
 
 namespace MIDI {
     constexpr int OCTAVE = 12;
-    constexpr int OCTAVE_SIZE = 12;
     constexpr int KEYBOARD_SIZE = 128;
     constexpr int KEYBOARD_OCTAVES = 10;
     constexpr int RANGE_LOW = 0;

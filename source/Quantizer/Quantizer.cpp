@@ -113,11 +113,11 @@ auto Quantizer::addNote(int noteValue) -> int {
 
     // Depending on the mode add the note or notes to the keyboard.
     if (this->mode == QuantizeMode::TWELVE_NOTES) {
-        int degree = noteValue % MIDI::OCTAVE_SIZE;
+        int degree = noteValue % MIDI::OCTAVE;
         
         // Add this note degree in every octave
         for (int octave = 0; octave < MIDI::KEYBOARD_OCTAVES; octave++) {
-            int current_note = (MIDI::OCTAVE_SIZE * octave) + degree;
+            int current_note = (MIDI::OCTAVE * octave) + degree;
             if (current_note < MIDI::KEYBOARD_SIZE) {
                 this->keyboard[current_note] = true;
                 this->note_count++;

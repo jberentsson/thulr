@@ -9,11 +9,7 @@
 #include <cstdint>
 
 class Keyboard {
-    private:
-        using ActiveNote = AbstractActiveNote;
-
-        std::vector<std::unique_ptr<Keyboard::ActiveNote>> activeNotes_;
-        
+    private:        
         int rangeLow_ = MIDI::RANGE_LOW;
         int rangeHigh_ = MIDI::RANGE_HIGH;
         int minOctave_ = MIDI::RANGE_LOW;
@@ -30,6 +26,9 @@ class Keyboard {
             MAX_CAPACITY = 5,
         };
 
+        using ActiveNote = AbstractActiveNote;
+        std::vector<std::unique_ptr<Keyboard::ActiveNote>> activeNotes_;
+
         Keyboard(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
         
         auto note(int pitch, int velocity) -> int;
@@ -43,7 +42,7 @@ class Keyboard {
         static auto maxCapacity() -> int { return MAX_CAPACITY; }
         static auto minCapacity() -> int { return MIN_CAPACITY; }
 
-        [[nodiscard]] const std::vector<std::unique_ptr<ActiveNote>> &getActiveNotes() const;
+        [[nodiscard]] const std::vector<std::unique_ptr<ActiveNote>>& getActiveNotes() const;
 
         void debugPrintActiveNotes() const;
 };
