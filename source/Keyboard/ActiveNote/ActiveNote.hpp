@@ -7,19 +7,19 @@ class AbstractActiveNote {
         int mVelocity_;
 
     public:
-        AbstractActiveNote(int originalPitch, int processedPitch, int velocity) 
+        AbstractActiveNote(int originalPitch, int processedPitch, int velocity)  // NOLINT
             : mOriginalPitch_(originalPitch), mProcessedPitch_(processedPitch), mVelocity_(velocity) {
         }
 
-        [[nodiscard]] virtual int originalPitch() const {
+        [[nodiscard]] virtual auto originalPitch() const -> int {
             return mOriginalPitch_;
         }
 
-        [[nodiscard]] virtual int pitch() const {
+        [[nodiscard]] virtual auto pitch() const -> int {
             return mProcessedPitch_;
         }
 
-        [[nodiscard]] virtual int velocity() const {
+        [[nodiscard]] virtual auto velocity() const -> int {
             return mVelocity_;
         }
 };

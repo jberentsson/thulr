@@ -19,8 +19,8 @@ class Keyboard {
         int minOctave_ = MIDI::RANGE_LOW;
         int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
 
-        [[nodiscard]] auto getPitchClass(int pitch) const -> int;
-        auto clampPitchToRange(int pitch) -> int;
+        [[nodiscard]] auto getPitchClass(int pitch);
+        auto clampPitchToRange(int pitch) const -> int;
         auto randomizeNote(int pitch) -> int;
 
     public:
@@ -34,7 +34,7 @@ class Keyboard {
         auto note(int pitch, int velocity) -> int;
         
         auto clearNotesByPitchClass(int pitch) -> int;
-        auto removeAll() -> int;
+        auto removeAll() -> unsigned int;
 
         void updateRange(int low, int high);
         void setRandomRange(int low, int high);

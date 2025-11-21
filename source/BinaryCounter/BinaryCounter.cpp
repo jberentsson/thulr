@@ -12,4 +12,4 @@ BinaryCounter::BinaryCounter(unsigned int n) {
 //  return this->maxValue_;
 //}
 
-unsigned int BinaryCounter::getMaxValue() { return this->maxValue; }
+auto BinaryCounter::getMaxValue() -> unsigned int { return this->maxValue; }

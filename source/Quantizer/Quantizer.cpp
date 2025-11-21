@@ -45,7 +45,7 @@ auto Quantizer::roundUp(int noteValue) -> int{
         }
 
     // We have found the correct note.
-    if (this->keyboard[i] == 1) {
+    if (this->keyboard[i]) {
       return i;
     }
   }

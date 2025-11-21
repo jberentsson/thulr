@@ -4,9 +4,9 @@
 
 using namespace MIDI;
 
-auto Keyboard::getPitchClass(int pitch) const -> int { return pitch % MIDI::OCTAVE; }
+auto Keyboard::getPitchClass(int pitch) { return pitch % MIDI::OCTAVE; }
 
-auto Keyboard::clampPitchToRange(int pitch) -> int {
+auto Keyboard::clampPitchToRange(int pitch) const -> int {
   return std::max(rangeLow_, std::min(pitch, rangeHigh_));
 }
 
@@ -18,11 +18,11 @@ auto Keyboard::randomizeNote(int pitch) -> int {
     return clampPitchToRange(pitch);
 }
 
-Keyboard::Keyboard(int low, int high) : rangeLow_(low), rangeHigh_(high) {
+Keyboard::Keyboard(int low, int high) : rangeLow_(low), rangeHigh_(high) { // NOLINT 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
-auto Keyboard::note(int pitch, int velocity) -> int {
+auto Keyboard::note(int pitch, int velocity) -> int { // NOLINT 
     if (pitch < RANGE_LOW || pitch > RANGE_HIGH || velocity < RANGE_LOW || velocity > RANGE_HIGH) {
         return 0;
     }
@@ -77,18 +77,18 @@ auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
   return clearedCount;
 }
 
-auto Keyboard::removeAll() -> int {
-    int count = this->activeNotes_.size();
+auto Keyboard::removeAll() -> unsigned int {
+    unsigned int count = this->activeNotes_.size();
     this->activeNotes_.clear();
     return count;
 }
 
-void Keyboard::updateRange(int low, int high) {
+void Keyboard::updateRange(int low, int high) { // NOLINT 
     this->rangeLow_ = low;
     this->rangeHigh_ = high;
 }
 
-void Keyboard::setRandomRange(int low, int high) {}
+void Keyboard::setRandomRange(int low, int high) {} // NOLINT 
 
 const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getActiveNotes() const {
     return this->activeNotes_;

@@ -68,7 +68,7 @@ auto ShiftRegister::activate() -> unsigned int {
   this->activeRegister_ = (unsigned int) !(bool) this->activeRegister_;
 
   // Clear the new inactive register.
-  this->clearRegister((unsigned int) !(bool) this->activeRegister_);
+  this->clearRegister((int) !(bool) this->activeRegister_);
 
   this->index_ = 0;
   this->bias_ = 0;

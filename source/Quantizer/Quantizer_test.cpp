@@ -1,11 +1,11 @@
 #include "../Utils/MIDI.hpp"
 #include "Quantizer.hpp"
-#include <catch2/catch.hpp>
+#include <catch2/catch.hpp> // NOLINT
 #include <iostream>
 
 using namespace MIDI::Notes;
 
-enum class Note : int { ON, OFF };
+enum class Note : uint8_t { ON, OFF };
 
 SCENARIO("create a new instance") {
   Quantizer qt = Quantizer();

@@ -1,5 +1,5 @@
 #include "Counter.hpp"
-#include <catch2/catch.hpp>
+#include <catch2/catch.hpp> // NOLINT 
 
 SCENARIO("Test Initialize") {
   Counter c = Counter(10);

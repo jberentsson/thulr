@@ -17,7 +17,7 @@ public:
   auto step() -> int;
   auto dataInput(int value) -> int;
   [[nodiscard]] auto dataThrough() const -> int;
-  auto get(int index) -> uint64_t;
+  auto get(int index) -> uint64_t; // NOLINT 
   [[nodiscard]] auto size() const -> int { return this->bits_; }
   auto activate() -> unsigned int;
   [[nodiscard]] auto getBias() const -> int;

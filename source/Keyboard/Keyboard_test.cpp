@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch.hpp> // NOLINT 
 #include "Keyboard.hpp"
 #include "../Utils/MIDI.hpp"
 

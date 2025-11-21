@@ -8,21 +8,21 @@ public:
         INVALID_NOTE = -1
     };
     
-    enum class RoundDirection : int { UP, DOWN };
-    enum class QuantizeMode : int { TWELVE_NOTES, ALL_NOTES };
-    enum class Note : int { OFF, ON };
+    enum class RoundDirection : uint8_t { UP, DOWN };
+    enum class QuantizeMode : uint8_t { TWELVE_NOTES, ALL_NOTES };
+    enum class Note : uint8_t { OFF, ON };
 
     Quantizer();
     ~Quantizer() = default;
 
-    auto quantize(int n) -> int;
-    auto addNote(int n) -> int;
-    auto setRange(int l, int h) -> int;
+    auto quantize(int noteValue) -> int;
+    auto addNote(int noteValue) -> int;
+    auto setRange(int rangeLow, int rangeHigh) -> int;
     auto clear() -> int;
-    auto getNote(int n) -> Note;
-    auto round(int n) -> int;
-    auto roundUp(int n) -> int;
-    auto roundDown(int n) -> int;
+    auto getNote(int noteValue) -> Note;
+    auto round(int noteValue) -> int;
+    auto roundUp(int noteValue) -> int;
+    auto roundDown(int noteValue) -> int;
     auto setRoundDirection(RoundDirection direction) -> RoundDirection;
     auto setMode(QuantizeMode mode) -> QuantizeMode;
 

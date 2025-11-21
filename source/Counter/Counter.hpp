@@ -11,7 +11,7 @@ protected:
   };
 
 public:
-  enum Direction {
+  enum Direction : bool {
     FORWARD = true,
     REVERSE = false,
   };
@@ -33,14 +33,14 @@ public:
   virtual auto value() -> unsigned int { return this->counter; }
   virtual auto set(unsigned int value) -> unsigned int;
   virtual auto setMaxValue(unsigned int maxValue) -> unsigned int;
-  virtual auto forward() -> int;
-  virtual auto preset() -> int;
-  virtual auto enable() -> int;
-  virtual auto  setPreset(unsigned int presetValue) -> unsigned int;
-  virtual auto reset() -> int;
-  virtual auto back() -> int;
-  virtual auto step() -> int;
-  virtual auto setDirection(Direction d) -> Direction;
+  virtual auto forward() -> unsigned int;
+  virtual auto preset() -> unsigned int;
+  virtual auto enable() -> unsigned int;
+  virtual auto setPreset(unsigned int presetValue) -> unsigned int;
+  virtual auto reset() -> unsigned int;
+  virtual auto back() -> unsigned int;
+  virtual auto step() -> unsigned int;
+  virtual auto setDirection(Direction newDirection) -> Direction;
   virtual auto toggleDirection() -> Direction;
 
   virtual ~Counter() = default;
