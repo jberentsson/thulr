@@ -4,7 +4,7 @@
 
 using namespace MIDI;
 
-auto Keyboard::getPitchClass(int pitch) { return pitch % MIDI::OCTAVE; }
+auto Keyboard::getPitchClass(int pitch) -> int { return pitch % MIDI::OCTAVE; }
 
 auto Keyboard::clampPitchToRange(int pitch) const -> int {
   return std::max(rangeLow_, std::min(pitch, rangeHigh_));
@@ -45,10 +45,10 @@ auto Keyboard::note(int pitch, int velocity) -> int { // NOLINT
 
 auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
     int clearedCount = 0;
-    int targetPitchClass = getPitchClass(pitch);
+    int targetPitchClass = (int) Keyboard::getPitchClass(pitch);
     
     for (auto it = this->activeNotes_.begin(); it != this->activeNotes_.end(); ) {
-        if (getPitchClass((*it)->originalPitch()) == targetPitchClass) {
+        if (Keyboard::getPitchClass((*it)->originalPitch()) == targetPitchClass) {
             it = this->activeNotes_.erase(it);
             clearedCount++;
         } else {
@@ -74,13 +74,4 @@ void Keyboard::setRandomRange(int low, int high) {} // NOLINT
 
 const std::vector<std::unique_ptr<Keyboard::ActiveNote>>& Keyboard::getActiveNotes() const { // NOLINT 
     return this->activeNotes_;
-}
-
-void Keyboard::debugPrintActiveNotes() const {
-    std::cout << "Active notes: " << this->activeNotes_.size() << "\n";
-    for (const auto& note : this->activeNotes_) {
-        std::cout << "  Original: " << note->originalPitch() 
-                  << " -> Processed: " << note->pitch() 
-                  << " Velocity: " << note->velocity() << "\n";
-    }
 }
