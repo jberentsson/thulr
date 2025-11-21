@@ -27,10 +27,10 @@ public:
 
 private:
   int bits_ = DEFAULT_BIT_SIZE;
-  std::array<std::array<uint32_t, DEFAULT_BIT_SIZE>, REGISTER_COUNT> data_ = {};
+  std::array<std::array<uint64_t, DEFAULT_BIT_SIZE>, REGISTER_COUNT> data_ = {};
   unsigned int activeRegister_ = 0;
-  int currentInput_ = 0;
+  uint64_t currentInput_ = 0;
   int index_ = 0;
-  int currentThrough_ = 0;
+  uint64_t currentThrough_ = 0;
   int bias_ = 0;
 };

@@ -8,45 +8,45 @@ using namespace MIDI::Notes;
 enum class Note : uint8_t { ON, OFF };
 
 SCENARIO("create a new instance") {
-  Quantizer qt = Quantizer();
-  REQUIRE(true);
+    Quantizer qt = Quantizer();
+    REQUIRE(true);
 }
 
 SCENARIO("one note"){
     Quantizer qt = Quantizer();
     qt.setMode(Quantizer::QuantizeMode::ALL_NOTES);
 
-  GIVEN("note is added") {
-    REQUIRE(qt.addNote(NoteC4) == 0);
+    GIVEN("note is added") {
+        REQUIRE(qt.addNote(NoteC4) == 0);
 
-        WHEN("we quantize nearby notes"){
-            THEN("notes quantize correctly"){
-                REQUIRE(qt.quantize(NoteC4) == NoteC4);
-                
-                // Test round down.
-                qt.setRoundDirection(Quantizer::RoundDirection::UP);
-                REQUIRE(qt.quantize(NoteB3) == NoteC4);
-                qt.setRoundDirection(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(NoteCS4) == NoteC4);
+            WHEN("we quantize nearby notes"){
+                THEN("notes quantize correctly"){
+                    REQUIRE(qt.quantize(NoteC4) == NoteC4);
+                    
+                    // Test round down.
+                    qt.setRoundDirection(Quantizer::RoundDirection::UP);
+                    REQUIRE(qt.quantize(NoteB3) == NoteC4);
+                    qt.setRoundDirection(Quantizer::RoundDirection::DOWN);
+                    REQUIRE(qt.quantize(NoteCS4) == NoteC4);
 
-                // Test round up.
-                qt.setRoundDirection(Quantizer::RoundDirection::UP);
-                REQUIRE(qt.quantize(NoteB3) == NoteC4);
-                qt.setRoundDirection(Quantizer::RoundDirection::DOWN);
-                REQUIRE(qt.quantize(NoteCS4) == NoteC4);
+                    // Test round up.
+                    qt.setRoundDirection(Quantizer::RoundDirection::UP);
+                    REQUIRE(qt.quantize(NoteB3) == NoteC4);
+                    qt.setRoundDirection(Quantizer::RoundDirection::DOWN);
+                    REQUIRE(qt.quantize(NoteCS4) == NoteC4);
             }
         }
     }
-  }
+}
 
 
 SCENARIO("two notes"){
     Quantizer qt = Quantizer();
     qt.setMode(Quantizer::QuantizeMode::ALL_NOTES);
 
-  GIVEN("notes are added") {
-    REQUIRE(qt.addNote(NoteC4) == 0);
-    REQUIRE(qt.addNote(NoteG4) == 0);
+    GIVEN("notes are added") {
+        REQUIRE(qt.addNote(NoteC4) == 0);
+        REQUIRE(qt.addNote(NoteG4) == 0);
 
         WHEN("we quantize nearby notes"){
             THEN("notes are quantized correctly"){
@@ -67,33 +67,31 @@ SCENARIO("two notes"){
             }
         }
     }
-  }
-
+}
 
 SCENARIO("edge cases") {
     Quantizer qt = Quantizer();
     qt.setMode(Quantizer::QuantizeMode::ALL_NOTES);
 
-  GIVEN("boundary notes are added") {
-    qt.addNote(NoteC0);
-    qt.addNote(NoteG10);
+    GIVEN("boundary notes are added") {
+        qt.addNote(NoteC0);
+        qt.addNote(NoteG10);
 
-    THEN("boundary notes work correctly") {
-      REQUIRE(qt.quantize(NoteC0) == 0);
-      REQUIRE(qt.quantize(NoteG10) == NoteG10);
-      REQUIRE(qt.quantize(NoteC0 - 1) == -1);  // Invalid low
-      REQUIRE(qt.quantize(NoteG10 + 1) == -1); // Invalid high
+        THEN("boundary notes work correctly") {
+            REQUIRE(qt.quantize(NoteC0) == 0);
+            REQUIRE(qt.quantize(NoteG10) == NoteG10);
+            REQUIRE(qt.quantize(NoteC0 - 1) == Quantizer::INVALID_NOTE);  // Invalid low
+            REQUIRE(qt.quantize(NoteG10 + 1) == Quantizer::INVALID_NOTE); // Invalid high
+        }
     }
-  }
 }
-
 
 SCENARIO("twelve notes mode") {
     Quantizer qt = Quantizer();
     qt.setMode(Quantizer::QuantizeMode::TWELVE_NOTES);
 
-  GIVEN("C3 is added") {
-    qt.addNote(NoteC4);
+    GIVEN("C3 is added") {
+        qt.addNote(NoteC4);
 
         THEN("all C notes are active across octaves") {
             REQUIRE(qt.getNote(NoteC0) == Quantizer::Note::ON);
@@ -108,7 +106,7 @@ SCENARIO("twelve notes mode") {
             REQUIRE(qt.getNote(NoteC9) == Quantizer::Note::ON);
         }
     }
-  }
+}
 
 
 SCENARIO("debug test") {
@@ -127,7 +125,7 @@ SCENARIO("debug test") {
             REQUIRE(result == NoteC4);                 // Should find note C4
         }
     }
-  }
+}
 
 
 SCENARIO("set the range") {
@@ -145,5 +143,4 @@ SCENARIO("set the range") {
             REQUIRE(qt.quantize(NoteDS3) == NoteC3);
         }
     }
-  }
-
+}

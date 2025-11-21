@@ -20,7 +20,8 @@ class Keyboard {
         int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
 
         [[nodiscard]] auto getPitchClass(int pitch);
-        auto clampPitchToRange(int pitch) const -> int;
+        [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
+        
         auto randomizeNote(int pitch) -> int;
 
     public:

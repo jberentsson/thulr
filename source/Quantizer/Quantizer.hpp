@@ -4,8 +4,8 @@
 
 class Quantizer {
 public:
-    enum {
-        INVALID_NOTE = -1
+    enum : uint8_t {
+        INVALID_NOTE = 255
     };
     
     enum class RoundDirection : uint8_t { UP, DOWN };

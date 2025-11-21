@@ -70,7 +70,7 @@ auto Counter::setPreset(unsigned int presetValue) -> unsigned int {
 
 auto Counter::step() -> unsigned int {
     // Trigger next step.
-    if (this->dir) {
+    if (this->dir == Counter::Direction::FORWARD) {
         return this->forward();
     }
 

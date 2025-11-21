@@ -41,23 +41,6 @@ auto Keyboard::note(int pitch, int velocity) -> int { // NOLINT
     }
     
     return 0;
-  
-
-  if (velocity > 0) {
-    // Note ON
-    int processedPitch = randomizeNote(pitch);
-
-    if (processedPitch >= MIDI::RANGE_LOW && processedPitch <= MIDI::RANGE_HIGH) {
-      activeNotes_.push_back(
-          std::make_unique<ActiveNote>(pitch, processedPitch, velocity));
-      return 1;
-    }
-  } else {
-    // Note OFF
-    return clearNotesByPitchClass(pitch);
-  }
-
-  return 0;
 }
 
 auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
@@ -73,8 +56,7 @@ auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
         }
     }
   
-
-  return clearedCount;
+    return clearedCount;
 }
 
 auto Keyboard::removeAll() -> unsigned int {
