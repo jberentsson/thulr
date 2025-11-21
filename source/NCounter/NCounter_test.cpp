@@ -2,13 +2,13 @@
 #include <catch2/catch.hpp>
 
 SCENARIO("Test Initialize") {
-  NCounter counter = NCounter(10);
+  NCounter counter = NCounter(10); // NOLINT
 
   REQUIRE(true);
 }
 
 SCENARIO("Test Reset") {
-  NCounter counter = NCounter(10);
+  NCounter counter = NCounter(10); // NOLINT
 
   REQUIRE(counter.value() == 0);
 
