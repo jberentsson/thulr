@@ -20,7 +20,7 @@ TEST_CASE("Keyboard basic functionality") {
         
         int cleared = keyboard.clearNotesByPitchClass(60); // NOLINT
         REQUIRE(cleared == 2);
-        REQUIRE(keyboard.getActiveNotes().size() == 0);
+        REQUIRE(keyboard.getActiveNotes().empty());
     }
     
     SECTION("Remove all clears all notes") {
@@ -28,7 +28,7 @@ TEST_CASE("Keyboard basic functionality") {
         keyboard.note(NoteE5, 100); // NOLINT
         REQUIRE(keyboard.getActiveNotes().size() == 2);
         
-        int cleared = keyboard.removeAll();
+        unsigned int cleared = keyboard.removeAll();
         REQUIRE(cleared == 2);
         REQUIRE(keyboard.getActiveNotes().empty());
     }

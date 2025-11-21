@@ -10,7 +10,7 @@ SCENARIO("Test Initialize") {
 SCENARIO("Test Back Step") {
   Counter c = Counter(10); // NOLINT
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) { // NOLINT
     c.back();
   }
 
