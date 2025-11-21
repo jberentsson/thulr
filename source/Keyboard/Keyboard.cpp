@@ -4,7 +4,7 @@
 
 using namespace MIDI;
 
-auto Keyboard::getPitchClass(int pitch) -> int { return pitch % MIDI::OCTAVE; }
+auto Keyboard::getPitchClass(int pitch) -> const int { return pitch % MIDI::OCTAVE; }
 
 auto Keyboard::clampPitchToRange(int pitch) const -> int {
   return std::max(rangeLow_, std::min(pitch, rangeHigh_));
@@ -45,7 +45,7 @@ auto Keyboard::note(int pitch, int velocity) -> int { // NOLINT
 
 auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
     int clearedCount = 0;
-    int targetPitchClass = (int) Keyboard::getPitchClass(pitch);
+    int targetPitchClass = Keyboard::getPitchClass(pitch);
     
     for (auto it = this->activeNotes_.begin(); it != this->activeNotes_.end(); ) {
         if (Keyboard::getPitchClass((*it)->originalPitch()) == targetPitchClass) {

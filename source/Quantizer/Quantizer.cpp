@@ -82,8 +82,8 @@ auto Quantizer::clear() -> int {
     // Clear all set notes from the keyboard.
     int index = 0;
     
-    for(int k = 0; k < MIDI::KEYBOARD_SIZE; k++) {
-        this->keyboard[k] = false;
+    for(auto& key : this->keyboard) {
+        key = false;
         index++;
     }
 

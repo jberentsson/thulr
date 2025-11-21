@@ -37,7 +37,7 @@ class Keyboard {
         void updateRange(int low, int high);
         void setRandomRange(int low, int high);
 
-        auto getPitchClass(int pitch) -> int;
+        auto getPitchClass(int pitch) -> const int;
         static auto maxCapacity() -> int { return MAX_CAPACITY; }
         static auto minCapacity() -> int { return MIN_CAPACITY; }
 
