@@ -53,12 +53,12 @@ auto ShiftRegister::calculateBias() const -> int{
     return this->index_ % this->bits_;
 }
 
-auto ShiftRegister::dataInput(int value) -> int {
+auto ShiftRegister::dataInput(int value) -> uint64_t {
     this->currentInput_ = value;
     return this->currentInput_;
 }
 
-auto ShiftRegister::dataThrough() const -> int {
+auto ShiftRegister::dataThrough() const -> uint64_t {
     // Data through.
     return this->currentThrough_;
 }

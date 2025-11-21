@@ -15,14 +15,14 @@ public:
   ~ShiftRegister() = default;
 
   auto step() -> int;
-  auto dataInput(int value) -> int;
-  [[nodiscard]] auto dataThrough() const -> int;
+  auto dataInput(int value) -> uint64_t;
+  [[nodiscard]] auto dataThrough() const -> uint64_t;
   auto get(int index) -> uint64_t; // NOLINT 
   [[nodiscard]] auto size() const -> int { return this->bits_; }
   auto activate() -> unsigned int;
   [[nodiscard]] auto getBias() const -> int;
   [[nodiscard]] auto calculateBias() const -> int;
-  auto currentInput() -> int;
+  auto currentInput() -> uint64_t;
   auto clearRegister(int registerID) -> int;
 
 private:

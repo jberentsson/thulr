@@ -9,12 +9,13 @@ Quantizer::Quantizer() {
 
 auto Quantizer::quantize(int noteValue) -> int {
     // Check if the note is in range.
-    if (noteValue < 0 || noteValue >= MIDI::KEYBOARD_SIZE) {
+    if (noteValue < MIDI::RANGE_LOW || noteValue > MIDI::RANGE_HIGH) {
         return INVALID_NOTE;
     }
     
     // If current note is already a valid key.
-    if (this->keyboard[noteValue]) {
+    if (this->keyboard[noteValue] == true) {
+        std::cout << "Note is already a valid key. note:" << noteValue <<"\n";
         return noteValue;
     }
     
@@ -31,7 +32,7 @@ auto Quantizer::round(int noteValue) -> int {
     return this->roundDown(noteValue);
 }
 
-auto Quantizer::roundUp(int noteValue) -> int{
+auto Quantizer::roundUp(int noteValue) -> int {
     // Search up from n.
     for (int i = noteValue + 1; i < MIDI::KEYBOARD_SIZE; i++) {
         // We have reached the high limit.
@@ -83,14 +84,14 @@ auto Quantizer::setRange(int rangeLow, int rangeHigh) -> int {
 
 auto Quantizer::clear() -> int {
     // Clear all set notes from the keyboard.
-    for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-        this->keyboard[i] = false;
+    int index = 0;
+    
+    for(int k = 0; k < MIDI::KEYBOARD_SIZE; k++) {
+        this->keyboard[k] = false;
+        index++;
     }
 
-    // Return error if the note value is out of range.
-    //if (n < 0 || n >= KEYBOARD_SIZE) {
-    //  return -1;
-    //}
+    std::cout << "CLEAR keyboard.size() " << index << "\n";
 
     return 0;
 }
@@ -106,6 +107,8 @@ auto Quantizer::getNote(int noteValue) -> Quantizer::Note {
 
 auto Quantizer::addNote(int noteValue) -> int {
     // Add note to the keyboard.
+
+    std::cout << "adding note: " << noteValue << "\n";
 
     // Return error if the note value is out of range.
     if (noteValue < 0 || noteValue >= MIDI::KEYBOARD_SIZE) {
