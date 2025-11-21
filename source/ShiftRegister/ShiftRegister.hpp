@@ -15,7 +15,7 @@ public:
   ~ShiftRegister() = default;
 
   auto step() -> int;
-  auto dataInput(int value) -> uint64_t;
+  auto dataInput(uint64_t value) -> uint64_t;
   [[nodiscard]] auto dataThrough() const -> uint64_t;
   auto get(int index) -> uint64_t; // NOLINT 
   [[nodiscard]] auto size() const -> int { return this->bits_; }

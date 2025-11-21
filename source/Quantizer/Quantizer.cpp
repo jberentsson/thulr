@@ -1,10 +1,11 @@
 #include "Quantizer.hpp"
+#include "../Utils/MIDI.hpp"
 #include <iostream>
 
 Quantizer::Quantizer() {
     this->clear();
-    this->range_low = 0;
-    this->range_high = MIDI::KEYBOARD_SIZE - 1;
+    this->range_low = MIDI::RANGE_LOW;
+    this->range_high = MIDI::RANGE_HIGH;
 }
 
 auto Quantizer::quantize(int noteValue) -> int {
@@ -14,7 +15,7 @@ auto Quantizer::quantize(int noteValue) -> int {
     }
     
     // If current note is already a valid key.
-    if (this->keyboard[noteValue] == true) {
+    if (this->keyboard[noteValue]) {
         std::cout << "Note is already a valid key. note:" << noteValue <<"\n";
         return noteValue;
     }
@@ -44,14 +45,9 @@ auto Quantizer::roundUp(int noteValue) -> int {
         if (this->keyboard[i]) {
             return i;
         }
-
-    // We have found the correct note.
-    if (this->keyboard[i]) {
-      return i;
     }
-  }
 
-  return INVALID_NOTE;
+    return INVALID_NOTE;
 }
 
 auto Quantizer::roundDown(int noteValue) -> int{
