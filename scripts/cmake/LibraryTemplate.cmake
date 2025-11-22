@@ -1,6 +1,6 @@
 macro(library_template PROJECT_LIBRARIES)
     if(NOT DEFINED PROJECT_NAME)
-        message(FATAL_ERROR "PROJECT_NAME must be defined before calling library_template")
+        message(FATAL_ERROR "PROJECT_NAME must be defined before calling library_template.")
     endif()
 
     set(SOURCES 
@@ -12,10 +12,10 @@ macro(library_template PROJECT_LIBRARIES)
     # SINGLE STATIC LIBRARY TARGET
     #############################################################
     
-    # Create just ONE static library
+    # Create just one static library.
     add_library(${PROJECT_NAME}_static STATIC ${SOURCES})
 
-    # Force static runtime for MSVC
+    # Force static runtime for MSVC.
     if(MSVC)
         set_target_properties(${PROJECT_NAME}_static PROPERTIES
             MSVC_RUNTIME_LIBRARY "MultiThreaded"
@@ -23,11 +23,6 @@ macro(library_template PROJECT_LIBRARIES)
     endif()
 
     target_include_directories(${PROJECT_NAME}_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-    # Link dependencies - use _static suffix for all library dependencies
-    #if(NOT ${PROJECT_NAME} STREQUAL "Counter")
-    #    target_link_libraries(${PROJECT_NAME}_static PUBLIC Counter_static)
-    #endif()
 
     if(DEFINED PROJECT_LIBRARIES AND PROJECT_LIBRARIES)
         foreach(PL ${PROJECT_LIBRARIES})
@@ -52,13 +47,13 @@ macro(library_template PROJECT_LIBRARIES)
 
     add_executable(${PROJECT_NAME}_test ${TEST_SOURCES})
 
-    # Link test executable with ALL required libraries
+    # Link test executable with ALL required libraries.
     target_link_libraries(${PROJECT_NAME}_test PRIVATE 
         Catch2::Catch2WithMain 
         ${PROJECT_NAME}_static
     )
 
-    # Also link with base libraries that the test might need directly
+    # Also link with base libraries that the test might need directly.
     if(NOT ${PROJECT_NAME} STREQUAL "Counter")
         target_link_libraries(${PROJECT_NAME}_test PRIVATE Counter_static)
     endif()
@@ -75,7 +70,7 @@ macro(library_template PROJECT_LIBRARIES)
         ${CMAKE_PROJECT_ROOT}/source
     )
 
-    # Force static runtime for test executable
+    # Force static runtime for test executable.
     if(MSVC)
         set_target_properties(${PROJECT_NAME}_test PROPERTIES
             MSVC_RUNTIME_LIBRARY "MultiThreaded"
@@ -92,8 +87,10 @@ macro(library_template PROJECT_LIBRARIES)
     # Unit Tests
     #############################################################
 
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/AddTests.cmake)
-        include(${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/AddTests.cmake)
+    set(ADD_TESTS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../scripts/cmake/AddTests.cmake)
+    
+    if(EXISTS ${ADD_TESTS_PATH})
+        include(${ADD_TESTS_PATH})
     else()
         message("The CMake config for the unit tests is not available.")
     endif()
