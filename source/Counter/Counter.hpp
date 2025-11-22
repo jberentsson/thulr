@@ -7,7 +7,7 @@ class Counter {
   protected:
     enum : std::uint8_t {
         // TODO: Find a better number.
-        MAX_VALUE = 10
+        MAX_VALUE = 255
     };
 
   public:
@@ -16,15 +16,21 @@ class Counter {
         REVERSE = false,
     };
 
-  protected:
-    unsigned int isEnabled = 1;
+    enum Status : bool {
+        ENABLED = true,
+        DISABLED = false,
+    };
+
+protected:
+    Status isEnabled = Status::ENABLED;
     Direction dir = Direction::FORWARD;
+
     unsigned int firstStep = 0;
     unsigned int counter = 0;
     unsigned int maxValue = MAX_VALUE;
     unsigned int presetValue = 0;
 
-  public:
+public:
     Counter() = default;
     Counter(int n) { this->maxValue = n; }
 
@@ -35,7 +41,7 @@ class Counter {
     virtual auto setMaxValue(unsigned int maxValue) -> unsigned int;
     virtual auto forward() -> unsigned int;
     virtual auto preset() -> unsigned int;
-    virtual auto enable() -> unsigned int;
+    virtual auto enable() -> Status;
     virtual auto setPreset(unsigned int presetValue) -> unsigned int;
     virtual auto reset() -> unsigned int;
     virtual auto back() -> unsigned int;

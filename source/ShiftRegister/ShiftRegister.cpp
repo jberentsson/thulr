@@ -44,7 +44,6 @@ auto ShiftRegister::get(int index) -> int {
         return this->data_[this->activeRegister_][index % this->bits_];
     }
 
-    // TODO: Fix this we want null here.
     return -1;
 }
 
