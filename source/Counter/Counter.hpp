@@ -21,7 +21,7 @@ public:
     };
 };
 
-class Counter : public  CounterAbstract {
+class Counter : public CounterAbstract {
 protected:
     Status isEnabled = Status::ENABLED;
     Direction dir = Direction::FORWARD;
