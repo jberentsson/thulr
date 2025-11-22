@@ -6,10 +6,25 @@ clean:
 	rm -rf build
 
 tidy:
-	clang-tidy source/**/*.{cpp,hpp} -- std=c++17 -Ibuild/_deps/catch2-src/single_include
+	find source -name "*.cpp" -o -name "*.hpp" -exec clang-tidy {} \
+	    -- -std=c++17 \
+	    -I source \
+	    -isystem build/_deps/catch2-src/single_include \
+	    -Wno-everything \;
+
+tidy-ci:
+	find source -name "*.cpp" -o -name "*.hpp" -exec clang-tidy {} \
+	    -checks='readability-*,modernize-*,performance-*,bugprone-*,-modernize-avoid-c-arrays,-readability-identifier-naming,-bugprone-chained-comparison,-llvmlibc-restrict-system-libc-headers,-cppcoreguidelines-use-enum-class' \
+	    -- -std=c++17 \
+	    -I source \
+	    -isystem build/_deps/catch2-src/single_include \
+	    -Wno-everything \;
 
 format:
-	clang-format -i source/*/*.{hpp,cpp}
+	find source -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.c" -exec clang-format -i {} \;
+
+format-check:
+	find source -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.c" -exec clang-format --dry-run --Werror {} \;
 
 test:
 	cd build && ctest -C Release --output-on-failure

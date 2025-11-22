@@ -1,2 +1,2 @@
-set(PROJECT_NAME "Quantizer")
+set(PROJECT_NAME Quantizer)
 library_template(Quantizer)
