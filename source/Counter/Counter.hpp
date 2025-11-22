@@ -3,14 +3,13 @@
 #include <cmath>
 #include <cstdint>
 
-class Counter {
-  protected:
+class CounterAbstract {
+protected:
     enum : std::uint8_t {
-        // TODO: Find a better number.
         MAX_VALUE = 255
     };
 
-  public:
+public:
     enum Direction : bool {
         FORWARD = true,
         REVERSE = false,
@@ -20,7 +19,9 @@ class Counter {
         ENABLED = true,
         DISABLED = false,
     };
+};
 
+class Counter : protected CounterAbstract {
 protected:
     Status isEnabled = Status::ENABLED;
     Direction dir = Direction::FORWARD;
