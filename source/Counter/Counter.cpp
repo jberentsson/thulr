@@ -77,9 +77,9 @@ auto Counter::step() -> unsigned int {
     return this->back();
 }
 
-auto Counter::enable() -> unsigned int {
+auto Counter::enable() -> Status {
     // Enable or disable the output.
-    this->isEnabled = (unsigned int)!(bool)this->isEnabled;
+    this->isEnabled = this->isEnabled == Status::ENABLED ? Status::DISABLED : Status::ENABLED;
     return this->isEnabled;
 }
 

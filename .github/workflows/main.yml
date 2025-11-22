@@ -2,9 +2,9 @@ name: CMake, CTest, and Code Quality
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, develop ]
 
 env:
   BUILD_TYPE: Release
@@ -14,8 +14,8 @@ jobs:
     name: Build and Test - ${{ matrix.os }} (${{ matrix.build_type }})
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        build_type: [Release, Debug]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        build_type: [ Release, Debug ]
     
     runs-on: ${{ matrix.os }}
     
@@ -88,4 +88,5 @@ jobs:
 
     - name: Check code quality with clang-tidy
       run: |
+        make
         make tidy-ci

@@ -6,19 +6,19 @@ clean:
 	rm -rf build
 
 tidy:
-	find source -name "*.cpp" -o -name "*.hpp" -exec clang-tidy {} \
-	    -- -std=c++17 \
-	    -I source \
-	    -isystem build/_deps/catch2-src/single_include \
-	    -Wno-everything \;
+	clang-tidy source/*/*.hpp source/*/*.cpp\
+	           -- -std=c++17 \
+	           -I source \
+	           -isystem build/_deps/catch2-src/single_include \
+	           -Wno-everything \;
 
 tidy-ci:
-	find source -name "*.cpp" -o -name "*.hpp" -exec clang-tidy {} \
-	    -checks='readability-*,modernize-*,performance-*,bugprone-*,-modernize-avoid-c-arrays,-readability-identifier-naming,-bugprone-chained-comparison,-llvmlibc-restrict-system-libc-headers,-cppcoreguidelines-use-enum-class' \
-	    -- -std=c++17 \
-	    -I source \
-	    -isystem build/_deps/catch2-src/single_include \
-	    -Wno-everything \;
+	clang-tidy source/*/*.hpp source/*/*.cpp \
+	           -checks='readability-*,modernize-*,performance-*,bugprone-*,-modernize-avoid-c-arrays,-readability-identifier-naming,-bugprone-chained-comparison,-llvmlibc-restrict-system-libc-headers,-cppcoreguidelines-use-enum-class' \
+	           -- -std=c++17 \
+	           -I source \
+	           -isystem build/_deps/catch2-src/single_include \
+	           -Wno-everything \;
 
 format:
 	find source -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.c" -exec clang-format -i {} \;

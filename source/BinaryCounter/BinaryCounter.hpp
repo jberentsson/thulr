@@ -8,7 +8,6 @@ class BinaryCounter : public Counter {
     BinaryCounter(unsigned int n);
 
     auto getMaxValue() -> unsigned int;
-    // unsigned int setMaxValue(int n);
 
     using Counter::direction;
     using Counter::enable;
