@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../Utils/MIDI.hpp"
 
 class Quantizer {
@@ -8,12 +7,9 @@ class Quantizer {
         INVALID_NOTE = 255
     };
 
-    enum class RoundDirection : uint8_t { UP,
-                                          DOWN };
-    enum class QuantizeMode : uint8_t { TWELVE_NOTES,
-                                        ALL_NOTES };
-    enum class Note : uint8_t { OFF,
-                                ON };
+    enum class RoundDirection : uint8_t { UP, DOWN };
+    enum class QuantizeMode : uint8_t { TWELVE_NOTES, ALL_NOTES };
+    enum class Note : uint8_t { OFF, ON };
 
     Quantizer();
     ~Quantizer() = default;
@@ -28,12 +24,15 @@ class Quantizer {
     auto roundDown(int noteValue) -> int;
     auto setRoundDirection(RoundDirection direction) -> RoundDirection;
     auto setMode(QuantizeMode mode) -> QuantizeMode;
+    auto enable() -> bool;
+    auto disable() -> bool;
 
   private:
     bool keyboard[MIDI::KEYBOARD_SIZE];
     int range_low = 0;
     int range_high = 0;
     int note_count = 0;
+    bool quantize_on = true;
 
     RoundDirection round_direction = RoundDirection::UP;
     QuantizeMode mode = QuantizeMode::ALL_NOTES;
