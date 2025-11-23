@@ -4,7 +4,7 @@
 
 class NCounter : public Counter {
   public:
-    NCounter(unsigned int n);
+    explicit NCounter(unsigned int n = MAX_VALUE);
 
     using Counter::enable;
     using Counter::reset;

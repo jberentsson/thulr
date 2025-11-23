@@ -49,7 +49,7 @@ auto Counter::setDirection(Direction newDirection) -> Counter::Direction {
 
 auto Counter::set(unsigned int value) -> unsigned int {
     // Set the counter value.
-    if (0 <= value && value < this->maxValue) {
+    if (value < this->maxValue) {
         this->counter = value;
     }
 

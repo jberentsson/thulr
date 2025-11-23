@@ -18,7 +18,7 @@ TEST_CASE("Keyboard basic functionality") {
         keyboard.note(NoteC5, 100); // NOLINT
         REQUIRE(keyboard.getActiveNotes().size() == 2);
 
-        int cleared = keyboard.clearNotesByPitchClass(60); // NOLINT
+        int cleared = keyboard.clearNotesByPitchClass(NoteC5);
         REQUIRE(cleared == 2);
         REQUIRE(keyboard.getActiveNotes().empty());
     }
@@ -38,4 +38,5 @@ TEST_CASE("Keyboard basic functionality") {
         REQUIRE(keyboard.minCapacity() == 2);
         REQUIRE(keyboard.maxCapacity() == 5);
     }
-}
+};
+

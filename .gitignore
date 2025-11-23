@@ -24,6 +24,9 @@ temp/
 # CTest files
 Testing/
 
+# Clang files
+.cache/
+
 # Build output binaries (not needed in repo)
 *.exe
 *.dll

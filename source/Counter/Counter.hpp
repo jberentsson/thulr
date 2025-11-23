@@ -32,8 +32,8 @@ protected:
     unsigned int presetValue = 0;
 
 public:
-    Counter() = default;
-    Counter(int n) { this->maxValue = n; }
+    //Counter() = default;
+    explicit Counter(int n = MAX_VALUE) { this->maxValue = n; }
 
     virtual auto direction() -> Direction { return this->dir; }
     virtual auto getDirection() -> Direction { return this->dir; }
@@ -52,3 +52,4 @@ public:
 
     virtual ~Counter() = default;
 };
+

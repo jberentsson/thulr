@@ -1,2 +1,3 @@
-set(PROJECT_NAME "NCounter")
-library_template(Counter)
+project(NCounter)
+set(PROJECT_LIBRARIES Counter)
+library_template("${PROJECT_LIBRARIES}")
