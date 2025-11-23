@@ -7,10 +7,10 @@
 
 class Keyboard {
   private:
-    int rangeLow_ = MIDI::RANGE_LOW;
-    int rangeHigh_= MIDI::RANGE_HIGH;
-    int minOctave_= MIDI::RANGE_LOW;
-    int maxOctave_= MIDI::KEYBOARD_OCTAVES;
+    int rangeLow_  = MIDI::RANGE_LOW;
+    int rangeHigh_ = MIDI::RANGE_HIGH;
+    int minOctave_ = MIDI::RANGE_LOW;
+    int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
 
     [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
 
@@ -40,4 +40,3 @@ class Keyboard {
 
     [[nodiscard]] auto getActiveNotes() -> const std::vector<std::unique_ptr<ActiveNote>> &;
 };
-

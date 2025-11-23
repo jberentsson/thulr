@@ -26,7 +26,11 @@ macro(library_template PROJECT_LIBRARIES)
         )
     endif()
 
-    target_include_directories(${PROJECT_NAME}_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+    target_include_directories(${PROJECT_NAME}_static PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../thulr/source
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Utils
+    )
 
     # IMPROVED DEPENDENCY HANDLING - Handle missing targets gracefully
     if(DEFINED PROJECT_LIBRARIES AND PROJECT_LIBRARIES)
@@ -99,6 +103,7 @@ macro(library_template PROJECT_LIBRARIES)
         target_include_directories(${PROJECT_NAME}_test PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}
             ${CMAKE_CURRENT_SOURCE_DIR}/../
+            ${CMAKE_CURRENT_SOURCE_DIR}/../thulr/source
             ${CMAKE_SOURCE_DIR}
         )
 
@@ -129,6 +134,16 @@ macro(library_template PROJECT_LIBRARIES)
     else()
         message(STATUS "   No test file found for ${PROJECT_NAME}")
     endif()
+    
+    target_include_directories(${PROJECT_NAME}_static PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/..
+    )
+
+    target_include_directories(${PROJECT_NAME}_test PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/..
+    )
 
     message(STATUS " Successfully configured ${PROJECT_NAME}")
 
