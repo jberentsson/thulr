@@ -6,12 +6,11 @@
 class ShiftRegister {
   public:
     enum : std::uint8_t {
-        DEFAULT_BIT_SIZE = 8,
+        DEFAULT_BIT_COUNT = 8,
         REGISTER_COUNT = 2
     };
 
-    ShiftRegister() = default;
-    ShiftRegister(int n);
+    explicit ShiftRegister(int n = DEFAULT_BIT_COUNT);
     ~ShiftRegister() = default;
 
     auto step() -> int;
@@ -26,8 +25,8 @@ class ShiftRegister {
     auto clearRegister(int registerID) -> int;
 
   private:
-    int bits_ = DEFAULT_BIT_SIZE;
-    std::array<std::array<int, DEFAULT_BIT_SIZE>, REGISTER_COUNT> data_ = {};
+    int bits_ = DEFAULT_BIT_COUNT;
+    std::array<std::array<int, DEFAULT_BIT_COUNT>, REGISTER_COUNT> data_ = {};
     unsigned int activeRegister_ = 0;
     int currentInput_ = 0;
     int index_ = 0;

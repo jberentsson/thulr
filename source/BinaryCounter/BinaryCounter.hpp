@@ -5,7 +5,7 @@
 class BinaryCounter : public Counter {
   public:
     BinaryCounter() = default;
-    BinaryCounter(unsigned int n);
+    explicit BinaryCounter(unsigned int n = MAX_VALUE);
 
     auto getMaxValue() -> unsigned int;
 

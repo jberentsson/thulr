@@ -1,2 +1,3 @@
-set(PROJECT_NAME Quantizer)
-library_template(Quantizer)
+project(Quantizer)
+set(PROJECT_LIBRARIES "")
+library_template("${PROJECT_LIBRARIES}")

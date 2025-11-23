@@ -1,2 +1,3 @@
-set(PROJECT_NAME "Keyboard")
-library_template(Keyboard)
+project(Keyboard)
+set(PROJECT_LIBRARIES)
+library_template("${PROJECT_LIBRARIES}")

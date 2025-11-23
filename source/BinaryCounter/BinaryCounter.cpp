@@ -1,5 +1,4 @@
 #include "BinaryCounter.hpp"
-#include <cmath>
 
 BinaryCounter::BinaryCounter(unsigned int n) {
     this->setMaxValue(n);

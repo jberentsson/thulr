@@ -1,19 +1,16 @@
 #pragma once
 #include "../Utils/MIDI.hpp"
 #include "ActiveNote/ActiveNote.hpp"
-#include <algorithm>
 #include <cstdint>
-#include <cstdlib>
-#include <ctime>
 #include <memory>
 #include <vector>
 
 class Keyboard {
   private:
     int rangeLow_ = MIDI::RANGE_LOW;
-    int rangeHigh_ = MIDI::RANGE_HIGH;
-    int minOctave_ = MIDI::RANGE_LOW;
-    int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
+    int rangeHigh_= MIDI::RANGE_HIGH;
+    int minOctave_= MIDI::RANGE_LOW;
+    int maxOctave_= MIDI::KEYBOARD_OCTAVES;
 
     [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
 
@@ -28,7 +25,7 @@ class Keyboard {
     using ActiveNote = AbstractActiveNote;
     std::vector<std::unique_ptr<Keyboard::ActiveNote>> activeNotes_;
 
-    Keyboard(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
+    explicit Keyboard(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
 
     auto note(int pitch, int velocity) -> int;
     auto clearNotesByPitchClass(int pitch) -> int;
@@ -43,3 +40,4 @@ class Keyboard {
 
     [[nodiscard]] auto getActiveNotes() -> const std::vector<std::unique_ptr<ActiveNote>> &;
 };
+

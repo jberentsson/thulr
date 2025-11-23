@@ -6,7 +6,7 @@
 class NotImplementedException : public std::exception {
   public:
     // Construct with given error message:
-    NotImplementedException(
+    explicit NotImplementedException(
         const char *error = "Functionality not yet implemented!") {
         errorMessage = error;
     }
@@ -21,7 +21,7 @@ class NotImplementedException : public std::exception {
 class NoteOutOfRangeException : public std::exception {
   public:
     // Construct with given error message:
-    NoteOutOfRangeException(
+    explicit NoteOutOfRangeException(
         const char *error = "MIDI note must be between 0-127") {
         errorMessage = error;
     }
