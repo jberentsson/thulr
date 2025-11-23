@@ -1,5 +1,4 @@
 #include "Quantizer.hpp"
-#include "../Utils/MIDI.hpp"
 
 Quantizer::Quantizer() {
     this->clear();
@@ -18,6 +17,8 @@ auto Quantizer::quantize(int noteValue) -> int {
         return noteValue;
     }
 
+    // Return the original note if
+    // the quantizer is disabled.
     if (!this->quantize_on) {
         return noteValue;
     }

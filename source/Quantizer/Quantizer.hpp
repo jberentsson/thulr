@@ -1,5 +1,5 @@
 #pragma once
-#include "../Utils/MIDI.hpp"
+#include "Utils/MIDI.hpp"
 
 class Quantizer {
   public:
@@ -26,11 +26,12 @@ class Quantizer {
     auto setMode(QuantizeMode mode) -> QuantizeMode;
     auto enable() -> bool;
     auto disable() -> bool;
+    [[nodiscard]] auto noteCount() const -> int { return this->note_count; }
 
   private:
     bool keyboard[MIDI::KEYBOARD_SIZE];
-    int range_low = 0;
-    int range_high = 0;
+    int range_low = MIDI::RANGE_LOW;
+    int range_high = MIDI::RANGE_HIGH;
     int note_count = 0;
     bool quantize_on = true;
 
