@@ -1,5 +1,5 @@
 #include "Counter.hpp"
-#include "../Exceptions/Exceptions.hpp"
+#include "Exceptions/Exceptions.hpp"
 #include <type_traits>
 
 auto Counter::reset() -> unsigned int {
