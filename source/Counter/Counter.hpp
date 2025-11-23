@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cmath>
 #include <cstdint>
 
 class CounterAbstract {
@@ -49,6 +48,7 @@ public:
     virtual auto step() -> unsigned int;
     virtual auto setDirection(Direction newDirection) -> Direction;
     virtual auto toggleDirection() -> Direction;
+    virtual auto getMaxValue() -> unsigned int { return this->maxValue; }
 
     virtual ~Counter() = default;
 };
