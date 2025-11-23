@@ -1,5 +1,4 @@
 #include "ShiftRegister.hpp"
-#include <iostream>
 
 ShiftRegister::ShiftRegister(int n) {
     this->bits_ = n;
