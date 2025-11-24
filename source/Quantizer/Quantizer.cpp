@@ -9,22 +9,26 @@ Quantizer::Quantizer() {
 
 auto Quantizer::quantize(int noteValue) -> int {
     // Check if the note is in range.
-    if (noteValue < MIDI::RANGE_LOW || noteValue > MIDI::RANGE_HIGH) {
+    if (noteValue < MIDI::RANGE_LOW || noteValue >= MIDI::KEYBOARD_SIZE) {
+        std::cout << "THE NOTE WAS INVALID!";
         return INVALID_NOTE;
     }
 
     // If current note is already a valid key.
     if (this->note_count == 0 || this->keyboard[noteValue]) {
+        std::cout << "CURRENT NOTE IS ALREADY A VALID KEY.";
         return noteValue;
     }
 
     // Return the original note if
     // the quantizer is disabled.
     if (!this->quantize_on) {
+        std::cout << "QUNTIZE IS TURNED OFF!\n";
         return noteValue;
     }
 
     // Return the rounded value.
+    std::cout << "THE NOTE WAS QUANTIZED!!\n";
     return this->round(noteValue);
 }
 
@@ -119,7 +123,7 @@ auto Quantizer::addNote(int noteValue) -> int {
     // Add note to the keyboard.
 
     // Return error if the note value is out of range.
-    if (noteValue <= 0 || noteValue > MIDI::KEYBOARD_SIZE || this->note_count >= MIDI::KEYBOARD_SIZE) {
+    if (noteValue < 0 || noteValue > MIDI::KEYBOARD_SIZE || this->note_count >= MIDI::KEYBOARD_SIZE) {
         return -1;
     }
 

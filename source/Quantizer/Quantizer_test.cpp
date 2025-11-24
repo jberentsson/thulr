@@ -78,7 +78,7 @@ SCENARIO("edge cases") {
         quantizer.addNote(NoteG10);
 
         THEN("boundary notes work correctly") {
-            REQUIRE(quantizer.quantize(NoteC0) == 0);
+            REQUIRE(quantizer.quantize(NoteC0) == NoteC0);
             REQUIRE(quantizer.quantize(NoteG10) == NoteG10);
             REQUIRE(quantizer.quantize(NoteC0 - 1) == Quantizer::INVALID_NOTE);  // Invalid low
             REQUIRE(quantizer.quantize(NoteG10 + 1) == Quantizer::INVALID_NOTE); // Invalid high
