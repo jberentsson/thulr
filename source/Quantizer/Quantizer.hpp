@@ -4,6 +4,7 @@
 class Quantizer {
   public:
     enum : uint8_t {
+        // The highest MIDI value is 127.
         INVALID_NOTE = 255
     };
 
@@ -22,11 +23,15 @@ class Quantizer {
     auto round(int noteValue) -> int;
     auto roundUp(int noteValue) -> int;
     auto roundDown(int noteValue) -> int;
+    [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->round_direction; }
     auto setRoundDirection(RoundDirection direction) -> RoundDirection;
     auto setMode(QuantizeMode mode) -> QuantizeMode;
     auto enable() -> bool;
     auto disable() -> bool;
     [[nodiscard]] auto noteCount() const -> int { return this->note_count; }
+
+    [[nodiscard]] auto high() const -> int { return this->currentNoteLow; }
+    [[nodiscard]] auto low() const -> int { return this->currentNoteLow; }
 
   private:
     bool keyboard[MIDI::KEYBOARD_SIZE];
@@ -34,7 +39,9 @@ class Quantizer {
     int range_high = MIDI::RANGE_HIGH;
     int note_count = 0;
     bool quantize_on = true;
-
+    int currentNoteLow = MIDI::RANGE_HIGH + 1;
+    int currentNoteHigh = MIDI::RANGE_LOW - 1;
+    
     RoundDirection round_direction = RoundDirection::UP;
     QuantizeMode mode = QuantizeMode::ALL_NOTES;
 };

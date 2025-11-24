@@ -140,6 +140,9 @@ auto Quantizer::addNote(int noteValue) -> int {
         this->note_count++;
     }
 
+    this->currentNoteHigh = std::max(this->currentNoteHigh, noteValue);
+    this->currentNoteLow = std::min(this->currentNoteLow, noteValue);
+
     return 0;
 }
 

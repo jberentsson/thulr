@@ -16,7 +16,9 @@ SCENARIO("one note") {
     quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
 
     GIVEN("note is added") {
+        REQUIRE(quantizer.noteCount() == 0);
         REQUIRE(quantizer.addNote(NoteC4) == 0);
+        REQUIRE(quantizer.noteCount() == 1);
 
         WHEN("we quantize nearby notes") {
             THEN("notes quantize correctly") {
