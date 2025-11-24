@@ -1,4 +1,5 @@
 #include "Quantizer.hpp"
+#include <iostream>
 
 Quantizer::Quantizer() {
     this->clear();
@@ -13,7 +14,7 @@ auto Quantizer::quantize(int noteValue) -> int {
     }
 
     // If current note is already a valid key.
-    if (this->keyboard[noteValue]) {
+    if (this->note_count == 0 || this->keyboard[noteValue]) {
         return noteValue;
     }
 
@@ -118,7 +119,7 @@ auto Quantizer::addNote(int noteValue) -> int {
     // Add note to the keyboard.
 
     // Return error if the note value is out of range.
-    if (noteValue < 0 || noteValue >= MIDI::KEYBOARD_SIZE) {
+    if (noteValue <= 0 || noteValue > MIDI::KEYBOARD_SIZE || this->note_count >= MIDI::KEYBOARD_SIZE) {
         return -1;
     }
 
@@ -127,21 +128,45 @@ auto Quantizer::addNote(int noteValue) -> int {
         int degree = noteValue % MIDI::OCTAVE;
 
         // Add this note degree in every octave
-        for (int octave = 0; octave < MIDI::KEYBOARD_OCTAVES; octave++) {
+        for (int octave = 0; octave <= MIDI::KEYBOARD_OCTAVES; octave++) {
             int current_note = (MIDI::OCTAVE * octave) + degree;
-            if (current_note < MIDI::KEYBOARD_SIZE) {
+            if (current_note < MIDI::KEYBOARD_SIZE && !this->keyboard[current_note]) {
                 this->keyboard[current_note] = true;
                 this->note_count++;
+            } else {
+                return -1;
             }
         }
-    } else {
+    } else if (this->mode == QuantizeMode::ALL_NOTES) {
         // ALL_NOTES mode - just add the single note
         this->keyboard[noteValue] = true;
         this->note_count++;
+    } else {
+        return -1;
     }
 
     this->currentNoteHigh = std::max(this->currentNoteHigh, noteValue);
     this->currentNoteLow = std::min(this->currentNoteLow, noteValue);
+
+    return 0;
+}
+
+auto Quantizer::deleteNote(int noteValue) -> int {
+    if (noteValue < 0 || noteValue > MIDI::RANGE_HIGH || this->note_count <= 0) {
+        return -1;
+    }
+
+    if (this->mode == QuantizeMode::ALL_NOTES) {
+        this->keyboard[noteValue] = 0;
+        this->note_count--;
+    } else if (this->mode == QuantizeMode::TWELVE_NOTES) {
+        int i = noteValue % MIDI::OCTAVE;
+        while (i < MIDI::KEYBOARD_SIZE){
+            this->keyboard[i] = 0;
+            this->note_count--;
+            i = i +  MIDI::OCTAVE;
+        }
+    }
 
     return 0;
 }

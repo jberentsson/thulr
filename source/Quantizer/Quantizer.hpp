@@ -17,19 +17,20 @@ class Quantizer {
 
     auto quantize(int noteValue) -> int;
     auto addNote(int noteValue) -> int;
+    auto deleteNote(int noteValue) -> int;
     auto setRange(int rangeLow, int rangeHigh) -> int;
     auto clear() -> int;
     auto getNote(int noteValue) -> Note;
     auto round(int noteValue) -> int;
     auto roundUp(int noteValue) -> int;
     auto roundDown(int noteValue) -> int;
-    [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->round_direction; }
     auto setRoundDirection(RoundDirection direction) -> RoundDirection;
     auto setMode(QuantizeMode mode) -> QuantizeMode;
     auto enable() -> bool;
     auto disable() -> bool;
-    [[nodiscard]] auto noteCount() const -> int { return this->note_count; }
 
+    [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->round_direction; }
+    [[nodiscard]] auto noteCount() const -> int { return this->note_count; }
     [[nodiscard]] auto high() const -> int { return this->currentNoteLow; }
     [[nodiscard]] auto low() const -> int { return this->currentNoteLow; }
 
@@ -43,5 +44,5 @@ class Quantizer {
     int currentNoteHigh = MIDI::RANGE_LOW - 1;
     
     RoundDirection round_direction = RoundDirection::UP;
-    QuantizeMode mode = QuantizeMode::ALL_NOTES;
+    QuantizeMode mode = QuantizeMode::TWELVE_NOTES;
 };
