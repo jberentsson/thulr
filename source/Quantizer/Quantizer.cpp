@@ -157,14 +157,13 @@ auto Quantizer::deleteNote(int noteValue) -> int {
     }
 
     if (this->mode == QuantizeMode::ALL_NOTES) {
-        this->keyboard[noteValue] = 0;
+        this->keyboard[noteValue] = false;
         this->note_count--;
     } else if (this->mode == QuantizeMode::TWELVE_NOTES) {
-        int i = noteValue % MIDI::OCTAVE;
-        while (i < MIDI::KEYBOARD_SIZE){
-            this->keyboard[i] = 0;
+        
+        for (int i = noteValue % MIDI::OCTAVE; i < MIDI::KEYBOARD_SIZE; i = i +  MIDI::OCTAVE){
+            this->keyboard[i] = false;
             this->note_count--;
-            i = i +  MIDI::OCTAVE;
         }
     }
 
