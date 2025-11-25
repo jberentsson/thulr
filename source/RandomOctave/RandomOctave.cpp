@@ -65,13 +65,12 @@ auto RandomOctave::removeAll() -> unsigned int {
     return count;
 }
 
-void RandomOctave::updateRange(int low, int high) { // NOLINT
+auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
     this->rangeLow_ = low;
     this->rangeHigh_ = high;
+    return 0;
 }
 
-void RandomOctave::setRandomRange(int low, int high) {} // NOLINT
-
-auto RandomOctave::getActiveNotes() -> const std::vector<std::unique_ptr<RandomOctave::ActiveNote>> & { // NOLINT
+auto RandomOctave::getActiveNotes() const -> const std::vector<std::unique_ptr<RandomOctave::ActiveNote>> & {
     return this->activeNotes_;
 }

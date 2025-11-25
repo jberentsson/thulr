@@ -30,13 +30,11 @@ class RandomOctave {
         auto note(int pitch, int velocity) -> int;
         auto clearNotesByPitchClass(int pitch) -> int;
         auto removeAll() -> unsigned int;
-
-        void updateRange(int low, int high);
-        void setRandomRange(int low, int high);
+        auto setRange(int low, int high) -> int;
 
         static auto getPitchClass(int pitch) -> int;
         static auto maxCapacity() -> int { return MAX_CAPACITY; }
         static auto minCapacity() -> int { return MIN_CAPACITY; }
 
-        [[nodiscard]] auto getActiveNotes() -> const std::vector<std::unique_ptr<ActiveNote>> &;
+        [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::unique_ptr<ActiveNote>> &;
 };
