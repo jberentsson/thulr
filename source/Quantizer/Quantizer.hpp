@@ -28,6 +28,8 @@ class Quantizer {
     auto setMode(QuantizeMode mode) -> QuantizeMode;
     auto enable() -> bool;
     auto disable() -> bool;
+    auto disableThrough() -> bool;
+    auto enableThrough() -> bool;
 
     [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->round_direction; }
     [[nodiscard]] auto noteCount() const -> int { return this->note_count; }
@@ -42,6 +44,7 @@ class Quantizer {
     bool quantize_on = true;
     int currentNoteLow = MIDI::RANGE_HIGH + 1;
     int currentNoteHigh = MIDI::RANGE_LOW - 1;
+    bool noteThrough = false;
     
     RoundDirection round_direction = RoundDirection::UP;
     QuantizeMode mode = QuantizeMode::TWELVE_NOTES;
