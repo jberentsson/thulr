@@ -1,16 +1,16 @@
-#include "Keyboard.hpp"
+#include "RandomOctave.hpp"
 #include "../Utils/MIDI.hpp"
 #include <ctime>
 
 using namespace MIDI;
 
-auto Keyboard::getPitchClass(int pitch) -> int { return pitch % MIDI::OCTAVE; }
+auto RandomOctave::getPitchClass(int pitch) -> int { return pitch % MIDI::OCTAVE; }
 
-auto Keyboard::clampPitchToRange(int pitch) const -> int {
+auto RandomOctave::clampPitchToRange(int pitch) const -> int {
     return std::max(rangeLow_, std::min(pitch, rangeHigh_));
 }
 
-auto Keyboard::randomizeNote(int pitch) -> int {
+auto RandomOctave::randomizeNote(int pitch) -> int {
     if (pitch < RANGE_LOW || pitch > RANGE_HIGH) {
         return -1;
     }
@@ -18,11 +18,11 @@ auto Keyboard::randomizeNote(int pitch) -> int {
     return clampPitchToRange(pitch);
 }
 
-Keyboard::Keyboard(int low, int high) : rangeLow_(low), rangeHigh_(high) { // NOLINT
+RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high) { // NOLINT
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
-auto Keyboard::note(int pitch, int velocity) -> int { // NOLINT
+auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
     if (pitch < RANGE_LOW || pitch > RANGE_HIGH || velocity < RANGE_LOW || velocity > RANGE_HIGH) {
         return 0;
     }
@@ -32,7 +32,7 @@ auto Keyboard::note(int pitch, int velocity) -> int { // NOLINT
         int processedPitch = randomizeNote(pitch);
 
         if (processedPitch >= RANGE_LOW && processedPitch <= RANGE_HIGH) {
-            this->activeNotes_.push_back(std::make_unique<Keyboard::ActiveNote>(pitch, processedPitch, velocity));
+            this->activeNotes_.push_back(std::make_unique<RandomOctave::ActiveNote>(pitch, processedPitch, velocity));
             return 1;
         }
     } else {
@@ -43,12 +43,12 @@ auto Keyboard::note(int pitch, int velocity) -> int { // NOLINT
     return 0;
 }
 
-auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
+auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
     int clearedCount = 0;
-    int targetPitchClass = Keyboard::getPitchClass(pitch);
+    int targetPitchClass = RandomOctave::getPitchClass(pitch);
 
     for (auto it = this->activeNotes_.begin(); it != this->activeNotes_.end();) {
-        if (Keyboard::getPitchClass((*it)->originalPitch()) == targetPitchClass) {
+        if (RandomOctave::getPitchClass((*it)->originalPitch()) == targetPitchClass) {
             it = this->activeNotes_.erase(it);
             clearedCount++;
         } else {
@@ -59,19 +59,19 @@ auto Keyboard::clearNotesByPitchClass(int pitch) -> int {
     return clearedCount;
 }
 
-auto Keyboard::removeAll() -> unsigned int {
+auto RandomOctave::removeAll() -> unsigned int {
     unsigned int count = this->activeNotes_.size();
     this->activeNotes_.clear();
     return count;
 }
 
-void Keyboard::updateRange(int low, int high) { // NOLINT
+void RandomOctave::updateRange(int low, int high) { // NOLINT
     this->rangeLow_ = low;
     this->rangeHigh_ = high;
 }
 
-void Keyboard::setRandomRange(int low, int high) {} // NOLINT
+void RandomOctave::setRandomRange(int low, int high) {} // NOLINT
 
-auto Keyboard::getActiveNotes() -> const std::vector<std::unique_ptr<Keyboard::ActiveNote>> & { // NOLINT
+auto RandomOctave::getActiveNotes() -> const std::vector<std::unique_ptr<RandomOctave::ActiveNote>> & { // NOLINT
     return this->activeNotes_;
 }
