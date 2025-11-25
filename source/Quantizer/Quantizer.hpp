@@ -1,9 +1,10 @@
 #pragma once
-#include "../Utils/MIDI.hpp"
+#include "Utils/MIDI.hpp"
 
 class Quantizer {
   public:
     enum : uint8_t {
+        // The highest MIDI value is 127.
         INVALID_NOTE = 255
     };
 
@@ -16,6 +17,7 @@ class Quantizer {
 
     auto quantize(int noteValue) -> int;
     auto addNote(int noteValue) -> int;
+    auto deleteNote(int noteValue) -> int;
     auto setRange(int rangeLow, int rangeHigh) -> int;
     auto clear() -> int;
     auto getNote(int noteValue) -> Note;
@@ -26,14 +28,24 @@ class Quantizer {
     auto setMode(QuantizeMode mode) -> QuantizeMode;
     auto enable() -> bool;
     auto disable() -> bool;
+    auto disableThrough() -> bool;
+    auto enableThrough() -> bool;
+
+    [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->round_direction; }
+    [[nodiscard]] auto noteCount() const -> int { return this->note_count; }
+    [[nodiscard]] auto high() const -> int { return this->currentNoteLow; }
+    [[nodiscard]] auto low() const -> int { return this->currentNoteLow; }
 
   private:
     bool keyboard[MIDI::KEYBOARD_SIZE];
-    int range_low = 0;
-    int range_high = 0;
+    int range_low = MIDI::RANGE_LOW;
+    int range_high = MIDI::RANGE_HIGH;
     int note_count = 0;
     bool quantize_on = true;
-
+    int currentNoteLow = MIDI::RANGE_HIGH + 1;
+    int currentNoteHigh = MIDI::RANGE_LOW - 1;
+    bool noteThrough = false;
+    
     RoundDirection round_direction = RoundDirection::UP;
-    QuantizeMode mode = QuantizeMode::ALL_NOTES;
+    QuantizeMode mode = QuantizeMode::TWELVE_NOTES;
 };

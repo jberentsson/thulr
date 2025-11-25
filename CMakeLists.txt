@@ -5,7 +5,7 @@ project("Thula" VERSION 1.0.0 LANGUAGES C CXX)
 set(SHARED_DIRS 
     BinaryCounter
     Counter
-    Keyboard
+    RandomOctave
     NCounter
     Quantizer
     ShiftRegister
