@@ -1,5 +1,5 @@
 #include "RandomOctave.hpp"
-#include "../Utils/MIDI.hpp"
+#include "Utils/MIDI.hpp"
 #include <ctime>
 
 using namespace MIDI;

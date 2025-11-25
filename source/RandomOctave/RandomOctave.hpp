@@ -1,5 +1,5 @@
 #pragma once
-#include "../Utils/MIDI.hpp"
+#include "Utils/MIDI.hpp"
 #include "ActiveNote/ActiveNote.hpp"
 #include <cstdint>
 #include <memory>
