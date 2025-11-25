@@ -52,7 +52,7 @@ jobs:
       run: |
         cmake --build build --config ${{ matrix.build_type }} --parallel 4
 
-    - name: Test
+    - name: Unit Tests
       run: |
         cd build
         ctest -C ${{ matrix.build_type }} --output-on-failure --timeout 30
