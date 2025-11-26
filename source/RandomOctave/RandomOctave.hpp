@@ -35,12 +35,12 @@ class RandomOctave {
         auto removeAll() -> unsigned int;
         auto setRange(int low, int high) -> int;
 
-        static auto getPitchClass(int pitch) -> int;
+        auto getPitchClass(int pitch) -> int;
         static auto maxCapacity() -> int { return MAX_CAPACITY; }
         static auto minCapacity() -> int { return MIN_CAPACITY; }
 
-        [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>> & { return this->notesActive_; }
-        [[nodiscard]] auto getQueuedNotes() const -> const std::vector<std::shared_ptr<ActiveNote>> & { return this->noteQueue_; }
+        [[nodiscard]] auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return notesActive_; }
+        [[nodiscard]] auto getQueuedNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return noteQueue_; }
 
         auto clearQueue() -> int;
 };

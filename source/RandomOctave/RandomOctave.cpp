@@ -1,6 +1,7 @@
 #include "RandomOctave.hpp"
 #include "Utils/MIDI.hpp"
 #include <ctime>
+#include <iostream>
 
 using namespace MIDI;
 
@@ -32,9 +33,13 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
         int processedPitch = randomizeNote(pitch);
 
         if (processedPitch >= RANGE_LOW && processedPitch <= RANGE_HIGH) {
+
             auto newNote = std::make_shared<RandomOctave::ActiveNote>(pitch, processedPitch, velocity);
-            this->notesActive_.push_back(newNote);
-            this->noteQueue_.push_back(newNote);
+
+            notesActive_.push_back(newNote);
+            noteQueue_.push_back(newNote);
+            
+            std::cout << "sizes " << notesActive_.size() << " " << noteQueue_.size() << "\n";
             return 1;
         }
     } else {
@@ -47,10 +52,10 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
 
 auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
     int clearedCount = 0;
-    int targetPitchClass = RandomOctave::getPitchClass(pitch);
+    int targetPitchClass = this->getPitchClass(pitch);
 
     for (auto it = this->notesActive_.begin(); it != this->notesActive_.end();) {
-        if (RandomOctave::getPitchClass((*it)->originalPitch()) == targetPitchClass) {
+        if (this->getPitchClass((*it)->originalPitch()) == targetPitchClass) {
             it = this->notesActive_.erase(it);
             clearedCount++;
         } else {
@@ -62,7 +67,7 @@ auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
 }
 
 auto RandomOctave::removeAll() -> unsigned int {
-    unsigned int count = this->notesActive_.size();
+    unsigned int count = notesActive_.size();
     this->notesActive_.clear();
     return count;
 }
@@ -74,9 +79,6 @@ auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
 }
 
 auto RandomOctave::clearQueue() -> int {
-    for (auto it = this->getQueuedNotes().begin(); it != this->getQueuedNotes().end();){
-        it = this->noteQueue_.erase(it);
-    }
-
+    this->noteQueue_.clear();
     return 0;
 }
