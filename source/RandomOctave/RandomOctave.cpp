@@ -41,7 +41,6 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
             notesActive_.push_back(newNote);
             noteQueue_.push_back(newNote);
             
-            std::cout << "sizes " << notesActive_.size() << " " << noteQueue_.size() << "\n";
             return 1;
         }
     } else {
