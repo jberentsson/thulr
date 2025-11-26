@@ -32,7 +32,9 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
         int processedPitch = randomizeNote(pitch);
 
         if (processedPitch >= RANGE_LOW && processedPitch <= RANGE_HIGH) {
-            this->notesActive_.push_back(std::make_unique<RandomOctave::ActiveNote>(pitch, processedPitch, velocity));
+            auto newNote = std::make_shared<RandomOctave::ActiveNote>(pitch, processedPitch, velocity);
+            this->notesActive_.push_back(newNote);
+            this->noteQueue_.push_back(newNote);
             return 1;
         }
     } else {
@@ -71,6 +73,10 @@ auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
     return 0;
 }
 
-auto RandomOctave::getActiveNotes() const -> const std::vector<std::shared_ptr<RandomOctave::ActiveNote>> & {
-    return this->notesActive_;
+auto RandomOctave::clearQueue() -> int {
+    for (auto it = this->getQueuedNotes().begin(); it != this->getQueuedNotes().end();){
+        it = this->noteQueue_.erase(it);
+    }
+
+    return 0;
 }
