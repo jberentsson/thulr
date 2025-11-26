@@ -35,7 +35,7 @@ class RandomOctave {
         auto removeAll() -> unsigned int;
         auto setRange(int low, int high) -> int;
 
-        auto getPitchClass(int pitch) -> int;
+        static auto  getPitchClass(int pitch) -> int;
         static auto maxCapacity() -> int { return MAX_CAPACITY; }
         static auto minCapacity() -> int { return MIN_CAPACITY; }
 

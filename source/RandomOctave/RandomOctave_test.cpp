@@ -83,9 +83,9 @@ TEST_CASE("RandomOctave multiple notes can be added") {
     const auto& activeNotes = randomOctave.getActiveNotes();
     REQUIRE(activeNotes.size() == notes.size());
     
-    for (const int note : notes) {
-        //REQUIRE(containsNote(randomOctave, note));
-    }
+    //for (const int note : notes) {
+    //    //REQUIRE(containsNote(randomOctave, note));
+    //}
 }
 
 TEST_CASE("RandomOctave multiple notes can be removed") {

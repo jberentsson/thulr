@@ -5,7 +5,9 @@
 
 using namespace MIDI;
 
-auto RandomOctave::getPitchClass(int pitch) -> int { return pitch % MIDI::OCTAVE; }
+auto RandomOctave::getPitchClass(int pitch) -> int {
+    return pitch % MIDI::OCTAVE;
+}
 
 auto RandomOctave::clampPitchToRange(int pitch) const -> int {
     return std::max(rangeLow_, std::min(pitch, rangeHigh_));
@@ -52,10 +54,10 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
 
 auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
     int clearedCount = 0;
-    int targetPitchClass = this->getPitchClass(pitch);
+    int targetPitchClass = RandomOctave::getPitchClass(pitch);
 
     for (auto it = this->notesActive_.begin(); it != this->notesActive_.end();) {
-        if (this->getPitchClass((*it)->originalPitch()) == targetPitchClass) {
+        if (RandomOctave::getPitchClass((*it)->originalPitch()) == targetPitchClass) {
             it = this->notesActive_.erase(it);
             clearedCount++;
         } else {
