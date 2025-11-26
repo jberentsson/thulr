@@ -1,5 +1,5 @@
 #pragma once
-#include "../Utils/MIDI.hpp"
+#include "Utils/MIDI.hpp"
 #include "ActiveNote/ActiveNote.hpp"
 #include <cstdint>
 #include <memory>
@@ -33,15 +33,14 @@ class RandomOctave {
         auto note(int pitch, int velocity) -> int;
         auto clearNotesByPitchClass(int pitch) -> int;
         auto removeAll() -> unsigned int;
-
         auto setRange(int low, int high) -> int;
 
         static auto getPitchClass(int pitch) -> int;
         static auto maxCapacity() -> int { return MAX_CAPACITY; }
         static auto minCapacity() -> int { return MIN_CAPACITY; }
 
-        [[nodiscard]] auto getActiveNotes() -> const std::vector<std::shared_ptr<ActiveNote>> & { return this->notesActive_; }
-        [[nodiscard]] auto getQueuedNotes() -> const std::vector<std::shared_ptr<ActiveNote>> & { return this->noteQueue_; }
+        [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>> & { return this->notesActive_; }
+        [[nodiscard]] auto getQueuedNotes() const -> const std::vector<std::shared_ptr<ActiveNote>> & { return this->noteQueue_; }
 
         auto clearQueue() -> int;
 };

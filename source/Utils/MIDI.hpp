@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Exceptions/Exceptions.hpp"
+#include "Utils/Exceptions.hpp"
 
 #include <cstdint>
 #include <stdexcept>

@@ -1,5 +1,5 @@
 #include "RandomOctave.hpp"
-#include "../Utils/MIDI.hpp"
+#include "Utils/MIDI.hpp"
 #include <ctime>
 
 using namespace MIDI;
@@ -22,14 +22,6 @@ RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high)
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
-auto RandomOctave::clearQueue() -> int {
-    for (auto it = this->noteQueue_.begin(); it != this->noteQueue_.end();) {
-        it = this->noteQueue_.erase(it);
-    }
-
-    return 0;
-}
-
 auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
     if (pitch < RANGE_LOW || pitch > RANGE_HIGH || velocity < RANGE_LOW || velocity > RANGE_HIGH) {
         return 0;
@@ -38,29 +30,25 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
     if (velocity > 0) {
         // Note ON
         int processedPitch = randomizeNote(pitch);
-        std::shared_ptr<RandomOctave::ActiveNote> newNote = std::make_shared<RandomOctave::ActiveNote>(pitch, processedPitch, velocity);
 
         if (processedPitch >= RANGE_LOW && processedPitch <= RANGE_HIGH) {
-            this->noteQueue_.push_back(newNote);
-            this->notesActive_.push_back(newNote);
-            return 0;
+            this->notesActive_.push_back(std::make_unique<RandomOctave::ActiveNote>(pitch, processedPitch, velocity));
+            return 1;
         }
     } else {
         // Note OFF
         return clearNotesByPitchClass(pitch);
     }
 
-    return 1;
+    return 0;
 }
 
 auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
     int clearedCount = 0;
     int targetPitchClass = RandomOctave::getPitchClass(pitch);
 
-    // Then in your loop:
     for (auto it = this->notesActive_.begin(); it != this->notesActive_.end();) {
         if (RandomOctave::getPitchClass((*it)->originalPitch()) == targetPitchClass) {
-            this->noteQueue_.push_back(*it);
             it = this->notesActive_.erase(it);
             clearedCount++;
         } else {
@@ -68,7 +56,7 @@ auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
         }
     }
 
-    return 0;
+    return clearedCount;
 }
 
 auto RandomOctave::removeAll() -> unsigned int {
@@ -80,6 +68,9 @@ auto RandomOctave::removeAll() -> unsigned int {
 auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
     this->rangeLow_ = low;
     this->rangeHigh_ = high;
-
     return 0;
+}
+
+auto RandomOctave::getActiveNotes() const -> const std::vector<std::shared_ptr<RandomOctave::ActiveNote>> & {
+    return this->notesActive_;
 }
