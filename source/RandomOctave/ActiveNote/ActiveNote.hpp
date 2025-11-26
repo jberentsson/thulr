@@ -8,7 +8,9 @@ class AbstractActiveNote {
 
     public:
         AbstractActiveNote(int originalPitch, int processedPitch, int velocity)  // NOLINT
-            : mOriginalPitch_(originalPitch), mProcessedPitch_(processedPitch), mVelocity_(velocity) {
+            : mOriginalPitch_(originalPitch), 
+              mProcessedPitch_(processedPitch), 
+              mVelocity_(velocity) {
         }
 
         [[nodiscard]] virtual auto originalPitch() const -> int {
