@@ -69,15 +69,13 @@ auto Counter::set(unsigned int value) -> unsigned int {
 
 auto Counter::preset() -> unsigned int {
     // Set the counter to the preset value.
-    this->counter = this->presetValue - 1;
-    std::cout << "The counter value is now " << this->counter << std::endl;
+    this->counter = this->presetValue;
     return this->counter;
 }
 
 auto Counter::setPreset(unsigned int presetValue) -> unsigned int {
     // Set a new preset value.
     this->presetValue = presetValue;
-    std::cout << "The preset value is now " << this->presetValue << std::endl;
     return this->presetValue;
 }
 
