@@ -225,4 +225,29 @@ TEST_CASE("assa"){
 
     REQUIRE(randomOctave.getQueuedNotes().size() == 3);
     REQUIRE(randomOctave.getActiveNotes().size() == 3);
+
+    // Remove G5
+    REQUIRE_NOTHROW(randomOctave.note( NoteG5, 0 ));
+
+    REQUIRE(randomOctave.getQueuedNotes().size() == 4);
+    REQUIRE(randomOctave.getActiveNotes().size() == 2);
+
+    // Remove E5
+    REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
+
+    REQUIRE(randomOctave.getQueuedNotes().size() == 5);
+    REQUIRE(randomOctave.getActiveNotes().size() == 1);
+
+    // Try to remove a note that is not active.
+    REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
+
+    // No change.
+    REQUIRE(randomOctave.getQueuedNotes().size() == 5);
+    REQUIRE(randomOctave.getActiveNotes().size() == 1);
+
+    // Remove C5
+    REQUIRE_NOTHROW(randomOctave.note( NoteC5, 0 ));
+
+    REQUIRE(randomOctave.getQueuedNotes().size() == 6);
+    REQUIRE(randomOctave.getActiveNotes().size() == 0);
 };

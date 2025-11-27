@@ -52,11 +52,16 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
 }
 
 auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
+    // Clear all active notes that share a class with pitch input.
     int clearedCount = 0;
     int targetPitchClass = RandomOctave::getPitchClass(pitch);
 
     for (auto it = this->notesActive_.begin(); it != this->notesActive_.end();) {
         if (RandomOctave::getPitchClass((*it)->originalPitch()) == targetPitchClass) {
+            // Add note off to the note queue.
+            this->noteQueue_.push_back(std::make_shared<RandomOctave::ActiveNote>((*it)->pitch(), 0, 0));
+            
+            // Remove the note from active notes.
             it = this->notesActive_.erase(it);
             clearedCount++;
         } else {
