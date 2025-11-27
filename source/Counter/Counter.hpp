@@ -29,6 +29,7 @@ protected:
     unsigned int counter = 0;
     unsigned int maxValue = MAX_VALUE;
     unsigned int presetValue = 0;
+    bool resetTriggered = false;
 
 public:
     explicit Counter(int n = MAX_VALUE) { this->maxValue = n; }
