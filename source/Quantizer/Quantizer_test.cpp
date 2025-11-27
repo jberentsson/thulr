@@ -212,4 +212,60 @@ SCENARIO("round with NEAREST") {
     }
 }
 
-// TODO: Make tests for UP_DOWN and DOWN_UP:
+SCENARIO("first we round UP then DOWN") {
+    Quantizer quantizer = Quantizer();
+    quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
+    quantizer.setRoundDirection(Quantizer::RoundDirection::UP_DOWN);
+    
+    GIVEN("no notes have been added") {
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteB1);
+        }
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB2) == NoteB2);
+        }
+    }
+
+    GIVEN("note C4 is added") {
+        quantizer.addNote(NoteC2);
+        quantizer.addNote(NoteC3);
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteC2);
+        }
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB3) == NoteC3);
+        }
+    }
+}
+
+SCENARIO("first we round DOWN then UP") {
+    Quantizer quantizer = Quantizer();
+    quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
+    quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN_UP);
+    
+    GIVEN("no notes have been added") {
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteB1);
+        }
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB2) == NoteB2);
+        }
+    }
+
+    GIVEN("note C4 is added") {
+        quantizer.addNote(NoteC2);
+        quantizer.addNote(NoteC3);
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB2) == NoteC2);
+        }
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteC2);
+        }
+    }
+}

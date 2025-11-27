@@ -11,6 +11,10 @@ auto Quantizer::round(int noteValue) -> int {
             return this->roundUp(noteValue);
         case RoundDirection::DOWN:
             return this->roundDown(noteValue);
+        case RoundDirection::DOWN_UP:
+            return this->roundDownUp(noteValue);
+        case RoundDirection::UP_DOWN:
+            return this->roundUpDown(noteValue);
         case RoundDirection::NEAREST:
             return this->roundNearest(noteValue);
         case RoundDirection::FURTHEST:
@@ -56,6 +60,26 @@ auto Quantizer::roundDown(int noteValue) -> int {
     }
 
     return INVALID_NOTE;
+}
+
+auto Quantizer::roundUpDown(int noteValue) -> int {
+    int upValue = this->roundUp(noteValue);
+
+    if (upValue == INVALID_NOTE){
+        return this->roundDown(MIDI::Notes::NoteG10);
+    }
+
+    return upValue;
+}
+
+auto Quantizer::roundDownUp(int noteValue) -> int {
+    int upValue = this->roundDown(noteValue);
+
+    if (upValue == INVALID_NOTE){
+        return this->roundUp(MIDI::Notes::NoteC0);
+    }
+
+    return upValue;
 }
 
 auto Quantizer::roundUpOverflow(int noteValue) -> int {
