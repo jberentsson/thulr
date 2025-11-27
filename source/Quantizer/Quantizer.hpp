@@ -9,7 +9,7 @@ class Quantizer {
         INVALID_NOTE = 255
     };
 
-    enum class RoundDirection : uint8_t { UP, DOWN, UP_OVERFLOW, DOWN_UNDERFLOW, NEAREST, FURTHEST };
+    enum class RoundDirection : uint8_t { UP, DOWN, UP_OVERFLOW, DOWN_UNDERFLOW, NEAREST, FURTHEST, UP_DOWN, DOWN_UP };
     enum class QuantizeMode : uint8_t { TWELVE_NOTES, ALL_NOTES };
     enum class Note : uint8_t { OFF, ON };
 
