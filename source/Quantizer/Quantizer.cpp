@@ -12,12 +12,12 @@ Quantizer::Quantizer() {
 
 auto Quantizer::quantize(int noteValue) -> int {
     // Check if the note is in range.
-    if (noteValue < MIDI::RANGE_LOW || noteValue >= MIDI::KEYBOARD_SIZE) {
+    if ((noteValue < MIDI::RANGE_LOW) || (noteValue >= MIDI::KEYBOARD_SIZE)) {
         return INVALID_NOTE;
     }
 
     // If current note is already a valid key.
-    if (this->note_count == 0 || this->keyboard[noteValue]) {
+    if ((this->note_count == 0) || this->keyboard[noteValue]) {
         return noteValue;
     }
 
@@ -33,7 +33,7 @@ auto Quantizer::quantize(int noteValue) -> int {
 
 auto Quantizer::getNote(int noteValue) -> Quantizer::Note {
     // Check if the note has been set.
-    if (noteValue < 0 || noteValue >= MIDI::KEYBOARD_SIZE) {
+    if ((noteValue < 0) || (noteValue >= MIDI::KEYBOARD_SIZE)) {
         return Note::OFF;
     }
 
@@ -44,7 +44,7 @@ auto Quantizer::addNote(int noteValue) -> int {
     // Add note to the keyboard.
 
     // Return error if the note value is out of range.
-    if (noteValue < 0 || noteValue > MIDI::KEYBOARD_SIZE || this->note_count >= MIDI::KEYBOARD_SIZE) {
+    if ((noteValue < 0) || (noteValue > MIDI::KEYBOARD_SIZE) || (this->note_count >= MIDI::KEYBOARD_SIZE)) {
         return -1;
     }
 
