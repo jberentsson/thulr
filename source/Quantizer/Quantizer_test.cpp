@@ -133,12 +133,81 @@ SCENARIO("set the range") {
     quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN);
     quantizer.setRange(NoteC2, NoteC3);
 
-    GIVEN("note C4 is added") {
+    GIVEN("note C2 is added") {
         quantizer.addNote(NoteC2);
 
         THEN("verify basic functionality") {
             REQUIRE(quantizer.quantize(NoteB1) == NoteC2);
             REQUIRE(quantizer.quantize(NoteDS3) == NoteC3);
+        }
+    }
+}
+
+SCENARIO("round with UP_OVERFLOW") {
+    Quantizer quantizer = Quantizer();
+    quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
+    quantizer.setRoundDirection(Quantizer::RoundDirection::UP_OVERFLOW);
+    
+    GIVEN("no notes have been added") {
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteB1);
+        }
+    }
+
+    GIVEN("note C2 is added") {
+        quantizer.addNote(NoteC2);
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteCS2) == NoteC2);
+        }
+    }
+}
+
+SCENARIO("round with DOWN_UNDERFLOW") {
+    Quantizer quantizer = Quantizer();
+    quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
+    quantizer.setRoundDirection(Quantizer::RoundDirection::DOWN_UNDERFLOW);
+
+    GIVEN("no notes have been added") {
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteB1);
+        }
+    }
+
+    GIVEN("note C4 is added") {
+        quantizer.addNote(NoteC2);
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteC2);
+        }
+    }
+}
+
+SCENARIO("round with NEAREST") {
+    Quantizer quantizer = Quantizer();
+    quantizer.setMode(Quantizer::QuantizeMode::ALL_NOTES);
+    quantizer.setRoundDirection(Quantizer::RoundDirection::NEAREST);
+    
+    GIVEN("no notes have been added") {
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteB1);
+        }
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB2) == NoteB2);
+        }
+    }
+
+    GIVEN("note C4 is added") {
+        quantizer.addNote(NoteC2);
+        quantizer.addNote(NoteC3);
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB1) == NoteC2);
+        }
+
+        THEN("we try to round") {
+            REQUIRE(quantizer.quantize(NoteB2) == NoteC3);
         }
     }
 }

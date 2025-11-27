@@ -42,5 +42,5 @@ class RandomOctave {
         [[nodiscard]] auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return notesActive_; }
         [[nodiscard]] auto getQueuedNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return noteQueue_; }
 
-        auto clearQueue() -> int;
+        auto clearQueue() -> void { this->noteQueue_.clear(); }
 };

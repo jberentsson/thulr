@@ -78,8 +78,3 @@ auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
     this->rangeHigh_ = high;
     return 0;
 }
-
-auto RandomOctave::clearQueue() -> int {
-    this->noteQueue_.clear();
-    return 0;
-}
