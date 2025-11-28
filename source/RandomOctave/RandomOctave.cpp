@@ -14,7 +14,7 @@ auto RandomOctave::clampPitchToRange(int pitch) const -> int {
 }
 
 auto RandomOctave::randomizeNote(int pitch) -> int {
-    if (pitch < RANGE_LOW || pitch > RANGE_HIGH) {
+    if (pitch < this->rangeLow_ || pitch > this->rangeHigh_) {
         return -1;
     }
     
@@ -25,12 +25,12 @@ auto RandomOctave::randomizeNote(int pitch) -> int {
     return clampPitchToRange(randomPitch);
 }
 
-RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high) { // NOLINT
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high), gen(std::random_device{}()) { // NOLINT
+
 }
 
 auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
-    if (pitch < RANGE_LOW || pitch > RANGE_HIGH || velocity < RANGE_LOW || velocity > RANGE_HIGH) {
+    if (pitch < this->rangeLow_ || pitch > this->rangeHigh_ || velocity < this->rangeLow_ || velocity > this->rangeHigh_) {
         return 0;
     }
 
