@@ -2,19 +2,19 @@
 #include "RandomOctave.hpp"
 #include <catch2/catch.hpp>
 #include <vector>
+#include <algorithm> 
 
 using namespace MIDI::Notes;
-/* 
+
 // Helper function to check if a note exists in active notes
 auto containsNote(const RandomOctave& randomOctave, int expectedNote) -> bool {
-    for (const auto& activeNote : randomOctave.getActiveNotes()) {
-        if (activeNote->pitch() == expectedNote) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(randomOctave.getActiveNotes().begin(), 
+                       randomOctave.getActiveNotes().end(),
+        [expectedNote](const auto& activeNote) -> auto {
+            return RandomOctave::getPitchClass(activeNote->pitch()) == RandomOctave::getPitchClass(expectedNote);
+        });
 }
- */
+ 
 TEST_CASE("RandomOctave starts empty") {
     RandomOctave randomOctave;
     REQUIRE(randomOctave.getActiveNotes().empty());
@@ -26,7 +26,7 @@ TEST_CASE("RandomOctave note on adds note") {
     
     REQUIRE(result == 1);
     REQUIRE(randomOctave.getActiveNotes().size() == 1);
-    //REQUIRE(containsNote(randomOctave, NoteC5));
+    REQUIRE(containsNote(randomOctave, NoteC5));
 }
 
 TEST_CASE("RandomOctave note off removes note") {
@@ -83,9 +83,9 @@ TEST_CASE("RandomOctave multiple notes can be added") {
     const auto& activeNotes = randomOctave.getActiveNotes();
     REQUIRE(activeNotes.size() == notes.size());
     
-    //for (const int note : notes) {
-    //    //REQUIRE(containsNote(randomOctave, note));
-    //}
+    for (const int note : notes) {
+        REQUIRE(containsNote(randomOctave, note));
+    }
 }
 
 TEST_CASE("RandomOctave multiple notes can be removed") {
@@ -159,9 +159,9 @@ TEST_CASE("RandomOctave remaining notes are correct after removal") {
     randomOctave.note(initialNotes[1], 0);
     
     // Check remaining notes exist
-/*     REQUIRE(containsNote(randomOctave, initialNotes[2]));
+    REQUIRE(containsNote(randomOctave, initialNotes[2]));
     REQUIRE(containsNote(randomOctave, additionalNotes[0]));
-    REQUIRE(containsNote(randomOctave, additionalNotes[1])); */
+    REQUIRE(containsNote(randomOctave, additionalNotes[1]));
 }
 
 TEST_CASE("RandomOctave removed notes are gone") {
@@ -178,8 +178,8 @@ TEST_CASE("RandomOctave removed notes are gone") {
     randomOctave.note(initialNotes[1], 0);
     
     // Check removed notes are gone
-/*     REQUIRE_FALSE(containsNote(randomOctave, initialNotes[0]));
-    REQUIRE_FALSE(containsNote(randomOctave, initialNotes[1])); */
+    REQUIRE_FALSE(containsNote(randomOctave, initialNotes[0]));
+    REQUIRE_FALSE(containsNote(randomOctave, initialNotes[1]));
 }
 
 TEST_CASE("RandomOctave zero velocity note does nothing") {
@@ -198,7 +198,7 @@ TEST_CASE("RandomOctave removing non-existent note does nothing") {
     randomOctave.note(NoteD5, 0); // Remove non-existent note
     
     REQUIRE(randomOctave.getActiveNotes().size() == beforeSize);
-/*     REQUIRE(containsNote(randomOctave, NoteC5)); */
+    REQUIRE(containsNote(randomOctave, NoteC5));
 }
 
 TEST_CASE("RandomOctave duplicate note behavior") {
@@ -225,29 +225,46 @@ TEST_CASE("assa"){
 
     REQUIRE(randomOctave.getQueuedNotes().size() == 3);
     REQUIRE(randomOctave.getActiveNotes().size() == 3);
+    
+    REQUIRE(randomOctave.getQueuedNotes().at(0)->velocity() == 100);
+    REQUIRE(randomOctave.getQueuedNotes().at(1)->velocity() == 100);
+    REQUIRE(randomOctave.getQueuedNotes().at(2)->velocity() == 100);
+
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
+    REQUIRE(randomOctave.getQueuedNotes().empty());
 
     // Remove G5
     REQUIRE_NOTHROW(randomOctave.note( NoteG5, 0 ));
 
-    REQUIRE(randomOctave.getQueuedNotes().size() == 4);
+    REQUIRE(randomOctave.getQueuedNotes().size() == 1);
     REQUIRE(randomOctave.getActiveNotes().size() == 2);
 
     // Remove E5
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
-    REQUIRE(randomOctave.getQueuedNotes().size() == 5);
+    REQUIRE(randomOctave.getQueuedNotes().size() == 2);
     REQUIRE(randomOctave.getActiveNotes().size() == 1);
 
     // Try to remove a note that is not active.
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
     // No change.
-    REQUIRE(randomOctave.getQueuedNotes().size() == 5);
+    REQUIRE(randomOctave.getQueuedNotes().size() == 3);
     REQUIRE(randomOctave.getActiveNotes().size() == 1);
 
     // Remove C5
     REQUIRE_NOTHROW(randomOctave.note( NoteC5, 0 ));
 
-    REQUIRE(randomOctave.getQueuedNotes().size() == 6);
-    REQUIRE(randomOctave.getActiveNotes().size() == 0);
+    REQUIRE(randomOctave.getQueuedNotes().size() == 4);
+    
+    REQUIRE(randomOctave.getQueuedNotes().at(0)->velocity() == 0);
+    REQUIRE(randomOctave.getQueuedNotes().at(1)->velocity() == 0);
+    REQUIRE(randomOctave.getQueuedNotes().at(2)->velocity() == 0);
+
+    REQUIRE(randomOctave.getQueuedNotes().at(0)->pitch() % 12 == 0);
+
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
+
+    REQUIRE(randomOctave.getQueuedNotes().empty());
+    REQUIRE(randomOctave.getActiveNotes().empty());
 };

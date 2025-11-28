@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include <random>
 
 class RandomOctave {
     public:
@@ -21,6 +22,9 @@ class RandomOctave {
         [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
 
         auto randomizeNote(int pitch) -> int;
+        
+        std::random_device rd;
+        std::mt19937 gen;
 
     public:
         enum : std::uint8_t {
@@ -39,8 +43,8 @@ class RandomOctave {
         static auto maxCapacity() -> int { return MAX_CAPACITY; }
         static auto minCapacity() -> int { return MIN_CAPACITY; }
 
-        [[nodiscard]] auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return notesActive_; }
-        [[nodiscard]] auto getQueuedNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return noteQueue_; }
+        [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>> & { return notesActive_; }
+        [[nodiscard]] auto getQueuedNotes() const -> const std::vector<std::shared_ptr<ActiveNote>> & { return noteQueue_; }
 
         auto clearQueue() -> void { this->noteQueue_.clear(); }
 };

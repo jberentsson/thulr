@@ -1,6 +1,6 @@
 #include "Quantizer.hpp"
-#include "QuantizerMisc.cpp"
-#include "QuantizerStrategies.cpp"
+#include "QuantizerMisc.cpp" // NOLINT
+#include "QuantizerStrategies.cpp" // NOLINT
 
 #include <iostream>
 

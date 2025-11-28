@@ -2,6 +2,7 @@
 #include "Utils/MIDI.hpp"
 #include <ctime>
 #include <iostream>
+#include <random>
 
 using namespace MIDI;
 
@@ -14,11 +15,15 @@ auto RandomOctave::clampPitchToRange(int pitch) const -> int {
 }
 
 auto RandomOctave::randomizeNote(int pitch) -> int {
-    if (pitch < RANGE_LOW || pitch > RANGE_HIGH) {
-        return -1;
-    }
+    //if (pitch < RANGE_LOW || pitch > RANGE_HIGH) {
+    //    return -1;
+    //}
 
-    return clampPitchToRange(pitch);
+    std::uniform_int_distribution<> dist(0, 10); // NOLINT
+    
+    int randomInt = dist(gen);
+    int randomPitch = RandomOctave::getPitchClass(pitch) + (randomInt * MIDI::OCTAVE);
+    return clampPitchToRange(randomPitch);
 }
 
 RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high) { // NOLINT
@@ -67,6 +72,10 @@ auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
         } else {
             ++it;
         }
+    }
+
+    if (clearedCount == 0) {
+         this->noteQueue_.push_back(std::make_shared<RandomOctave::ActiveNote>(pitch, 0, 0));
     }
 
     return clearedCount;
