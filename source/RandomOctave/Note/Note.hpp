@@ -6,7 +6,7 @@
 #include "ActiveNote.hpp"
 #include "Utils/MIDI.hpp"
 
-#define MAX_NOTES 4
+#define MAX_NOTES 4 // NOLINT
 
 class AbstractNote {
 private:
@@ -76,12 +76,12 @@ public:
         return this->activeNotes.size();
     }
 
-    void setRange(int low, int high) {
+    auto setRange(int low, int high) -> void { // NOLINT
         rangeLow_ = low;
         rangeHigh_ = high;
     }
 
-    bool contains(int note) {
+    auto contains(int note) -> bool {
         for (const auto &activeNote : activeNotes) {
             if (activeNote->pitch() == note) {
                 return true;

@@ -10,7 +10,7 @@
 using namespace MIDI::Notes;
 
 SCENARIO("test the note class") {
-    AbstractNote noteTest = AbstractNote(48);
+    AbstractNote noteTest = AbstractNote(48); // NOLINT
     
     REQUIRE(noteTest.getActiveNoteCount() == 0);
 
@@ -43,12 +43,13 @@ SCENARIO("test the keyboard class") {
     REQUIRE(!keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getNoteQueue().size() == 4);
     REQUIRE(keyboardTest.clearQueue() == 0);
-    REQUIRE(keyboardTest.getNoteQueue().size() == 0);
+    REQUIRE(keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getActiveNoteCount() == 4);
     REQUIRE(keyboardTest.add(48, 60, 0) != nullptr);
     REQUIRE(keyboardTest.getNoteQueue().size() == 1);
+    REQUIRE(keyboardTest.getActiveNoteCount() == 3);
     REQUIRE(keyboardTest.clearQueue() == 0);
-    REQUIRE(keyboardTest.getNoteQueue().size() == 0);
+    REQUIRE(keyboardTest.getNoteQueue().empty());
 }
 
 SCENARIO("RandomOctave starts empty") {
@@ -88,10 +89,10 @@ SCENARIO("RandomOctave clearNotesByPitchClass works") {
     REQUIRE(randomOctave.getActiveNotes().empty());
     //REQUIRE(!randomOctave.getNoteQueue().empty());
     //REQUIRE(randomOctave.getNoteQueue().size() == 2);
-    //REQUIRE_NOTHROW(randomOctave.clearQueue());
-    //REQUIRE(randomOctave.getActiveNotes().empty());
-    //REQUIRE(randomOctave.getNoteQueue().empty());
-    //REQUIRE_NOTHROW(randomOctave.clearQueue());
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
+    REQUIRE(randomOctave.getActiveNotes().empty());
+    REQUIRE(randomOctave.getNoteQueue().empty());
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
 }
 
 SCENARIO("RandomOctave removeAll clears all notes") {
@@ -179,7 +180,7 @@ SCENARIO("RandomOctave removing notes decreases count") {
     randomOctave.note(initialNotes[0], 0);
     randomOctave.note(initialNotes[1], 0);
     
-    //REQUIRE(randomOctave.getActiveNoteCount() == initialNotes.size() + additionalNotes.size() - 2);
+    REQUIRE(randomOctave.getActiveNoteCount() == initialNotes.size() + additionalNotes.size() - 2);
 }
 
 SCENARIO("RandomOctave remaining notes are correct after removal") {
@@ -280,35 +281,35 @@ SCENARIO("assa"){
     // Remove G5
     REQUIRE_NOTHROW(randomOctave.note( NoteG5, 0 ));
 
-    //REQUIRE(randomOctave.getNoteQueue().size() == 1);
-    //REQUIRE(randomOctave.getActiveNoteCount() == 2);
+    REQUIRE(randomOctave.getNoteQueue().size() == 1);
+    REQUIRE(randomOctave.getActiveNoteCount() == 2);
 
     // Remove E5
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
-    //REQUIRE(randomOctave.getNoteQueue().size() == 2);
-    //REQUIRE(randomOctave.getActiveNoteCount() == 1);
+    REQUIRE(randomOctave.getNoteQueue().size() == 2);
+    REQUIRE(randomOctave.getActiveNoteCount() == 1);
 
     // Try to remove a note that is not active.
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
     // No change.
-    //REQUIRE(randomOctave.getNoteQueue().size() == 3);
-    //REQUIRE(randomOctave.getActiveNoteCount() == 1);
+    REQUIRE(randomOctave.getNoteQueue().size() == 3);
+    REQUIRE(randomOctave.getActiveNoteCount() == 1);
 
     // Remove C5
     REQUIRE_NOTHROW(randomOctave.note( NoteC5, 0 ));
 
-    //REQUIRE(randomOctave.getNoteQueue().size() == 4);
+    REQUIRE(randomOctave.getNoteQueue().size() == 4);
     
-    //REQUIRE(randomOctave.getNoteQueue().at(0)->velocity() == 0);
-    //REQUIRE(randomOctave.getNoteQueue().at(1)->velocity() == 0);
-    //REQUIRE(randomOctave.getNoteQueue().at(2)->velocity() == 0);
+    REQUIRE(randomOctave.getNoteQueue().at(0)->velocity() == 0);
+    REQUIRE(randomOctave.getNoteQueue().at(1)->velocity() == 0);
+    REQUIRE(randomOctave.getNoteQueue().at(2)->velocity() == 0);
 
     //REQUIRE(randomOctave.getNoteQueue().at(0)->pitch() % 12 == 0);
 
-    //REQUIRE_NOTHROW(randomOctave.clearQueue());
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
 
-    //REQUIRE(randomOctave.getNoteQueue().empty());
-    //REQUIRE(randomOctave.getActiveNotes().empty());
+    REQUIRE(randomOctave.getNoteQueue().empty());
+    REQUIRE(randomOctave.getActiveNotes().empty());
 };

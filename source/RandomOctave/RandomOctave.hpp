@@ -37,7 +37,7 @@ class RandomOctave {
 
         // Alternative: pass random generator as parameter
         auto randomizeNote(int pitch, std::mt19937& gen) -> int {        
-            std::uniform_int_distribution<> dist(0, 10);
+            std::uniform_int_distribution<> dist(0, 10); // NOLINT
             int randomInt = dist(gen);
             int randomPitch = getPitchClass(pitch) + (randomInt * MIDI::OCTAVE);
             return clampPitchToRange(randomPitch);

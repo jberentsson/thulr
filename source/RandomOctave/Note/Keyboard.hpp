@@ -2,8 +2,8 @@
 #include <memory>
 #include <vector>
 #include <iostream>
-#include "Note/ActiveNote.hpp"
-#include "Note/Note.hpp"
+#include "RandomOctave/Note/ActiveNote.hpp"
+#include "RandomOctave/Note/Note.hpp"
 
 class Keyboard {
 private:
@@ -25,17 +25,18 @@ public:
 
     auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote> {
         if (originalPitch >= 0 && originalPitch < keyboard_.size() && (originalPitch % MIDI::OCTAVE == randomPitch % MIDI::OCTAVE)) {
+            int noteCount = keyboard_[originalPitch].getActiveNoteCount();
             std::shared_ptr<ActiveNote> result =  keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             
-            if (result != NULL) {
+            if (result != nullptr) {
                 noteQueue_.push_back(result);
-                this->activeNoteCount_++;
+                this->activeNoteCount_ += (keyboard_[originalPitch].getActiveNoteCount() - noteCount);
             }
 
             return result;
         }
 
-        return NULL;
+        return nullptr;
     }
 
     auto clear(int note) -> int {
