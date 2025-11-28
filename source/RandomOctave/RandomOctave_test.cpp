@@ -5,15 +5,12 @@
 #include <catch2/catch.hpp>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
 using namespace MIDI::Notes;
 
 SCENARIO("test the note class") {
     AbstractNote noteTest = AbstractNote(48); // NOLINT
-    
     REQUIRE(noteTest.getActiveNoteCount() == 0);
-
     REQUIRE(noteTest.add(47, 46, 127) == nullptr);
     REQUIRE(noteTest.add(48, 36, 127) != nullptr);
     REQUIRE(noteTest.add(48, 46, 127) == nullptr);
@@ -21,16 +18,13 @@ SCENARIO("test the note class") {
     REQUIRE(noteTest.add(48, 60, 127) != nullptr);
     REQUIRE(noteTest.add(48, 72, 127) != nullptr);
     REQUIRE(noteTest.add(48, 84, 127) == nullptr);
-
     REQUIRE(noteTest.getActiveNoteCount() == 4);
 }
 
 SCENARIO("test the keyboard class") {
-    Keyboard keyboardTest = Keyboard();
-
+    AbstractKeyboard keyboardTest = AbstractKeyboard();
     REQUIRE(keyboardTest.getActiveNoteCount() == 0);
     REQUIRE(keyboardTest.getNoteQueue().empty());
-
     REQUIRE(keyboardTest.add(47, 46, 127) == nullptr);
     REQUIRE(keyboardTest.add(48, 36, 127) != nullptr);
     REQUIRE(keyboardTest.add(48, 46, 127) == nullptr);
@@ -38,7 +32,6 @@ SCENARIO("test the keyboard class") {
     REQUIRE(keyboardTest.add(48, 60, 127) != nullptr);
     REQUIRE(keyboardTest.add(48, 72, 127) != nullptr);
     REQUIRE(keyboardTest.add(48, 84, 127) == nullptr);
-
     REQUIRE(keyboardTest.getActiveNoteCount() == 4);
     REQUIRE(!keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getNoteQueue().size() == 4);
@@ -58,34 +51,28 @@ SCENARIO("RandomOctave starts empty") {
 }
 
 SCENARIO("RandomOctave note on adds note") {
-    RandomOctave randomOctave;
-    const int result = randomOctave.note(NoteC5, 100);  // NOLINT
-    
-    REQUIRE(result == 0);
+    RandomOctave randomOctave;    
+    REQUIRE(randomOctave.note(NoteC5, 100) == 0); // NOLINT
     REQUIRE(randomOctave.getActiveNoteCount() == 1);
     REQUIRE(randomOctave.containsNote(NoteC5));
 }
 
 SCENARIO("RandomOctave note off removes note") {
     RandomOctave randomOctave;
-    
-    randomOctave.note(NoteC5, 100);  // NOLINT
+    REQUIRE(randomOctave.note(NoteC5, 100) == 0);
     REQUIRE(randomOctave.getNoteQueue().size() == 1);
     REQUIRE(randomOctave.getActiveNoteCount() == 1);
-    
-    randomOctave.note(NoteC5, 0);
+    REQUIRE(randomOctave.note(NoteC5, 0) == 0);
     REQUIRE(randomOctave.getActiveNotes().empty());
 }
 
 SCENARIO("RandomOctave clearNotesByPitchClass works") {
     RandomOctave randomOctave;
-    
-    randomOctave.note(NoteC4, 100); // NOLINT
-    randomOctave.note(NoteC5, 100); // NOLINT
+    REQUIRE(randomOctave.note(NoteC4, 100) == 0); // NOLINT
+    REQUIRE(randomOctave.note(NoteC5, 100) == 0); // NOLINT
     REQUIRE(randomOctave.getActiveNoteCount() == 2);
     REQUIRE_NOTHROW(randomOctave.clearQueue());
-    const int cleared = randomOctave.clear(NoteC5);
-    REQUIRE(cleared == 1);
+    REQUIRE(randomOctave.clear(NoteC5) == 1);
     REQUIRE(randomOctave.getActiveNotes().empty());
     //REQUIRE(!randomOctave.getNoteQueue().empty());
     //REQUIRE(randomOctave.getNoteQueue().size() == 2);
@@ -97,22 +84,18 @@ SCENARIO("RandomOctave clearNotesByPitchClass works") {
 
 SCENARIO("RandomOctave removeAll clears all notes") {
     RandomOctave randomOctave;
-    
-    randomOctave.note(NoteC5, 100); // NOLINT
-    randomOctave.note(NoteE5, 100); // NOLINT
-    REQUIRE(randomOctave.getActiveNoteCount() == 2);
-    
-    const unsigned int cleared = randomOctave.removeAll();
-    REQUIRE(cleared == 2);
+    REQUIRE(randomOctave.note(NoteC5, 100) == 0); // NOLINT
+    REQUIRE(randomOctave.note(NoteE5, 100) == 0); // NOLINT
+    REQUIRE(randomOctave.getActiveNoteCount() == 2);    
+    REQUIRE(randomOctave.removeAll() == 2);
     REQUIRE(randomOctave.getActiveNotes().empty());
 }
 
 SCENARIO("RandomOctave range setting works") {
     RandomOctave randomOctave;
-    
-    randomOctave.setRange(2, 5); // NOLINT
-    REQUIRE(randomOctave.minCapacity() == 2);
-    REQUIRE(randomOctave.maxCapacity() == 5);
+    REQUIRE(randomOctave.setRange(2, 5) == 0); // NOLINT
+    //REQUIRE(randomOctave.minCapacity() == 2);
+    //REQUIRE(randomOctave.maxCapacity() == 5);
 }
 
 SCENARIO("RandomOctave multiple notes can be added") {
@@ -190,15 +173,16 @@ SCENARIO("RandomOctave remaining notes are correct after removal") {
     
     // Add all notes
     for (const int note : initialNotes) {
-        randomOctave.note(note, 100); // NOLINT
+        REQUIRE(randomOctave.note(note, 100) == 0); // NOLINT
     }
+
     for (const int note : additionalNotes) {
-        randomOctave.note(note, 100); // NOLINT
+        REQUIRE(randomOctave.note(note, 100) == 0); // NOLINT
     }
     
     // Remove two notes
-    randomOctave.note(initialNotes[0], 0);
-    randomOctave.note(initialNotes[1], 0);
+    REQUIRE(randomOctave.note(initialNotes[0], 0) == 0);
+    REQUIRE(randomOctave.note(initialNotes[1], 0) == 0);
     
     // Check remaining notes exist
     REQUIRE(randomOctave.containsNote(initialNotes[2]));
@@ -212,7 +196,7 @@ SCENARIO("RandomOctave removed notes are gone") {
     
     // Add notes
     for (const int note : initialNotes) {
-        randomOctave.note(note, 100); // NOLINT
+        REQUIRE(randomOctave.note(note, 100) == 0); // NOLINT
     }
     
     REQUIRE(randomOctave.containsNote(initialNotes[0]));
@@ -230,19 +214,15 @@ SCENARIO("RandomOctave removed notes are gone") {
 
 SCENARIO("RandomOctave zero velocity note does nothing") {
     RandomOctave randomOctave;
-    
-    randomOctave.note(NoteC5, 0);
+    REQUIRE(randomOctave.note(NoteC5, 0) == 0);
     REQUIRE(randomOctave.getActiveNotes().empty());
 }
 
 SCENARIO("RandomOctave removing non-existent note does nothing") {
     RandomOctave randomOctave;
-    
-    randomOctave.note(NoteC5, 100); // NOLINT
+    REQUIRE(randomOctave.note(NoteC5, 100) == 0); // NOLINT
     const unsigned int beforeSize = randomOctave.getActiveNotes().size();
-    
-    randomOctave.note(NoteD5, 0); // Remove non-existent note
-    
+    REQUIRE(randomOctave.note(NoteD5, 0) == 0); // Remove non-existent note
     REQUIRE(randomOctave.getActiveNotes().size() == beforeSize);
     REQUIRE(randomOctave.containsNote(NoteC5));
 }

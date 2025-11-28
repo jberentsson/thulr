@@ -31,10 +31,10 @@ public:
             originalPitch != this->mPitch_ || 
            (this->activeNotes.size() >= MAX_NOTES || 
             this->contains(randomPitch)) && velocity > 0) {
-            return NULL;
+            return nullptr;
         }
 
-        auto newNote = std::make_shared<AbstractActiveNote>(originalPitch, randomPitch, velocity);
+        auto newNote = std::make_shared<ActiveNote>(originalPitch, randomPitch, velocity);
         
         if (MIDI::RANGE_LOW < velocity && velocity <= MIDI::RANGE_HIGH) {
             activeNotes.push_back(newNote);
@@ -46,33 +46,27 @@ public:
     }
 
     auto removeByPitch(int pitch) -> void {
-        auto it = std::find_if(activeNotes.begin(), activeNotes.end(),
-            [pitch](const auto& note) {
+        auto currentActiveNote = std::find_if(activeNotes.begin(), activeNotes.end(),
+            [pitch](const auto& note) -> bool {
                 return note->pitch() == pitch;
             });
         
-        if (it != activeNotes.end()) {
-            activeNotes.erase(it);
+        if (currentActiveNote != activeNotes.end()) {
+            activeNotes.erase(currentActiveNote);
         }
     }
 
-    auto clear() -> int {
-        int activeCount = activeNotes.size();
+    auto clear() -> size_t {
+        size_t activeCount = activeNotes.size();
         activeNotes.clear();
         return activeCount;
     }
 
-    // Const version for read-only access
-    [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<AbstractActiveNote>>& {
+    [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>>& {
         return activeNotes;
     }
 
-    // Non-const version for modification
-    auto getActiveNotes() -> std::vector<std::shared_ptr<AbstractActiveNote>>& {
-        return this->activeNotes;
-    }
-
-    auto getActiveNoteCount() -> int {
+    auto getActiveNoteCount() -> size_t {
         return this->activeNotes.size();
     }
 
