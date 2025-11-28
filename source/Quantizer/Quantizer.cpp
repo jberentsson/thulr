@@ -2,8 +2,6 @@
 #include "QuantizerMisc.cpp" // NOLINT
 #include "QuantizerStrategies.cpp" // NOLINT
 
-#include <iostream>
-
 Quantizer::Quantizer() {
     this->clear();
     this->range_low = MIDI::RANGE_LOW;

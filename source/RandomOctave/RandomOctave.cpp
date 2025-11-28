@@ -1,7 +1,6 @@
 #include "RandomOctave.hpp"
 #include "Utils/MIDI.hpp"
 #include <ctime>
-#include <iostream>
 #include <random>
 
 using namespace MIDI;
@@ -15,10 +14,10 @@ auto RandomOctave::clampPitchToRange(int pitch) const -> int {
 }
 
 auto RandomOctave::randomizeNote(int pitch) -> int {
-    //if (pitch < RANGE_LOW || pitch > RANGE_HIGH) {
-    //    return -1;
-    //}
-
+    if (pitch < RANGE_LOW || pitch > RANGE_HIGH) {
+        return -1;
+    }
+    
     std::uniform_int_distribution<> dist(0, 10); // NOLINT
     
     int randomInt = dist(gen);
@@ -50,13 +49,13 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
         }
     } else {
         // Note OFF
-        return clearNotesByPitchClass(pitch);
+        return clearNotesByPitchClass(pitch, velocity);
     }
 
     return 0;
 }
 
-auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
+auto RandomOctave::clearNotesByPitchClass(int pitch, int velocity) -> int { // NOLINT
     // Clear all active notes that share a class with pitch input.
     int clearedCount = 0;
     int targetPitchClass = RandomOctave::getPitchClass(pitch);
@@ -75,7 +74,7 @@ auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
     }
 
     if (clearedCount == 0) {
-         this->noteQueue_.push_back(std::make_shared<RandomOctave::ActiveNote>(pitch, 0, 0));
+        this->noteQueue_.push_back(std::make_shared<RandomOctave::ActiveNote>(pitch, pitch, 0));
     }
 
     return clearedCount;

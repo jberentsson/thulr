@@ -1,8 +1,6 @@
 #include "Quantizer.hpp"
 #include "Utils/MIDI.hpp"
 
-#include <iostream>
-
 auto Quantizer::round(int noteValue) -> int {
     // Round depending on what rounding mode is active.
 

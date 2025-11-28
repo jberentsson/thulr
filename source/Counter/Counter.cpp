@@ -1,5 +1,4 @@
 #include "Counter.hpp"
-#include <iostream>
 
 auto Counter::reset() -> unsigned int {
     // Reset counter to zero.

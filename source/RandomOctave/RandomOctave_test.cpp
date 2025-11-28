@@ -46,10 +46,16 @@ TEST_CASE("RandomOctave clearNotesByPitchClass works") {
     randomOctave.note(NoteC4, 100); // NOLINT
     randomOctave.note(NoteC5, 100); // NOLINT
     REQUIRE(randomOctave.getActiveNotes().size() == 2);
-    
-    const int cleared = randomOctave.clearNotesByPitchClass(NoteC5);
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
+    const int cleared = randomOctave.clearNotesByPitchClass(NoteC5, 0);
     REQUIRE(cleared == 2);
     REQUIRE(randomOctave.getActiveNotes().empty());
+    REQUIRE(!randomOctave.getQueuedNotes().empty());
+    REQUIRE(randomOctave.getQueuedNotes().size() == 2);
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
+    REQUIRE(randomOctave.getActiveNotes().empty());
+    REQUIRE(randomOctave.getQueuedNotes().empty());
+    REQUIRE_NOTHROW(randomOctave.clearQueue());
 }
 
 TEST_CASE("RandomOctave removeAll clears all notes") {
@@ -207,7 +213,6 @@ TEST_CASE("RandomOctave duplicate note behavior") {
     GIVEN("Two identical notes are played.") {
         randomOctave.note(NoteC5, 100); // NOLINT
         randomOctave.note(NoteC5, 100); // NOLINT
-        
         
         THEN("One or two notes can be active."){
             const auto size = randomOctave.getActiveNotes().size();

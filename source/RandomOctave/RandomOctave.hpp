@@ -35,7 +35,7 @@ class RandomOctave {
         explicit RandomOctave(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
 
         auto note(int pitch, int velocity) -> int;
-        auto clearNotesByPitchClass(int pitch) -> int;
+        auto clearNotesByPitchClass(int pitch, int velocity) -> int;
         auto removeAll() -> unsigned int;
         auto setRange(int low, int high) -> int;
 
