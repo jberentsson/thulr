@@ -31,7 +31,7 @@ RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high)
 
 auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
     if (pitch < this->rangeLow_ || pitch > this->rangeHigh_ || velocity < this->rangeLow_ || velocity > this->rangeHigh_) {
-        return 0;
+        return -1;
     }
 
     if (velocity > 0) {

@@ -2,17 +2,20 @@
 #include "RandomOctave.hpp"
 #include <catch2/catch.hpp>
 #include <vector>
-#include <algorithm> 
+#include <algorithm>
+#include <iostream>
 
 using namespace MIDI::Notes;
 
-// Helper function to check if a note exists in active notes
+// Helper function to check if a note exists in active notes.
 auto containsNote(const RandomOctave& randomOctave, int expectedNote) -> bool {
-    return std::any_of(randomOctave.getActiveNotes().begin(), 
-                       randomOctave.getActiveNotes().end(),
-        [expectedNote](const auto& activeNote) -> auto {
-            return RandomOctave::getPitchClass(activeNote->pitch()) == RandomOctave::getPitchClass(expectedNote);
-        });
+    for (const auto &activeNote: randomOctave.getActiveNotes()) { // NOLINT
+        if (activeNote->originalPitch() == expectedNote) {
+            return true;
+        }
+    }
+
+    return false;
 }
  
 TEST_CASE("RandomOctave starts empty") {
