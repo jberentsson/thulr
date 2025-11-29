@@ -1,4 +1,5 @@
 #include "Quantizer.hpp"
+
 auto Quantizer::disable() -> bool {
     // Disable the quantizer.
     this->quantize_on = false;
@@ -11,7 +12,7 @@ auto Quantizer::enable() -> bool {
     return this->quantize_on;
 }
 
-auto Quantizer::setRange(int rangeLow, int rangeHigh) -> int {
+auto Quantizer::setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int {
     // Set the quantizer output range.
     if (rangeLow >= 0 && rangeLow < MIDI::KEYBOARD_SIZE && rangeHigh >= 0 && rangeHigh < MIDI::KEYBOARD_SIZE && rangeLow <= rangeHigh) {
         this->range_low = rangeLow;

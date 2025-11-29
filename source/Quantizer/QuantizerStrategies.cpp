@@ -1,9 +1,8 @@
 #include "Quantizer.hpp"
 #include "Utils/MIDI.hpp"
 
-auto Quantizer::round(int noteValue) -> int {
+auto Quantizer::round(MIDI::Note noteValue) -> int {
     // Round depending on what rounding mode is active.
-
     switch(this->round_direction){
         case RoundDirection::UP:
             return this->roundUp(noteValue);
@@ -26,7 +25,7 @@ auto Quantizer::round(int noteValue) -> int {
     }
 }
 
-auto Quantizer::roundUp(int noteValue) -> int {
+auto Quantizer::roundUp(MIDI::Note noteValue) -> int {
     // Search up from n.
     for (int i = noteValue + 1; i < MIDI::KEYBOARD_SIZE; i++) {
         // We have reached the high limit.
@@ -45,7 +44,7 @@ auto Quantizer::roundUp(int noteValue) -> int {
     return INVALID_NOTE;
 }
 
-auto Quantizer::roundDown(int noteValue) -> int {
+auto Quantizer::roundDown(MIDI::Note noteValue) -> int {
     // Search down from n.
     for (int i = noteValue - 1; i >= 0; i--) {
         // We have reached the low limit.
@@ -63,49 +62,49 @@ auto Quantizer::roundDown(int noteValue) -> int {
     return INVALID_NOTE;
 }
 
-auto Quantizer::roundUpDown(int noteValue) -> int {
+auto Quantizer::roundUpDown(MIDI::Note noteValue) -> int {
     int upValue = this->roundUp(noteValue);
 
     if (upValue == INVALID_NOTE){
-        return this->roundDown(MIDI::Notes::NoteG10);
+        return this->roundDown((MIDI::Note) MIDI::Notes::NoteG10);
     }
 
     return upValue;
 }
 
-auto Quantizer::roundDownUp(int noteValue) -> int {
+auto Quantizer::roundDownUp(MIDI::Note noteValue) -> int {
     int upValue = this->roundDown(noteValue);
 
     if (upValue == INVALID_NOTE){
-        return this->roundUp(MIDI::Notes::NoteC0);
+        return this->roundUp((MIDI::Note) MIDI::Notes::NoteC0);
     }
 
     return upValue;
 }
 
-auto Quantizer::roundUpOverflow(int noteValue) -> int {
+auto Quantizer::roundUpOverflow(MIDI::Note noteValue) -> int {
     int roundedUp = this->roundUp(noteValue);
 
     if (roundedUp == INVALID_NOTE) {
         // No valid note above so se start from the lowest note.
-        return this->roundUp(this->range_low);
+        return this->roundUp((MIDI::Note) this->range_low);
     }
 
     return roundedUp;
 }
 
-auto Quantizer::roundDownUnderflow(int noteValue) -> int {
+auto Quantizer::roundDownUnderflow(MIDI::Note noteValue) -> int {
     int roundedUp = this->roundDown(noteValue);
 
     if (roundedUp == INVALID_NOTE) {
         // No valid note below so se start from the highest note.
-        return this->roundDown(this->range_high);
+        return this->roundDown((MIDI::Note) this->range_high);
     }
 
     return roundedUp;
 }
 
-auto Quantizer::roundNearest(int noteValue) -> int {
+auto Quantizer::roundNearest(MIDI::Note noteValue) -> int {
     int nearestUp = this->roundUp(noteValue);
     int nearestDown = this->roundDown(noteValue);
     
@@ -129,7 +128,7 @@ auto Quantizer::roundNearest(int noteValue) -> int {
     return (deltaDown <= deltaUp) ? nearestDown : nearestUp;
 }
 
-auto Quantizer::roundFurthest(int noteValue) -> int {
+auto Quantizer::roundFurthest(MIDI::Note noteValue) -> int {
     // Round to the furthest note value.
     int nearestUp = this->roundUp(noteValue);
     int nearestDown = this->roundDown(noteValue);

@@ -13,17 +13,26 @@ constexpr int RANGE_LOW = 0;
 constexpr int RANGE_HIGH = 127;
 
 class Note {
-  private:
+private:
     uint8_t value_;
+    bool valid_ = false;
 
-  public:
+public:
     // MIDI Note Datatype
     constexpr Note() : value_(0) {}
     constexpr explicit Note(uint8_t note) : value_(note) {
-        if (note > RANGE_HIGH) {
-            throw NoteOutOfRangeException();
+        if (note <= RANGE_HIGH) {
+            valid_ = false;
         }
     }
+    
+    constexpr operator int() const { return value_; }
+    constexpr auto operator<=(const Note& other) const -> bool { return value_ <= other.value_; }
+    constexpr auto operator>=(const Note& other) const -> bool { return value_ >= other.value_; }
+    constexpr auto operator<(const Note& other) const -> bool { return value_ < other.value_; }
+    constexpr auto operator>(const Note& other) const -> bool { return value_ > other.value_; }
+    constexpr auto operator==(const Note& other) const -> bool { return value_ == other.value_; }
+    constexpr auto operator!=(const Note& other) const -> bool { return value_ != other.value_; }
 };
 
 class Velocity : public Note {};
