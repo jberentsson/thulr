@@ -10,8 +10,16 @@ Quantizer::Quantizer() {
 
 auto Quantizer::quantize(MIDI::Note noteValue) -> int {
     // Check if the note is in range.
-    if ((noteValue < this->range_low) || (noteValue >= this->range_high)) {
-        return INVALID_NOTE;
+    //if ((noteValue < this->range_low) || (noteValue > this->range_high)) {
+    //    return INVALID_NOTE;
+    //}
+
+    if (noteValue < this->range_low) {
+        noteValue = this->range_low;
+    }
+
+    if (noteValue > this->range_high) {
+        noteValue = this->range_high;
     }
 
     int index = static_cast<int> (QuantizeMode::ALL_NOTES);
@@ -26,6 +34,9 @@ auto Quantizer::quantize(MIDI::Note noteValue) -> int {
     if (!this->quantize_on) {
         return noteValue;
     }
+
+    // TODO: Should we be storing the last value or the last
+    //       used algorithm so we can get even more variations?
 
     // Return the rounded value.
     return this->round(noteValue);
@@ -59,6 +70,8 @@ auto Quantizer::addNote(MIDI::Note noteValue) -> int {
 }
 
 auto Quantizer::deleteNote(MIDI::Note noteValue) -> int {
+    // Delete a note from the quantizer.
+
     if (noteValue < 0 || noteValue > MIDI::RANGE_HIGH || this->note_count[static_cast<int> (QuantizeMode::ALL_NOTES)] <= 0 || this->note_count[static_cast<int> (QuantizeMode::TWELVE_NOTES)] <= 0) {
         return -1;
     }
@@ -77,10 +90,10 @@ auto Quantizer::deleteNote(MIDI::Note noteValue) -> int {
 }
 
 auto Quantizer::addTwelveNotes(MIDI::Note noteValue) -> int {
-    // TWELVE_NOTES mode - add a note in every octave
+    // TWELVE_NOTES mode - add a note in every octave.
     int degree = (uint8_t) noteValue % MIDI::OCTAVE;
 
-    // Add this note degree in every octave
+    // Add this note degree in every octave.
     for (int octave = 0; octave <= MIDI::KEYBOARD_OCTAVES; octave++) {
         int current_note = (MIDI::OCTAVE * octave) + degree;
 
@@ -95,8 +108,10 @@ auto Quantizer::addTwelveNotes(MIDI::Note noteValue) -> int {
 }
 
 auto Quantizer::addAllNotes(MIDI::Note noteValue) -> int {
-    // ALL_NOTES mode - just add the single note
+    // ALL_NOTES mode - just add the single note.
+
     this->keyboard[static_cast<int> (QuantizeMode::ALL_NOTES)][(uint8_t) noteValue] = true;
     this->note_count[static_cast<int> (QuantizeMode::ALL_NOTES)]++;
+    
     return 0;
 }

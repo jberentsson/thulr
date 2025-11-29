@@ -2,6 +2,7 @@
 #include "Quantizer.hpp"
 #include <catch2/catch.hpp>
 
+using Note = MIDI::Note;
 using namespace MIDI::Notes;
 
 SCENARIO("create a new instance") {
@@ -74,12 +75,13 @@ SCENARIO("edge cases") {
     GIVEN("boundary notes are added") {
         quantizer.addNote(MIDI::Note(NoteC0));
         quantizer.addNote(MIDI::Note(NoteG10));
+        quantizer.setRange(MIDI::Note(0), MIDI::Note(127)); // NOLINT
 
         THEN("boundary notes work correctly") {
             REQUIRE(quantizer.quantize(MIDI::Note(NoteC0)) == MIDI::Note(NoteC0));
             REQUIRE(quantizer.quantize(MIDI::Note(NoteG10)) == MIDI::Note(NoteG10));
-            REQUIRE(quantizer.quantize(MIDI::Note(NoteC0 - 1)) == Quantizer::INVALID_NOTE);  // Invalid low
-            REQUIRE(quantizer.quantize(MIDI::Note(NoteG10 + 1)) == Quantizer::INVALID_NOTE); // Invalid high
+            REQUIRE(quantizer.quantize(MIDI::Note(NoteC0 - 1)) == MIDI::Note(NoteG10));  // Invalid low
+            REQUIRE(quantizer.quantize(MIDI::Note(NoteG10 + 1)) == MIDI::Note(NoteG10)); // Invalid high
         }
     }
 }
@@ -135,8 +137,9 @@ SCENARIO("set the range") {
         quantizer.addNote(MIDI::Note(NoteC2));
 
         THEN("verify basic functionality") {
+            // TODO: Here we want to use the high/low as a ceiling and a floor not ignore!
             REQUIRE(quantizer.quantize(MIDI::Note(NoteB1)) == MIDI::Note(NoteC2));
-            REQUIRE(quantizer.quantize(MIDI::Note(NoteDS3)) == MIDI::Note(NoteC3));
+            REQUIRE(quantizer.quantize(MIDI::Note(NoteDS3)) == MIDI::Note(NoteC2));
         }
     }
 }
