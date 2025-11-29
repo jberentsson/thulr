@@ -4,6 +4,9 @@
 #include <ctime>
 #include <random>
 
+std::random_device randomDevice;
+std::mt19937 gen(randomDevice());
+
 using namespace MIDI;
 
 RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high) {} // NOLINT
@@ -13,7 +16,7 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
         return -1;
     }
 
-    int randomPitch = pitch;
+    int randomPitch = this->randomizeNote(pitch, gen);
 
     this->keyboard_.add(pitch, randomPitch, velocity);
 
@@ -44,4 +47,3 @@ auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) const -> int {
     int randomPitch = getPitchClass(pitch) + (randomInt * MIDI::OCTAVE);
     return clampPitchToRange(randomPitch);
 }
-

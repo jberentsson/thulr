@@ -35,7 +35,9 @@ auto Quantizer::roundUp(int noteValue) -> int {
         }
 
         // We have found the correct note.
-        if (this->keyboard[i]) {
+        int index = this->keyboardIndex();
+
+        if (this->keyboard[index][i]) {
             return i;
         }
     }
@@ -52,7 +54,8 @@ auto Quantizer::roundDown(int noteValue) -> int {
         }
 
         // We have found the correct note.
-        if (this->keyboard[i]) {
+        int index = this->keyboardIndex();
+        if (this->keyboard[index][i]) {
             return i;
         }
     }

@@ -3,6 +3,7 @@
 #include <vector>
 #include "RandomOctave/Note/ActiveNote.hpp"
 #include "RandomOctave/Note/Note.hpp"
+#include <iostream>
 
 class AbstractKeyboard {
 private:
@@ -18,12 +19,12 @@ public:
         keyboard_.reserve(MIDI::KEYBOARD_SIZE);
 
         for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-            keyboard_.emplace_back(Note(i));
+            keyboard_.emplace_back(Note(i)); // NOLINT
         }
     }
 
     auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote> {
-        if (originalPitch >= 0 && originalPitch < keyboard_.size() && (originalPitch % MIDI::OCTAVE == randomPitch % MIDI::OCTAVE)) {
+        if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
             size_t noteCount = keyboard_[originalPitch].getActiveNoteCount();
             std::shared_ptr<ActiveNote> result =  keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             
@@ -33,6 +34,8 @@ public:
             }
 
             return result;
+        } else { // NOLINT
+            std::cout << "add failed " << originalPitch << " " << randomPitch << " " << velocity << "\n"; // NOLINT
         }
 
         return nullptr;
@@ -57,7 +60,7 @@ public:
         return empty;
     }
 
-    [[nodiscard]] auto getActiveNoteCount() const -> int {
+    [[nodiscard]] auto getActiveNoteCount() const -> size_t {
         return activeNoteCount_;
     }
 
@@ -73,7 +76,7 @@ public:
         for (int i = (noteValue % 12); i < keyboard_.size(); i += 12) { // NOLINT
             for (const auto &currentActiveNote : keyboard_[i].getActiveNotes()) {
                 
-                if (currentActiveNote->pitch() == noteValue) {
+                if ((currentActiveNote->pitch() % MIDI::OCTAVE) == (noteValue % MIDI::OCTAVE)) {
                     return true;
                 }
             }

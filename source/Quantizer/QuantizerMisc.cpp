@@ -24,11 +24,10 @@ auto Quantizer::setRange(int rangeLow, int rangeHigh) -> int {
 
 auto Quantizer::clear() -> int {
     // Clear all set notes from the keyboard.
-    int index = 0;
 
-    for (auto &key : this->keyboard) {
-        key = false;
-        index++;
+    for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
+        this->keyboard[0][i] = false;
+        this->keyboard[1][i] = false;
     }
 
     return 0;
@@ -52,4 +51,13 @@ auto Quantizer::enableThrough() -> bool {
 auto Quantizer::disableThrough() -> bool {
     this->noteThrough = false;
     return this->noteThrough;
+}
+
+auto Quantizer::keyboardIndex() -> int {
+    return static_cast<int> (this->mode);
+}
+
+auto Quantizer::noteCount() -> int {
+    int index = keyboardIndex();
+    return this->note_count[index];
 }
