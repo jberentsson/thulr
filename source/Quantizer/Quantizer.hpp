@@ -1,36 +1,18 @@
 #pragma once
 
+#include <memory>
 #include "Utils/MIDI.hpp"
+#include "Enums.hpp"
 
 class Quantizer {
+private:
+    std::shared_ptr<MIDI::Note> lastNote;
+
 public:
     using Note = MIDI::Note;
-
-    enum : uint8_t {
-        // The highest MIDI value is 127.
-        INVALID_NOTE = 255
-    };
-
-    enum class RoundDirection : uint8_t { 
-        UP = 0,
-        DOWN = 1,
-        UP_DOWN = 2,
-        DOWN_UP = 3,
-        UP_OVERFLOW = 4,
-        DOWN_UNDERFLOW = 5,
-        NEAREST = 6,
-        FURTHEST = 7
-    };
-    
-    enum class QuantizeMode : uint8_t { 
-        TWELVE_NOTES = 0, 
-        ALL_NOTES = 1
-    };
-    
-    enum class NoteData : uint8_t { 
-        OFF = 0,
-        ON = 1
-    };
+    using NoteData = QuantizerEnums::NoteData;
+    using RoundDirection = QuantizerEnums::RoundDirection;
+    using QuantizeMode = QuantizerEnums::QuantizeMode;
 
     Quantizer();
     ~Quantizer() = default;
@@ -40,7 +22,8 @@ public:
     auto deleteNote(MIDI::Note noteValue) -> int;
     auto getNote(MIDI::Note noteValue) -> NoteData;
     auto setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int;
-    
+    auto getLastNote() -> std::shared_ptr<Note> { return this->lastNote; }
+
     auto round(MIDI::Note noteValue) -> int;
     auto roundUp(MIDI::Note noteValue) -> int;
     auto roundUpDown(MIDI::Note noteValue) -> int;
@@ -70,15 +53,17 @@ public:
     [[nodiscard]] auto low() const -> int { return this->currentNoteLow; }
 
 private:
-    bool keyboard[2][MIDI::KEYBOARD_SIZE];
     MIDI::Note range_low = MIDI::Note(MIDI::RANGE_LOW);
     MIDI::Note range_high = MIDI::Note(MIDI::RANGE_HIGH);
-    int note_count[2] = { 0, 0 };
-    bool quantize_on = true;
     MIDI::Note currentNoteLow = MIDI::Note(MIDI::RANGE_HIGH + 1);
     MIDI::Note currentNoteHigh = MIDI::Note(MIDI::RANGE_LOW - 1);
-    bool noteThrough = false;
     
     RoundDirection round_direction = RoundDirection::UP;
     QuantizeMode mode = QuantizeMode::TWELVE_NOTES;
+
+    bool keyboard[2][MIDI::KEYBOARD_SIZE];
+    bool quantize_on = true;
+    bool noteThrough = false;
+
+    int note_count[2] = { 0, 0 };
 };

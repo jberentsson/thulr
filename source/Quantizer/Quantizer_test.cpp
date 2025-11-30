@@ -22,6 +22,8 @@ SCENARIO("one note") {
         WHEN("we quantize nearby notes") {
             THEN("notes quantize correctly") {
                 REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteC4)) == MIDI::Note(NoteC4));
+                REQUIRE(quantizerTestObject.getLastNote() != nullptr);
+                REQUIRE(*quantizerTestObject.getLastNote() == MIDI::Note(NoteC4));
 
                 // Test round down.
                 quantizerTestObject.setRoundDirection(Quantizer::RoundDirection::UP);
@@ -37,6 +39,16 @@ SCENARIO("one note") {
             }
         }
     }
+}
+
+SCENARIO("Specific failing test case") {
+    Quantizer quantizerTestObject;
+    
+    auto result = quantizerTestObject.quantize(MIDI::Note(NoteC4));
+    
+    REQUIRE(result == MIDI::Note(NoteC4));
+    REQUIRE(quantizerTestObject.getLastNote() != nullptr);
+    REQUIRE(*(quantizerTestObject.getLastNote()) == MIDI::Note(NoteC4));
 }
 
 SCENARIO("two notes") {
@@ -137,7 +149,6 @@ SCENARIO("set the range") {
         quantizerTestObject.addNote(MIDI::Note(NoteC2));
 
         THEN("verify basic functionality") {
-            // TODO: Here we want to use the high/low as a ceiling and a floor not ignore!
             REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteB1)) == MIDI::Note(NoteC2));
             REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteDS3)) == MIDI::Note(NoteC2));
         }

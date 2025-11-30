@@ -19,24 +19,30 @@ auto Quantizer::quantize(MIDI::Note noteValue) -> int {
         noteValue = this->range_high;
     }
 
+    bool noteFound = false;
     int index = static_cast<int> (QuantizeMode::ALL_NOTES);
 
     // If current note is already a valid key.
     if ((this->note_count[index] == 0) || this->keyboard[index][noteValue]) {
-        return noteValue;
+        noteFound = true;
     }
 
     // Return the original note if
     // the quantizer is disabled.
     if (!this->quantize_on) {
-        return noteValue;
+        noteFound = true;
     }
 
-    // TODO: Should we be storing the last value or the last
-    //       used algorithm so we can get even more variations?
+    // Round if we have not found the value else return original value.
+    int quantizedNoteValue = noteFound ? noteValue : this->round(noteValue);
 
-    // Return the rounded value.
-    return this->round(noteValue);
+    std::shared_ptr<Note> quantizedNote = std::make_shared<Note>(
+        static_cast<uint8_t>(quantizedNoteValue)
+    );
+
+    this->lastNote = quantizedNote;
+
+    return quantizedNoteValue;
 }
 
 auto Quantizer::getNote(MIDI::Note noteValue) -> Quantizer::NoteData {

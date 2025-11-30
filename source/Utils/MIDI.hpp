@@ -11,6 +11,8 @@ constexpr int KEYBOARD_SIZE = 128;
 constexpr int KEYBOARD_OCTAVES = 10;
 constexpr int RANGE_LOW = 0;
 constexpr int RANGE_HIGH = 127;
+constexpr int INVALID_NOTE = 255;
+
 
 class Note {
 private:

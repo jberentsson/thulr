@@ -21,7 +21,7 @@ auto Quantizer::round(MIDI::Note noteValue) -> int {
         case RoundDirection::DOWN_UNDERFLOW:
             return this->roundDownUnderflow(noteValue);
         default:
-            return INVALID_NOTE;
+            return MIDI::INVALID_NOTE;
     }
 }
 
@@ -41,7 +41,7 @@ auto Quantizer::roundUp(MIDI::Note noteValue) -> int {
         }
     }
 
-    return INVALID_NOTE;
+    return MIDI::INVALID_NOTE;
 }
 
 auto Quantizer::roundDown(MIDI::Note noteValue) -> int {
@@ -59,13 +59,13 @@ auto Quantizer::roundDown(MIDI::Note noteValue) -> int {
         }
     }
 
-    return INVALID_NOTE;
+    return MIDI::INVALID_NOTE;
 }
 
 auto Quantizer::roundUpDown(MIDI::Note noteValue) -> int {
     int upValue = this->roundUp(noteValue);
 
-    if (upValue == INVALID_NOTE){
+    if (upValue == MIDI::INVALID_NOTE){
         return this->roundDown((MIDI::Note) MIDI::Notes::NoteG10);
     }
 
@@ -75,7 +75,7 @@ auto Quantizer::roundUpDown(MIDI::Note noteValue) -> int {
 auto Quantizer::roundDownUp(MIDI::Note noteValue) -> int {
     int upValue = this->roundDown(noteValue);
 
-    if (upValue == INVALID_NOTE){
+    if (upValue == MIDI::INVALID_NOTE){
         return this->roundUp((MIDI::Note) MIDI::Notes::NoteC0);
     }
 
@@ -85,7 +85,7 @@ auto Quantizer::roundDownUp(MIDI::Note noteValue) -> int {
 auto Quantizer::roundUpOverflow(MIDI::Note noteValue) -> int {
     int roundedUp = this->roundUp(noteValue);
 
-    if (roundedUp == INVALID_NOTE) {
+    if (roundedUp == MIDI::INVALID_NOTE) {
         // No valid note above so se start from the lowest note.
         return this->roundUp((MIDI::Note) this->range_low);
     }
@@ -96,7 +96,7 @@ auto Quantizer::roundUpOverflow(MIDI::Note noteValue) -> int {
 auto Quantizer::roundDownUnderflow(MIDI::Note noteValue) -> int {
     int roundedUp = this->roundDown(noteValue);
 
-    if (roundedUp == INVALID_NOTE) {
+    if (roundedUp == MIDI::INVALID_NOTE) {
         // No valid note below so se start from the highest note.
         return this->roundDown((MIDI::Note) this->range_high);
     }
@@ -108,15 +108,15 @@ auto Quantizer::roundNearest(MIDI::Note noteValue) -> int {
     int nearestUp = this->roundUp(noteValue);
     int nearestDown = this->roundDown(noteValue);
     
-    if (nearestUp == INVALID_NOTE && nearestDown == INVALID_NOTE) {
+    if (nearestUp == MIDI::INVALID_NOTE && nearestDown == MIDI::INVALID_NOTE) {
         // No valid notes.
-        return INVALID_NOTE;
+        return MIDI::INVALID_NOTE;
     }
-    if (nearestUp == INVALID_NOTE) {
+    if (nearestUp == MIDI::INVALID_NOTE) {
         // Down is only valid.
         return nearestDown;
     }
-    if (nearestDown == INVALID_NOTE) {
+    if (nearestDown == MIDI::INVALID_NOTE) {
         // Up is only valid.
         return nearestUp;
     }
