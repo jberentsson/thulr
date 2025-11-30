@@ -21,7 +21,6 @@ class RandomOctave {
         explicit RandomOctave(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
         
         [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
-        [[nodiscard]] auto getActiveNoteCount() const -> size_t { return this->keyboard_.getActiveNoteCount(); }
         
         static auto getPitchClass(int pitch) -> int;
         auto clearNotesByPitchClass(int pitch) -> int;
@@ -31,9 +30,7 @@ class RandomOctave {
         auto removeAll() -> unsigned int;
         auto setRange(int low, int high) -> int;
 
-        auto getActiveCount() -> size_t;
-
-        auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return this->keyboard_.getActiveNotes(); }
+        auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> { return this->keyboard_.getActiveNotes(); }
         auto getNoteQueue() -> std::vector<std::shared_ptr<ActiveNote>> & { return this->keyboard_.getNoteQueue(); }
 
         auto containsNote(int noteValue) -> bool { return this->keyboard_.containsNote(noteValue); }

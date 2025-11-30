@@ -16,9 +16,14 @@ auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
         return -1;
     }
 
-    int randomPitch = this->randomizeNote(pitch, gen);
+    if (velocity > 0) {
+        int randomPitch = this->randomizeNote(pitch, gen);
+        this->keyboard_.add(pitch, randomPitch, velocity);
+    } else {
+        this->keyboard_.remove(pitch);
+    }
 
-    this->keyboard_.add(pitch, randomPitch, velocity);
+    this->keyboard_.updateActiveNotes();
 
     return 0;
 }
@@ -51,14 +56,4 @@ auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) const -> int {
 auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
     //return this->keyboard_.clearNotesByPitchClass(pitch);
     return -1;
-}
-
-auto RandomOctave::getActiveCount() -> size_t {
-    int activeCount = 0;
-
-    for(int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-        activeCount += this->keyboard_.getActiveNotes(i).size();
-    }
-
-    return activeCount;
 }

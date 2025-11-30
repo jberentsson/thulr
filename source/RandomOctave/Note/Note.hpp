@@ -29,8 +29,8 @@ public:
     auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote>{
         if ((originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) || 
             originalPitch != this->mPitch_ || 
-           (this->activeNotes.size() >= MAX_NOTES || 
-            this->contains(randomPitch)) && velocity > 0) {
+           ((this->activeNotes.size() >= MAX_NOTES || 
+            this->contains(randomPitch)) && (velocity > 0))) {
             return nullptr;
         }
 
@@ -64,10 +64,6 @@ public:
 
     [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>>& {
         return activeNotes;
-    }
-
-    auto getActiveNoteCount() -> size_t {
-        return this->activeNotes.size();
     }
 
     auto setRange(int low, int high) -> void { // NOLINT
