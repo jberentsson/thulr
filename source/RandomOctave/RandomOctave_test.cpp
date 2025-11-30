@@ -9,7 +9,7 @@
 using namespace MIDI::Notes;
 
 SCENARIO("test the note class") {
-    AbstractNote noteTest = AbstractNote(48); // NOLINT
+    Note noteTest = Note(48); // NOLINT
     REQUIRE(noteTest.getActiveNoteCount() == 0);
     REQUIRE(noteTest.add(47, 46, 127) == nullptr);
     REQUIRE(noteTest.add(48, 36, 127) != nullptr);
@@ -22,7 +22,7 @@ SCENARIO("test the note class") {
 }
 
 SCENARIO("test the keyboard class") {
-    AbstractKeyboard keyboardTest = AbstractKeyboard();
+    Keyboard keyboardTest = Keyboard();
     REQUIRE(keyboardTest.getActiveNoteCount() == 0);
     REQUIRE(keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.add(47, 46, 127) == nullptr);

@@ -6,21 +6,21 @@
 #include "ActiveNote.hpp"
 #include "Utils/MIDI.hpp"
 
-#define MAX_NOTES 4 // NOLINT
-
-class AbstractNote {
+class Note {
 private:
-    using ActiveNote = AbstractActiveNote;
+    enum : uint8_t {
+        MAX_NOTES = 4
+    };
 
     int mPitch_ = 0;
     int rangeHigh_ = MIDI::RANGE_HIGH;
     int rangeLow_ = MIDI::RANGE_LOW;
     
-    std::vector<std::shared_ptr<AbstractActiveNote>> activeNotes;
+    std::vector<std::shared_ptr<ActiveNote>> activeNotes;
 
 public:
-    AbstractNote() = default;
-    AbstractNote(int originalPitch) : mPitch_(originalPitch) {}
+    Note() = default;
+    Note(int originalPitch) : mPitch_(originalPitch) {}
     
     [[nodiscard]] virtual auto pitch() const -> int {
         return mPitch_;
@@ -35,7 +35,7 @@ public:
         }
 
         auto newNote = std::make_shared<ActiveNote>(originalPitch, randomPitch, velocity);
-        
+
         if (MIDI::RANGE_LOW < velocity && velocity <= MIDI::RANGE_HIGH) {
             activeNotes.push_back(newNote);
         } else {
@@ -50,7 +50,7 @@ public:
             [pitch](const auto& note) -> bool {
                 return note->pitch() == pitch;
             });
-        
+
         if (currentActiveNote != activeNotes.end()) {
             activeNotes.erase(currentActiveNote);
         }

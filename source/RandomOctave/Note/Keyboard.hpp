@@ -1,31 +1,30 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <Utils/MIDI.hpp>
 #include "RandomOctave/Note/ActiveNote.hpp"
 #include "RandomOctave/Note/Note.hpp"
 
-class AbstractKeyboard {
+class Keyboard {
 private:
-    using Note = AbstractNote;
-    using ActiveNote = AbstractActiveNote;
     std::vector<Note> keyboard_;
     std::vector<std::shared_ptr<ActiveNote>> activeNotes_;
     std::vector<std::shared_ptr<ActiveNote>> noteQueue_;
     size_t activeNoteCount_ = 0;
 
 public:
-    AbstractKeyboard() {
+    Keyboard() {
         keyboard_.reserve(MIDI::KEYBOARD_SIZE);
 
         for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-            keyboard_.emplace_back(Note(i)); // NOLINT
+            keyboard_.emplace_back(MIDI::Note(i)); // NOLINT
         }
     }
 
     auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote> {
         if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
             size_t noteCount = keyboard_[originalPitch].getActiveNoteCount();
-            std::shared_ptr<ActiveNote> result =  keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
+            std::shared_ptr<ActiveNote> result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             
             if (result != nullptr) {
                 noteQueue_.push_back(result);
@@ -36,6 +35,16 @@ public:
         }
 
         return nullptr;
+    }
+
+    auto clearNotesByPitchClass(int note) -> int { // NOLINT
+        int pitchClass = note % MIDI::OCTAVE;
+
+        for (int i = pitchClass; i < MIDI::KEYBOARD_SIZE; i += MIDI::OCTAVE) {
+            //this->keyboard_[i].clear();
+        }
+
+        return 0;
     }
 
     auto clear(int note) -> size_t {

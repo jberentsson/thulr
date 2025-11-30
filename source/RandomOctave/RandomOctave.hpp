@@ -9,9 +9,6 @@
 
 class RandomOctave {
     public:
-        using ActiveNote = AbstractActiveNote;
-        using Note = AbstractNote;
-        using Keyboard = AbstractKeyboard;
         Keyboard keyboard_;
 
     private:
@@ -27,11 +24,14 @@ class RandomOctave {
         [[nodiscard]] auto getActiveNoteCount() const -> size_t { return this->keyboard_.getActiveNoteCount(); }
         
         static auto getPitchClass(int pitch) -> int;
+        auto clearNotesByPitchClass(int pitch) -> int;
 
         auto randomizeNote(int pitch, std::mt19937& gen) const -> int;
         auto note(int pitch, int velocity) -> int;
         auto removeAll() -> unsigned int;
         auto setRange(int low, int high) -> int;
+
+        auto getActiveCount() -> size_t;
 
         auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> & { return this->keyboard_.getActiveNotes(); }
         auto getNoteQueue() -> std::vector<std::shared_ptr<ActiveNote>> & { return this->keyboard_.getNoteQueue(); }

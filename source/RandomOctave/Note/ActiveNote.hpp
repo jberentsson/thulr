@@ -1,13 +1,13 @@
 #pragma once
 
-class AbstractActiveNote {
+class ActiveNote {
 private:
     int mOriginalPitch_;
     int mProcessedPitch_;
     int mVelocity_;
 
 public:
-    AbstractActiveNote(int originalPitch, int processedPitch, int velocity)  // NOLINT
+    ActiveNote(int originalPitch, int processedPitch, int velocity)  // NOLINT
         : mOriginalPitch_(originalPitch), 
           mProcessedPitch_(processedPitch), 
           mVelocity_(velocity) {
@@ -31,7 +31,7 @@ public:
     }
 
     // Optional: Add comparison for easier testing
-    [[nodiscard]] auto equals(const AbstractActiveNote& other) const -> bool {
+    [[nodiscard]] auto equals(const ActiveNote& other) const -> bool {
         return mOriginalPitch_ == other.mOriginalPitch_ &&
                mProcessedPitch_ == other.mProcessedPitch_ &&
                mVelocity_ == other.mVelocity_;
