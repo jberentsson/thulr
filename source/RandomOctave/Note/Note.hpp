@@ -76,7 +76,7 @@ public:
     }
 
     auto contains(int note) -> bool {
-        for (const auto &activeNote : activeNotes) { // NOLINT
+        for (const auto &activeNote : activeNotes) {
             if (activeNote->pitch() == note) {
                 return true;
             }
