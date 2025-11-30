@@ -25,7 +25,6 @@ auto Quantizer::setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int {
 
 auto Quantizer::clear() -> int {
     // Clear all set notes from the keyboard.
-
     for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
         this->keyboard[0][i] = false;
         this->keyboard[1][i] = false;
@@ -42,6 +41,16 @@ auto Quantizer::setRoundDirection(RoundDirection direction) -> RoundDirection {
 auto Quantizer::setMode(QuantizeMode mode) -> QuantizeMode {
     this->mode = mode;
     return this->mode;
+}
+
+auto Quantizer::modeTwelveNotes() -> bool {
+    this->mode = QuantizeMode::TWELVE_NOTES;
+    return true;
+}
+
+auto Quantizer::modeAllNotes() -> bool {
+    this->mode = QuantizeMode::ALL_NOTES;
+    return true;
 }
 
 auto Quantizer::enableThrough() -> bool {

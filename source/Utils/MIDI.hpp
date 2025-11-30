@@ -15,6 +15,7 @@ constexpr int RANGE_HIGH = 127;
 class Note {
 private:
     uint8_t value_;
+    //uint8_t velocity_;
     bool valid_ = false;
 
 public:
@@ -22,10 +23,14 @@ public:
     constexpr Note() : value_(0) {}
     constexpr explicit Note(uint8_t note) : value_(note) {
         if (note <= RANGE_HIGH) {
-            valid_ = false;
+            this->valid_ = true;
         }
     }
-    
+
+    [[nodiscard]] auto valid() const -> bool {
+        return this->valid_;
+    }
+
     constexpr operator int() const { return value_; }
     constexpr auto operator<=(const Note& other) const -> bool { return value_ <= other.value_; }
     constexpr auto operator>=(const Note& other) const -> bool { return value_ >= other.value_; }

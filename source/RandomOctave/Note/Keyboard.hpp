@@ -3,7 +3,6 @@
 #include <vector>
 #include "RandomOctave/Note/ActiveNote.hpp"
 #include "RandomOctave/Note/Note.hpp"
-#include <iostream>
 
 class AbstractKeyboard {
 private:
@@ -34,8 +33,6 @@ public:
             }
 
             return result;
-        } else { // NOLINT
-            std::cout << "add failed " << originalPitch << " " << randomPitch << " " << velocity << "\n"; // NOLINT
         }
 
         return nullptr;

@@ -1,11 +1,10 @@
 #pragma once
 
 #include "Utils/MIDI.hpp"
-#include <iostream>
 
 class Quantizer {
 public:
-    //using Note = MIDI::Note;
+    using Note = MIDI::Note;
 
     enum : uint8_t {
         // The highest MIDI value is 127.
@@ -39,9 +38,9 @@ public:
     auto quantize(MIDI::Note noteValue) -> int;
     auto addNote(MIDI::Note noteValue) -> int;
     auto deleteNote(MIDI::Note noteValue) -> int;
-    auto setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int;
-    auto clear() -> int;
     auto getNote(MIDI::Note noteValue) -> NoteData;
+    auto setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int;
+    
     auto round(MIDI::Note noteValue) -> int;
     auto roundUp(MIDI::Note noteValue) -> int;
     auto roundUpDown(MIDI::Note noteValue) -> int;
@@ -51,16 +50,20 @@ public:
     auto roundDownUnderflow(MIDI::Note noteValue) -> int;
     auto roundNearest(MIDI::Note noteValue) -> int;
     auto roundFurthest(MIDI::Note noteValue) -> int;
-    auto addTwelveNotes(MIDI::Note noteValue) -> int;
-    auto addAllNotes(MIDI::Note noteValue) -> int;
+
     auto setRoundDirection(RoundDirection direction) -> RoundDirection;
     auto setMode(QuantizeMode mode) -> QuantizeMode;
+    auto addTwelveNotes(MIDI::Note noteValue) -> int;
+    auto addAllNotes(MIDI::Note noteValue) -> int;
     auto enable() -> bool;
     auto disable() -> bool;
     auto disableThrough() -> bool;
     auto enableThrough() -> bool;
+    auto modeTwelveNotes() -> bool;
+    auto modeAllNotes() -> bool;
     auto keyboardIndex() -> int;
     auto noteCount() -> int;
+    auto clear() -> int;
 
     [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->round_direction; }
     [[nodiscard]] auto high() const -> int { return this->currentNoteLow; }
