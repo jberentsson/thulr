@@ -43,26 +43,7 @@ public:
         return newNote;
     }
 
-    // TODO: Not used i think.
-/*     auto removeByPitch(int pitch) -> void {
-        auto currentActiveNote = std::find_if(activeNotes.begin(), activeNotes.end(),
-            [pitch] (const auto& note) -> bool {
-                return note->pitch() == pitch;
-            });
-
-        if (currentActiveNote != activeNotes.end()) {
-            activeNotes.erase(currentActiveNote);
-        }
-    } */
-
-    // TODO: I think we can delete this.
-    auto clear() -> size_t {
-        size_t activeCount = activeNotes.size();
-        activeNotes.clear();
-        return activeCount;
-    }
-
-    [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>>& {
+    auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>>& {
         return activeNotes;
     }
 
@@ -72,8 +53,8 @@ public:
         rangeHigh_ = high;
     }
 
-    // TODO: Are we using this?
     auto contains(int note) -> bool {
+        // Check if note is active.
         for (const auto &activeNote : activeNotes) { // NOLINT
             if (activeNote->pitch() == note) {
                 return true;
@@ -83,10 +64,9 @@ public:
         return false;
     }
 
-    // TODO: Add this to every function we can think of. Remove duplicated code.
     auto isValidNote(int originalPitch, int randomPitch, int velocity) -> bool { // NOLINT
         // Octave check
-        if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
+        if (Note::getPitchClass(originalPitch) != Note::getPitchClass(randomPitch)) {
             return false;
         }
         
@@ -98,5 +78,9 @@ public:
         }
         
         return true;
+    }
+    
+    static auto getPitchClass(int pitch) -> int {
+        return pitch % MIDI::OCTAVE;
     }
 };

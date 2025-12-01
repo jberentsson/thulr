@@ -53,8 +53,3 @@ auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) const -> int {
     int randomPitch = getPitchClass(pitch) + (randomInt * MIDI::OCTAVE);
     return clampPitchToRange(randomPitch);
 }
-
-auto RandomOctave::clearNotesByPitchClass(int pitch) -> int { // NOLINT
-    //return this->keyboard_.clearNotesByPitchClass(pitch);
-    return -1;
-}

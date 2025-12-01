@@ -6,13 +6,15 @@
 #include "RandomOctave/Note/Note.hpp"
 #include <iostream>
 
-#define MAX_NOTES 4
-
 class Keyboard {
 private:
     std::vector<Note> keyboard_;
     std::vector<std::shared_ptr<ActiveNote>> activeNotes_;
     std::vector<std::shared_ptr<ActiveNote>> noteQueue_;
+
+    enum : uint8_t {
+        MAX_NOTES = 4
+    };
 
 public:
     Keyboard() {
@@ -84,7 +86,7 @@ public:
             }
 
             // 2. Remove an active note.
-            this->keyboard_[originalPitch].clear();
+            this->keyboard_[originalPitch].getActiveNotes().clear();
             this->updateActiveNotes();
         }
 
@@ -92,30 +94,18 @@ public:
         return this->noteQueue_;
     }
 
-    // TOOD: Can we delete this?
-    auto clearNotesByPitchClass(int note) -> int { // NOLINT
-        int pitchClass = note % MIDI::OCTAVE;
-
-        for (int i = pitchClass; i < MIDI::KEYBOARD_SIZE; i += MIDI::OCTAVE) {
-            this->keyboard_[i].clear();
-        }
-
-        this->updateActiveNotes();
-
-        return 0;
-    }
-
-    auto clear(int note) -> size_t {
+/*     auto clear(int note) -> size_t {
         // Clear each of the active notes from each key.
         // TODO: Is this a duplicated function?
         if (note >= 0 && note < keyboard_.size()) {
-            size_t cleared = keyboard_[note].clear();
+            size_t cleared = keyboard_[note].getActiveNotes().size();
+            keyboard_[note].getActiveNotes().clear();
             this->updateActiveNotes();
             return cleared;
         }
 
         return 0;
-    }
+    } */
 
     auto getActiveNotes(int note) -> std::vector<std::shared_ptr<ActiveNote>> {
         // Get all active notes from each of the notes of the keyboard.
@@ -155,7 +145,7 @@ public:
 
         for (auto& note : keyboard_) {
             removed_count += note.getActiveNotes().size();
-            note.clear();
+            note.getActiveNotes().clear();
         }
 
         this->activeNotes_.clear();
@@ -179,13 +169,13 @@ public:
         // Update the active notes vector with data 
         // from each of the notes of the keyboard.
         this->activeNotes_.clear();
-        for (const auto& currNote : this->keyboard_) {
+        for (auto& currNote : this->keyboard_) {
             const auto& notes = currNote.getActiveNotes();
             this->activeNotes_.insert(this->activeNotes_.end(), notes.begin(), notes.end());
         }
     }
 
-    [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>>& {
+    auto getActiveNotes() ->  std::vector<std::shared_ptr<ActiveNote>>& {
         return this->activeNotes_;
     }
 };

@@ -30,10 +30,10 @@ class RandomOctave {
         auto removeAll() -> size_t;
         auto setRange(int low, int high) -> int;
 
-        [[nodiscard]] auto getActiveNotes() const -> std::vector<std::shared_ptr<ActiveNote>> { return this->keyboard_.getActiveNotes(); }
-        auto getNoteQueue() -> std::vector<std::shared_ptr<ActiveNote>> &{ return this->keyboard_.getNoteQueue(); }
+        auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> { return this->keyboard_.getActiveNotes(); }
+        auto getNoteQueue() -> std::vector<std::shared_ptr<ActiveNote>> { return this->keyboard_.getNoteQueue(); }
 
         auto containsNote(int noteValue) -> bool { return this->keyboard_.containsNote(noteValue); }
         auto clearQueue() -> void { this->keyboard_.clearQueue(); }
-        auto clear(int noteValue) -> size_t { return this->keyboard_.clear(noteValue); }
+        //auto clear(int noteValue) -> size_t { return this->keyboard_.clear(noteValue); }
 };
