@@ -27,10 +27,7 @@ public:
     }
 
     auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote>{
-        if ((originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) || 
-            originalPitch != this->mPitch_ || 
-           ((this->activeNotes.size() >= MAX_NOTES || 
-            this->contains(randomPitch)) && (velocity > 0))) {
+        if (!isValidNote(originalPitch, randomPitch, velocity)) {
             return nullptr;
         }
 
@@ -38,8 +35,6 @@ public:
 
         if (MIDI::RANGE_LOW < velocity && velocity <= MIDI::RANGE_HIGH) {
             activeNotes.push_back(newNote);
-        } else {
-            this->removeByPitch(randomPitch);
         }
 
         return newNote;
@@ -47,7 +42,7 @@ public:
 
     auto removeByPitch(int pitch) -> void {
         auto currentActiveNote = std::find_if(activeNotes.begin(), activeNotes.end(),
-            [pitch](const auto& note) -> bool {
+            [pitch] (const auto& note) -> bool {
                 return note->pitch() == pitch;
             });
 
@@ -79,5 +74,26 @@ public:
         }
         
         return false;
+    }
+
+    bool isValidNote(int originalPitch, int randomPitch, int velocity) {
+        // Octave check
+        if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
+            return false;
+        }
+        
+        // Pitch check
+        //if (originalPitch == this->mPitch_) {
+        //    return false;
+        //}
+        
+        // Note limit check (only for note-on events)
+        if (velocity > 0) {
+            if (this->activeNotes.size() >= MAX_NOTES || this->contains(randomPitch)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 };

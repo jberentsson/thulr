@@ -27,7 +27,7 @@ class RandomOctave {
 
         auto randomizeNote(int pitch, std::mt19937& gen) const -> int;
         auto note(int pitch, int velocity) -> int;
-        auto removeAll() -> unsigned int;
+        auto removeAll() -> size_t;
         auto setRange(int low, int high) -> int;
 
         auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>> { return this->keyboard_.getActiveNotes(); }

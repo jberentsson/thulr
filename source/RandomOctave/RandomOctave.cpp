@@ -36,7 +36,7 @@ auto RandomOctave::getPitchClass(int pitch) -> int {
     return pitch % MIDI::OCTAVE;
 }
 
-auto RandomOctave::removeAll() -> unsigned int {
+auto RandomOctave::removeAll() -> size_t {
     return this->keyboard_.removeAll();
 }
 

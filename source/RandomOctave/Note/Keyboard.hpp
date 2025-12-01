@@ -29,8 +29,15 @@ public:
             
             if (result != nullptr) {
                 // If our new note message is valid.
-                noteQueue_.push_back(result);
+                if (velocity > 0) {
+                    noteQueue_.push_back(result);
+                } else {
+                    if (!keyboard_[originalPitch].getActiveNotes().empty()) {
+                        noteQueue_.insert(noteQueue_.end(), activeNotes_.begin(), activeNotes_.end());
+                    }
+                }
             }
+            
             this->updateActiveNotes();
             return result;
         }
@@ -39,18 +46,22 @@ public:
     }
 
     auto remove(int originalPitch) -> std::vector<std::shared_ptr<ActiveNote>> {
-        // 1. Remove an active note.
-        // 2. Add it to the noteQueue.
-        // 3. Return the note queue.
         if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
-            for (const auto &cuan : this->keyboard_[originalPitch].getActiveNotes()) {
-                this->noteQueue_.push_back(cuan);
+            if (!this->keyboard_[originalPitch].getActiveNotes().empty()) {
+                for (const auto &cuan : this->keyboard_[originalPitch].getActiveNotes()) {
+                    // 1. Add it to the noteQueue.
+                    this->noteQueue_.push_back(cuan);
+                }
+            } else {
+                this->noteQueue_.push_back(std::make_shared<ActiveNote>(ActiveNote(originalPitch, originalPitch, 0)));
             }
 
+            // 2. Remove an active note.
             this->keyboard_[originalPitch].clear();
             this->updateActiveNotes();
         }
 
+        // 3. Return the note queue.
         return this->noteQueue_;
     }
 
@@ -60,6 +71,8 @@ public:
         for (int i = pitchClass; i < MIDI::KEYBOARD_SIZE; i += MIDI::OCTAVE) {
             this->keyboard_[i].clear();
         }
+
+        this->updateActiveNotes();
 
         return 0;
     }

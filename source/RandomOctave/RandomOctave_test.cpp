@@ -39,10 +39,22 @@ SCENARIO("test the keyboard class") {
     REQUIRE(keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getActiveNotes().size() == 4);
     REQUIRE(keyboardTest.remove(48).size() > 0);
-    //REQUIRE(keyboardTest.getNoteQueue().size() == 1);
-    //REQUIRE(keyboardTest.getActiveNotes().size() == 3);
-    //REQUIRE(keyboardTest.clearQueue() == 0);
-    //REQUIRE(keyboardTest.getNoteQueue().empty());
+    REQUIRE(keyboardTest.getNoteQueue().size() == 4);
+    REQUIRE(keyboardTest.getActiveNotes().size() == 0);
+    REQUIRE(keyboardTest.clearQueue() == 0);
+    REQUIRE(keyboardTest.getNoteQueue().empty());
+}
+
+
+SCENARIO("test the something") {
+    Keyboard keyboardTest = Keyboard();
+
+    REQUIRE(keyboardTest.getActiveNotes().size() == 0);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) != nullptr);
+    REQUIRE(keyboardTest.getActiveNotes().size() == 1);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) != nullptr);
+    REQUIRE(keyboardTest.clearNotesByPitchClass(NoteA5) == 0);
+    REQUIRE(keyboardTest.getActiveNotes().size() == 0);
 }
 
 SCENARIO("RandomOctave starts empty") {
@@ -71,12 +83,10 @@ SCENARIO("RandomOctave clearNotesByPitchClass works") {
     REQUIRE(randomOctave.note(NoteC4, 100) == 0); // NOLINT
     REQUIRE(randomOctave.note(NoteC5, 100) == 0); // NOLINT
     REQUIRE(randomOctave.getActiveNotes().size() == 2);
-    REQUIRE_NOTHROW(randomOctave.clearQueue());
     REQUIRE(randomOctave.clear(NoteC5) == 1);
     REQUIRE(randomOctave.getActiveNotes().size() == 1);
-    // TODO: Always crashing.
-    //REQUIRE(randomOctave.getNoteQueue().empty());
-    //REQUIRE(randomOctave.getNoteQueue().size() == 2);
+    REQUIRE(!randomOctave.getNoteQueue().empty());
+    REQUIRE(randomOctave.getNoteQueue().size() == 2);
     REQUIRE_NOTHROW(randomOctave.clearQueue());
     REQUIRE_NOTHROW(randomOctave.removeAll());
     REQUIRE(randomOctave.getActiveNotes().empty());
@@ -195,7 +205,7 @@ SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
                 // Check remaining notes exist
                 REQUIRE(randomOctave.containsNote(initialNotes[2]));
 
-                // TODO: The two last notes are sometimes missing.
+                // TODO: This is still failing.
                 //REQUIRE(randomOctave.containsNote(additionalNotes[0]));
                 //REQUIRE(randomOctave.containsNote(additionalNotes[1]));
             }
@@ -221,9 +231,8 @@ SCENARIO("RandomOctave removed notes are gone") {
     randomOctave.note(initialNotes[1], 0);
     
     // Check removed notes are gone
-    // TODO: These notes should be removed.
-    //REQUIRE_FALSE(randomOctave.containsNote(initialNotes[0]));
-    //REQUIRE_FALSE(randomOctave.containsNote(initialNotes[1]));
+    REQUIRE_FALSE(randomOctave.containsNote(initialNotes[0]));
+    REQUIRE_FALSE(randomOctave.containsNote(initialNotes[1]));
 }
 
 SCENARIO("RandomOctave zero velocity note does nothing") {
@@ -282,21 +291,19 @@ SCENARIO("assa"){
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
     REQUIRE(randomOctave.getNoteQueue().size() == 2);
-    // TODO: Sometimes this doesn't work.
-    //REQUIRE(randomOctave.getActiveNotes().size() >= 2);  
+    REQUIRE(randomOctave.getActiveNotes().size() == 1);  
 
     // Try to remove a note that is not active.
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
     // No change.
-    REQUIRE(randomOctave.getNoteQueue().size() == 2);
-    // TODO: Something broken here. Crashes randomly.
+    REQUIRE(randomOctave.getNoteQueue().size() == 3);
     REQUIRE(randomOctave.getActiveNotes().size() >= 1);
 
     // Remove C5
     REQUIRE_NOTHROW(randomOctave.note( NoteC5, 0 ));
 
-    //REQUIRE(randomOctave.getNoteQueue().size() == 4);
+    REQUIRE(randomOctave.getNoteQueue().size() == 4);
     
     //REQUIRE(randomOctave.getNoteQueue().at(0)->velocity() == 0);
     //REQUIRE(randomOctave.getNoteQueue().at(1)->velocity() == 0);
