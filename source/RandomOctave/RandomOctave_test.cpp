@@ -28,13 +28,13 @@ SCENARIO("test the keyboard class") {
     Keyboard keyboardTest = Keyboard();
     REQUIRE(keyboardTest.getActiveNotes().empty());
     REQUIRE(keyboardTest.getNoteQueue().empty());
-    REQUIRE(keyboardTest.add(47, 46, 127) != 0);
-    REQUIRE(keyboardTest.add(48, 36, 127) == 0);
-    REQUIRE(keyboardTest.add(48, 46, 127) != 0);
-    REQUIRE(keyboardTest.add(48, 48, 127) == 0);
-    REQUIRE(keyboardTest.add(48, 60, 127) == 0);
-    REQUIRE(keyboardTest.add(48, 72, 127) == 0);
-    REQUIRE(keyboardTest.add(48, 84, 127) != 0);
+    REQUIRE(keyboardTest.add(47, 46, 127) == NoteReturnCodes::DEGREE_MISMATCH);
+    REQUIRE(keyboardTest.add(48, 36, 127) == NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 46, 127) == NoteReturnCodes::DEGREE_MISMATCH);
+    REQUIRE(keyboardTest.add(48, 48, 127) == NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 60, 127) == NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 72, 127) == NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 84, 127) == NoteReturnCodes::OUT_OF_SPACE);
     REQUIRE(keyboardTest.getActiveNotes().size() == 4);
     REQUIRE(!keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getNoteQueue().size() == 4);
@@ -51,9 +51,9 @@ SCENARIO("test the keyboard class") {
 SCENARIO("test the something") {
     Keyboard keyboardTest = Keyboard();
     REQUIRE(keyboardTest.getActiveNotes().empty());
-    REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) == 0);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) == NoteReturnCodes::OK);
     REQUIRE(keyboardTest.getActiveNotes().size() == 1);
-    REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) == 0);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) == NoteReturnCodes::OK);
     REQUIRE(!keyboardTest.remove(NoteA5).empty());
     REQUIRE(keyboardTest.getActiveNotes().empty());
 }

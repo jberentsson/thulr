@@ -5,6 +5,14 @@
 #include "RandomOctave/Note/ActiveNote.hpp"
 #include "RandomOctave/Note/Note.hpp"
 #include <iostream>
+    
+enum class NoteReturnCodes : uint8_t {
+    OK = 0,
+    OUT_OF_RANGE = 1,
+    SOMETHING_ELSE = 2,
+    DEGREE_MISMATCH = 3,
+    OUT_OF_SPACE = 4
+};
 
 class Keyboard {
 private:
@@ -26,15 +34,15 @@ public:
         }
     }
 
-    auto add(int originalPitch, int randomPitch, int velocity) -> int {
+    auto add(int originalPitch, int randomPitch, int velocity) -> NoteReturnCodes {
         // Check if the notes have the same degree.        
         if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
-            return 4;
+            return NoteReturnCodes::DEGREE_MISMATCH;
         }
 
         // If there is no more space for notes.
         if (!(keyboard_[originalPitch].getActiveNotes().size() < MAX_NOTES)) {
-            return 5;
+            return NoteReturnCodes::OUT_OF_SPACE;
         }
         
         // Add a new note to a key.
@@ -57,16 +65,16 @@ public:
                 }
 
                 this->updateActiveNotes();
-                return 0;
+                return NoteReturnCodes::OK;
             } else { // NOLINT
                 std::cout << "Something else 1 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";
-                return 2;
+                return NoteReturnCodes::SOMETHING_ELSE;
             }
         } else { // NOLINT
             std::cout << "Something else 2 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";
         }
 
-        return 1;
+        return NoteReturnCodes::OUT_OF_RANGE;
     }
 
     auto remove(int originalPitch) -> std::vector<std::shared_ptr<ActiveNote>> {
