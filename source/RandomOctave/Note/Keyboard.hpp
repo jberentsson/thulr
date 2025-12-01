@@ -33,12 +33,16 @@ public:
                 } else {
                     if (!keyboard_[originalPitch].getActiveNotes().empty()) {
                         noteQueue_.insert(noteQueue_.end(), activeNotes_.begin(), activeNotes_.end());
+                    } else {
+                        std::cout << "Something else 0\n";   
                     }
                 }
+
+                this->updateActiveNotes();
+                return result;
+            } else {
+                std::cout << "Something else 1 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";   
             }
-            
-            this->updateActiveNotes();
-            return result;
         }
 
         return nullptr;
@@ -49,9 +53,10 @@ public:
             if (!this->keyboard_[originalPitch].getActiveNotes().empty()) {
                 for (const auto &cuan : this->keyboard_[originalPitch].getActiveNotes()) {
                     // 1. Add it to the noteQueue.
-                    this->noteQueue_.push_back(cuan);
+                    this->noteQueue_.push_back(std::make_shared<ActiveNote>(ActiveNote((*cuan).pitch(), (*cuan).pitch(), 0)));
                 }
-            } else {
+            } 
+            else {
                 this->noteQueue_.push_back(std::make_shared<ActiveNote>(ActiveNote(originalPitch, originalPitch, 0)));
             }
 

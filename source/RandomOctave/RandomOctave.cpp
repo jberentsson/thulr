@@ -12,12 +12,13 @@ using namespace MIDI;
 RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high) {} // NOLINT
 
 auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
+    int randomPitch = this->randomizeNote(pitch, gen);
+    
     if (pitch < this->rangeLow_ || pitch > this->rangeHigh_ || velocity < this->rangeLow_ || velocity > this->rangeHigh_) {
         return -1;
     }
 
     if (velocity > 0) {
-        int randomPitch = this->randomizeNote(pitch, gen);
         this->keyboard_.add(pitch, randomPitch, velocity);
     } else {
         this->keyboard_.remove(pitch);
