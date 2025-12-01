@@ -40,7 +40,7 @@ public:
 
                 this->updateActiveNotes();
                 return result;
-            } else {
+            } else { // NOLINT
                 std::cout << "Something else 1 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";   
             }
         }
