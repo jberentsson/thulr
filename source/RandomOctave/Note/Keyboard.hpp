@@ -6,6 +6,8 @@
 #include "RandomOctave/Note/Note.hpp"
 #include <iostream>
 
+#define MAX_NOTES 4
+
 class Keyboard {
 private:
     std::vector<Note> keyboard_;
@@ -14,6 +16,7 @@ private:
 
 public:
     Keyboard() {
+        // Populate the keyboard.
         keyboard_.reserve(MIDI::KEYBOARD_SIZE);
 
         for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
@@ -21,7 +24,17 @@ public:
         }
     }
 
-    auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote> {
+    auto add(int originalPitch, int randomPitch, int velocity) -> int {
+        // Check if the notes have the same degree.        
+        if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
+            return 4;
+        }
+
+        // If there is no more space for notes.
+        if (!(keyboard_[originalPitch].getActiveNotes().size() < MAX_NOTES)) {
+            return 5;
+        }
+        
         // Add a new note to a key.
         if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
             std::shared_ptr<ActiveNote> result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
@@ -29,34 +42,44 @@ public:
             if (result != nullptr) {
                 // If our new note message is valid.
                 if (velocity > 0) {
+                    // NOTE ON
                     noteQueue_.push_back(result);
                 } else {
+                    // NOTE OFF
                     if (!keyboard_[originalPitch].getActiveNotes().empty()) {
+                        std::cout << "Is this doing something?\n";
                         noteQueue_.insert(noteQueue_.end(), activeNotes_.begin(), activeNotes_.end());
                     } else {
-                        std::cout << "Something else 0\n";   
+                        std::cout << "Something else 0\n";
                     }
                 }
 
                 this->updateActiveNotes();
-                return result;
+                return 0;
             } else { // NOLINT
-                std::cout << "Something else 1 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";   
+                std::cout << "Something else 1 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";
+                return 2;
             }
+        } else { // NOLINT
+            std::cout << "Something else 2 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";
         }
 
-        return nullptr;
+        return 1;
     }
 
     auto remove(int originalPitch) -> std::vector<std::shared_ptr<ActiveNote>> {
+        // Check boundries.
         if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
+            // Check if there are any active notes on that key,
             if (!this->keyboard_[originalPitch].getActiveNotes().empty()) {
+                // Remove note from active and to note queue.
                 for (const auto &cuan : this->keyboard_[originalPitch].getActiveNotes()) {
                     // 1. Add it to the noteQueue.
                     this->noteQueue_.push_back(std::make_shared<ActiveNote>(ActiveNote((*cuan).pitch(), (*cuan).pitch(), 0)));
                 }
             } 
             else {
+                // NOTE THROUGH
                 this->noteQueue_.push_back(std::make_shared<ActiveNote>(ActiveNote(originalPitch, originalPitch, 0)));
             }
 
@@ -69,6 +92,7 @@ public:
         return this->noteQueue_;
     }
 
+    // TOOD: Can we delete this?
     auto clearNotesByPitchClass(int note) -> int { // NOLINT
         int pitchClass = note % MIDI::OCTAVE;
 
@@ -112,13 +136,15 @@ public:
     auto containsNote(int noteValue) -> bool {
         // Check if a key has an active note with a specific pitch.
         for (int i = (noteValue % MIDI::OCTAVE); i < keyboard_.size(); i += MIDI::OCTAVE) { // NOLINT
+            // Check each of the active notes for every key.
             for (const auto &currentActiveNote : keyboard_[i].getActiveNotes()) {
-                
                 if ((currentActiveNote->pitch() % MIDI::OCTAVE) == (noteValue % MIDI::OCTAVE)) {
                     return true;
                 }
             }
         }
+
+        std::cout << "did not contain note " << noteValue << "\n";
 
         return false;
     }

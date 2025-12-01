@@ -28,13 +28,13 @@ SCENARIO("test the keyboard class") {
     Keyboard keyboardTest = Keyboard();
     REQUIRE(keyboardTest.getActiveNotes().empty());
     REQUIRE(keyboardTest.getNoteQueue().empty());
-    REQUIRE(keyboardTest.add(47, 46, 127) == nullptr);
-    REQUIRE(keyboardTest.add(48, 36, 127) != nullptr);
-    REQUIRE(keyboardTest.add(48, 46, 127) == nullptr);
-    REQUIRE(keyboardTest.add(48, 48, 127) != nullptr);
-    REQUIRE(keyboardTest.add(48, 60, 127) != nullptr);
-    REQUIRE(keyboardTest.add(48, 72, 127) != nullptr);
-    REQUIRE(keyboardTest.add(48, 84, 127) == nullptr);
+    REQUIRE(keyboardTest.add(47, 46, 127) != 0);
+    REQUIRE(keyboardTest.add(48, 36, 127) == 0);
+    REQUIRE(keyboardTest.add(48, 46, 127) != 0);
+    REQUIRE(keyboardTest.add(48, 48, 127) == 0);
+    REQUIRE(keyboardTest.add(48, 60, 127) == 0);
+    REQUIRE(keyboardTest.add(48, 72, 127) == 0);
+    REQUIRE(keyboardTest.add(48, 84, 127) != 0);
     REQUIRE(keyboardTest.getActiveNotes().size() == 4);
     REQUIRE(!keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getNoteQueue().size() == 4);
@@ -52,9 +52,9 @@ SCENARIO("test the something") {
     Keyboard keyboardTest = Keyboard();
 
     REQUIRE(keyboardTest.getActiveNotes().empty());
-    REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) != nullptr);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) == 0);
     REQUIRE(keyboardTest.getActiveNotes().size() == 1);
-    REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) != nullptr);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) == 0);
     REQUIRE(keyboardTest.clearNotesByPitchClass(NoteA5) == 0);
     REQUIRE(keyboardTest.getActiveNotes().empty());
 }
@@ -116,7 +116,7 @@ SCENARIO("RandomOctave range setting works") {
 SCENARIO("RandomOctave multiple notes can be added") {
     std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
-    const std::vector<int> notes = {NoteE5, NoteD2, NoteG4};
+    const std::vector<int> notes = { NoteE5, NoteD2, NoteG4 };
     
     for (const int note : notes) {
         randomOctave.note(note, 100); // NOLINT
@@ -133,7 +133,7 @@ SCENARIO("RandomOctave multiple notes can be added") {
 SCENARIO("RandomOctave multiple notes can be removed") {
     std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
-    const std::vector<int> notes = {NoteE5, NoteD2, NoteG4};
+    const std::vector<int> notes = { NoteE5, NoteD2, NoteG4 };
     
     for (const int note : notes) {
         randomOctave.note(note, 100); // NOLINT
@@ -152,8 +152,8 @@ SCENARIO("RandomOctave multiple notes can be removed") {
 SCENARIO("RandomOctave adding notes increases count") {
     std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
-    const std::vector<int> initialNotes = {NoteC4, NoteE4, NoteG4};
-    const std::vector<int> additionalNotes = {NoteA4, NoteB4};
+    const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
+    const std::vector<int> additionalNotes = { NoteA4, NoteB4 };
     
     for (const int note : initialNotes) {
         randomOctave.note(note, 100); // NOLINT
@@ -164,15 +164,15 @@ SCENARIO("RandomOctave adding notes increases count") {
     }
     
     REQUIRE(!randomOctave.getActiveNotes().empty());
-    //REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size());
+    REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size());
     std::cout << "---------------------------------------------------------\n";
 }
 
 SCENARIO("RandomOctave removing notes decreases count") {
     std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
-    const std::vector<int> initialNotes = {NoteC4, NoteE4, NoteG4};
-    const std::vector<int> additionalNotes = {NoteA4, NoteB4};
+    const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
+    const std::vector<int> additionalNotes = { NoteA4, NoteB4 };
     
     // Add all notes
     for (const int note : initialNotes) {
@@ -187,14 +187,15 @@ SCENARIO("RandomOctave removing notes decreases count") {
     randomOctave.note(initialNotes[1], 0);
 
     // TODO: This output should be consistant number.
-    //REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size() - 2);
+    REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size() - 2);
     std::cout << "---------------------------------------------------------\n";
 }
 
 SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
+    std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
-    const std::vector<int> initialNotes = {NoteC4, NoteE4, NoteG4};
-    const std::vector<int> additionalNotes = {NoteA4, NoteB4};
+    const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
+    const std::vector<int> additionalNotes = { NoteA4, NoteB4 };
     
     GIVEN("a") {
         // Add all notes
@@ -207,6 +208,10 @@ SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
                 REQUIRE(randomOctave.note(note, 100) == 0); // NOLINT
             }
 
+            // TODO: Sometimes only four numbers are inserted.
+            REQUIRE(!randomOctave.getActiveNotes().empty());
+            REQUIRE(randomOctave.getActiveNotes().size() == 5);
+
             THEN("c") {
                 // Remove two notes
                 REQUIRE(randomOctave.note(initialNotes[0], 0) == 0);
@@ -216,11 +221,12 @@ SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
                 REQUIRE(randomOctave.containsNote(initialNotes[2]));
 
                 // TODO: This is still failing.
-                //REQUIRE(randomOctave.containsNote(additionalNotes[0]));
-                //REQUIRE(randomOctave.containsNote(additionalNotes[1]));
+                REQUIRE(randomOctave.containsNote(additionalNotes[0]));
+                REQUIRE(randomOctave.containsNote(additionalNotes[1]));
             }
         }
     }
+    std::cout << "---------------------------------------------------------\n";
 }
 
 SCENARIO("RandomOctave removed notes are gone") {

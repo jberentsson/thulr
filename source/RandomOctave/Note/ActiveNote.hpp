@@ -25,12 +25,6 @@ public:
         return mVelocity_;
     }
 
-    // Optional: Add setters if you need to modify pitches after creation
-    virtual void setProcessedPitch(int newPitch) {
-        mProcessedPitch_ = newPitch;
-    }
-
-    // Optional: Add comparison for easier testing
     [[nodiscard]] auto equals(const ActiveNote& other) const -> bool {
         return mOriginalPitch_ == other.mOriginalPitch_ &&
                mProcessedPitch_ == other.mProcessedPitch_ &&

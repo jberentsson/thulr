@@ -6,6 +6,7 @@
 #include "ActiveNote.hpp"
 #include "Utils/MIDI.hpp"
 
+// TODO: Rename this to key?
 class Note {
 private:
     enum : uint8_t {
@@ -27,12 +28,14 @@ public:
     }
 
     auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote>{
+        // Add an active note to the key.
         if (!isValidNote(originalPitch, randomPitch, velocity)) {
             return nullptr;
         }
 
         auto newNote = std::make_shared<ActiveNote>(originalPitch, randomPitch, velocity);
 
+        // TODO: Do we need this?
         if (MIDI::RANGE_LOW < velocity && velocity <= MIDI::RANGE_HIGH) {
             activeNotes.push_back(newNote);
         }
@@ -40,7 +43,8 @@ public:
         return newNote;
     }
 
-    auto removeByPitch(int pitch) -> void {
+    // TODO: Not used i think.
+/*     auto removeByPitch(int pitch) -> void {
         auto currentActiveNote = std::find_if(activeNotes.begin(), activeNotes.end(),
             [pitch] (const auto& note) -> bool {
                 return note->pitch() == pitch;
@@ -49,8 +53,9 @@ public:
         if (currentActiveNote != activeNotes.end()) {
             activeNotes.erase(currentActiveNote);
         }
-    }
+    } */
 
+    // TODO: I think we can delete this.
     auto clear() -> size_t {
         size_t activeCount = activeNotes.size();
         activeNotes.clear();
@@ -61,11 +66,13 @@ public:
         return activeNotes;
     }
 
+    // TODO: Can this be simplified with pointers?
     auto setRange(int low, int high) -> void { // NOLINT
         rangeLow_ = low;
         rangeHigh_ = high;
     }
 
+    // TODO: Are we using this?
     auto contains(int note) -> bool {
         for (const auto &activeNote : activeNotes) { // NOLINT
             if (activeNote->pitch() == note) {
@@ -76,6 +83,7 @@ public:
         return false;
     }
 
+    // TODO: Add this to every function we can think of. Remove duplicated code.
     auto isValidNote(int originalPitch, int randomPitch, int velocity) -> bool { // NOLINT
         // Octave check
         if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
