@@ -76,16 +76,11 @@ public:
         return false;
     }
 
-    bool isValidNote(int originalPitch, int randomPitch, int velocity) {
+    auto isValidNote(int originalPitch, int randomPitch, int velocity) -> bool { // NOLINT
         // Octave check
         if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
             return false;
         }
-        
-        // Pitch check
-        //if (originalPitch == this->mPitch_) {
-        //    return false;
-        //}
         
         // Note limit check (only for note-on events)
         if (velocity > 0) {

@@ -53,7 +53,7 @@ auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) const -> int {
     return clampPitchToRange(randomPitch);
 }
 
-auto RandomOctave::clearNotesByPitchClass(int pitch) -> int {
+auto RandomOctave::clearNotesByPitchClass(int pitch) -> int { // NOLINT
     //return this->keyboard_.clearNotesByPitchClass(pitch);
     return -1;
 }

@@ -10,7 +10,7 @@ using namespace MIDI::Notes;
 
 SCENARIO("test the note class") {
     Note noteTest = Note(48); // NOLINT
-    REQUIRE(noteTest.getActiveNotes().size() == 0);
+    REQUIRE(noteTest.getActiveNotes().empty());
     REQUIRE(noteTest.add(47, 46, 127) == nullptr);
     REQUIRE(noteTest.add(48, 36, 127) != nullptr);
     REQUIRE(noteTest.add(48, 46, 127) == nullptr);
@@ -19,11 +19,13 @@ SCENARIO("test the note class") {
     REQUIRE(noteTest.add(48, 72, 127) != nullptr);
     REQUIRE(noteTest.add(48, 84, 127) == nullptr);
     REQUIRE(noteTest.getActiveNotes().size() == 4);
+    REQUIRE_NOTHROW(noteTest.clear());
+    REQUIRE(noteTest.getActiveNotes().empty());
 }
 
 SCENARIO("test the keyboard class") {
     Keyboard keyboardTest = Keyboard();
-    REQUIRE(keyboardTest.getActiveNotes().size() == 0);
+    REQUIRE(keyboardTest.getActiveNotes().empty());
     REQUIRE(keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.add(47, 46, 127) == nullptr);
     REQUIRE(keyboardTest.add(48, 36, 127) != nullptr);
@@ -38,23 +40,22 @@ SCENARIO("test the keyboard class") {
     REQUIRE(keyboardTest.clearQueue() == 0);
     REQUIRE(keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getActiveNotes().size() == 4);
-    REQUIRE(keyboardTest.remove(48).size() > 0);
+    REQUIRE(keyboardTest.remove(48).size() == 4);
     REQUIRE(keyboardTest.getNoteQueue().size() == 4);
-    REQUIRE(keyboardTest.getActiveNotes().size() == 0);
+    REQUIRE(keyboardTest.getActiveNotes().empty());
     REQUIRE(keyboardTest.clearQueue() == 0);
     REQUIRE(keyboardTest.getNoteQueue().empty());
 }
 
-
 SCENARIO("test the something") {
     Keyboard keyboardTest = Keyboard();
 
-    REQUIRE(keyboardTest.getActiveNotes().size() == 0);
+    REQUIRE(keyboardTest.getActiveNotes().empty());
     REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) != nullptr);
     REQUIRE(keyboardTest.getActiveNotes().size() == 1);
     REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) != nullptr);
     REQUIRE(keyboardTest.clearNotesByPitchClass(NoteA5) == 0);
-    REQUIRE(keyboardTest.getActiveNotes().size() == 0);
+    REQUIRE(keyboardTest.getActiveNotes().empty());
 }
 
 SCENARIO("RandomOctave starts empty") {
@@ -156,7 +157,7 @@ SCENARIO("RandomOctave adding notes increases count") {
         randomOctave.note(note, 100); // NOLINT
     }
     
-    REQUIRE(randomOctave.getActiveNotes().size() > 0);
+    REQUIRE(!randomOctave.getActiveNotes().empty());
     //REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size());
 }
 
@@ -218,7 +219,7 @@ SCENARIO("RandomOctave removed notes are gone") {
     const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
     
     // Add notes
-    for (const int note : initialNotes) {
+    for (const int note : initialNotes) { // NOLINT
         REQUIRE(randomOctave.note(note, 100) == 0); // NOLINT
     }
     
@@ -298,7 +299,7 @@ SCENARIO("assa"){
 
     // No change.
     REQUIRE(randomOctave.getNoteQueue().size() == 3);
-    REQUIRE(randomOctave.getActiveNotes().size() >= 1);
+    REQUIRE(!randomOctave.getActiveNotes().empty());
 
     // Remove C5
     REQUIRE_NOTHROW(randomOctave.note( NoteC5, 0 ));

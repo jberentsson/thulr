@@ -24,7 +24,6 @@ public:
     auto add(int originalPitch, int randomPitch, int velocity) -> std::shared_ptr<ActiveNote> {
         // Add a new note to a key.
         if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
-            size_t noteCount = keyboard_[originalPitch].getActiveNotes().size();
             std::shared_ptr<ActiveNote> result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             
             if (result != nullptr) {
@@ -155,7 +154,7 @@ public:
         }
     }
 
-    auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>>& {
+    [[nodiscard]] auto getActiveNotes() const -> const std::vector<std::shared_ptr<ActiveNote>>& {
         return this->activeNotes_;
     }
 };
