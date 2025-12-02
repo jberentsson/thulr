@@ -1,14 +1,13 @@
 #pragma once
+
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include <ctime>
 #include <random>
 #include "Utils/MIDI.hpp"
 #include "Note/Keyboard.hpp"
 #include "Note/Note.hpp"
-
-#include <ctime>
-#include <random>
 
 class RandomOctave {
     public:
@@ -23,9 +22,8 @@ class RandomOctave {
         int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
 
     public:
-        std::random_device randomDevice{};
-        std::mt19937 gen{randomDevice()};
-        
+        std::mt19937 gen{std::random_device{}()}; 
+
         explicit RandomOctave(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
         
         [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
