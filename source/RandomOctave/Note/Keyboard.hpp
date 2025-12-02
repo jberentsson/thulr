@@ -35,79 +35,60 @@ public:
     }
 
     auto add(int originalPitch, int randomPitch, int velocity) -> NoteReturnCodes {
+        // Validate pitches are in range.
+        if (originalPitch < 0 || originalPitch >= static_cast<int>(keyboard_.size())) {
+            return NoteReturnCodes::OUT_OF_RANGE;
+        }
+        
+        // Check degree match (pitch class must be same).
         if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
-            std::cerr << "Add: Degree mismatch.\n";
             return NoteReturnCodes::DEGREE_MISMATCH;
         }
 
-        if (originalPitch < 0 || originalPitch >= static_cast<int>(keyboard_.size())) {
-            std::cerr << "Add: Out of range.\n";
-            return NoteReturnCodes::OUT_OF_RANGE;
-        }
-
         if (velocity > 0) {
-            // NOTE ON
+            // === NOTE ON ===
+            // Check if key has space for more notes.
             if (keyboard_[originalPitch].getActiveNotes().size() >= MAX_NOTES) {
-                std::cerr << "Add: Key out of space.\n";
                 return NoteReturnCodes::OUT_OF_SPACE;
             }
-
+            
+            // Add the note.
             auto result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             if (result == nullptr) {
-                std::cerr << "Add: Something else.\n";
                 return NoteReturnCodes::SOMETHING_ELSE;
             }
-
+            
+            // Add to queues.
             noteQueue_.push_back(result);
-            activeNotes_.push_back(result);
-            std::cout << "Add: pushing back Note(" << originalPitch << ", " << randomPitch << ", " << velocity << ").\n";
 
+            // Refresh active notes list.
+            updateActiveNotes();
+            
         } else {
-            // NOTE OFF - Use your remove logic
-            if (!keyboard_[originalPitch].getActiveNotes().empty()) {
-                // Add note-offs for all active notes on this key
-                for (const auto &activeNote : keyboard_[originalPitch].getActiveNotes()) {
+            // === NOTE OFF ===
+            // Find and remove all active notes with this original pitch.
+            for (auto it = activeNotes_.begin(); it != activeNotes_.end(); ) {
+                if ((*it)->originalPitch() == originalPitch) {
+                    // Create note-off message,
                     noteQueue_.push_back(std::make_shared<ActiveNote>(
-                        ActiveNote(activeNote->pitch(), activeNote->pitch(), velocity)
+                        ActiveNote(originalPitch, (*it)->pitch(), 0)
                     ));
+                    it = activeNotes_.erase(it);
+                } else {
+                    ++it;
                 }
-            } else {
-                // NOTE THROUGH - original pitch matches random pitch
-                noteQueue_.push_back(std::make_shared<ActiveNote>(
-                    ActiveNote(randomPitch, originalPitch, velocity)
-                ));
             }
-
-            // Clear active notes from this key
+            
+            // Also clear from the specific key.
             keyboard_[originalPitch].getActiveNotes().clear();
         }
-
-        updateActiveNotes();
+        
         return NoteReturnCodes::OK;
     }
 
     auto remove(int originalPitch) -> std::vector<std::shared_ptr<ActiveNote>> {
-        // Check boundries.
-        if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
-            // Check if there are any active notes on that key,
-            if (!this->keyboard_[originalPitch].getActiveNotes().empty()) {
-                // Remove note from active and to note queue.
-                for (const auto &cuan : this->keyboard_[originalPitch].getActiveNotes()) {
-                    // 1. Add it to the noteQueue.
-                    this->noteQueue_.push_back(std::make_shared<ActiveNote>(ActiveNote((*cuan).pitch(), (*cuan).pitch(), 0)));
-                }
-            } 
-            else {
-                // NOTE THROUGH
-                this->noteQueue_.push_back(std::make_shared<ActiveNote>(ActiveNote(originalPitch, originalPitch, 0)));
-            }
-
-            // 2. Remove an active note.
-            this->keyboard_[originalPitch].getActiveNotes().clear();
-            this->updateActiveNotes();
-        }
-
-        // 3. Return the note queue.
+        // Create a note-off message.
+        this->add(originalPitch, originalPitch, 0);
         return this->noteQueue_;
     }
 

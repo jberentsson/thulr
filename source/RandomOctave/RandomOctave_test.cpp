@@ -310,14 +310,14 @@ SCENARIO("assa"){
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
     // No change.
-    REQUIRE(randomOctave.getNoteQueue().size() == 3);
+    REQUIRE(randomOctave.getNoteQueue().size() == 2);
     REQUIRE(!randomOctave.getActiveNotes().empty());
-    REQUIRE(randomOctave.getNoteQueue().size() == 3);
+    REQUIRE(randomOctave.getNoteQueue().size() == 2);
 
     // Remove C5
     REQUIRE_NOTHROW(randomOctave.note( NoteC5, 0 ));
 
-    REQUIRE(randomOctave.getNoteQueue().size() == 4);
+    REQUIRE(randomOctave.getNoteQueue().size() == 3);
     
     REQUIRE(randomOctave.getNoteQueue().at(0)->velocity() == 0);
     REQUIRE(randomOctave.getNoteQueue().at(1)->velocity() == 0);
@@ -325,8 +325,8 @@ SCENARIO("assa"){
     
     REQUIRE(randomOctave.getNoteQueue().at(0)->pitch() % 12 == 7);
     REQUIRE(randomOctave.getNoteQueue().at(1)->pitch() % 12 == 4);
-    REQUIRE(randomOctave.getNoteQueue().at(2)->pitch() % 12 == 4);
-    REQUIRE(randomOctave.getNoteQueue().at(3)->pitch() % 12 == 0);
+    REQUIRE(randomOctave.getNoteQueue().at(2)->pitch() % 12 == 0);
+    //REQUIRE(randomOctave.getNoteQueue().at(3)->pitch() % 12 == 3);
 
     REQUIRE_NOTHROW(randomOctave.clearQueue());
 
