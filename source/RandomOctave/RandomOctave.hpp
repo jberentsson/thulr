@@ -7,6 +7,9 @@
 #include "Note/Keyboard.hpp"
 #include "Note/Note.hpp"
 
+#include <ctime>
+#include <random>
+
 class RandomOctave {
     public:
         Keyboard keyboard_;
@@ -20,12 +23,14 @@ class RandomOctave {
         int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
 
     public:
+        std::random_device randomDevice{};
+        std::mt19937 gen{randomDevice()};
+        
         explicit RandomOctave(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
         
         [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
         
         static auto getPitchClass(int pitch) -> int;
-        auto clearNotesByPitchClass(int pitch) -> int;
 
         auto randomizeNote(int pitch, std::mt19937& gen) const -> int;
         auto note(int pitch, int velocity) -> int;
@@ -37,5 +42,4 @@ class RandomOctave {
 
         auto containsNote(int noteValue) -> bool { return this->keyboard_.containsNote(noteValue); }
         auto clearQueue() -> void { this->keyboard_.clearQueue(); }
-        //auto clear(int noteValue) -> size_t { return this->keyboard_.clear(noteValue); }
 };

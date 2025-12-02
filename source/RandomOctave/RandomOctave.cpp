@@ -1,11 +1,6 @@
 #include "RandomOctave.hpp"
 #include "Utils/MIDI.hpp"
 #include <vector>
-#include <ctime>
-#include <random>
-
-std::random_device randomDevice;
-std::mt19937 gen(randomDevice());
 
 using namespace MIDI;
 
