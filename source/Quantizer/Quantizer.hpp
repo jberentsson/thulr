@@ -13,6 +13,8 @@ public:
     using NoteData = QuantizerEnums::NoteData;
     using RoundDirection = QuantizerEnums::RoundDirection;
     using QuantizeMode = QuantizerEnums::QuantizeMode;
+    using NoteThrough = QuantizerEnums::NoteThrough;
+    using QuantizeEnable = QuantizerEnums::QuantizeEnable;
 
     Quantizer();
     ~Quantizer() = default;
@@ -36,12 +38,13 @@ public:
 
     auto setRoundDirection(RoundDirection direction) -> RoundDirection;
     auto setMode(QuantizeMode mode) -> QuantizeMode;
+    auto setThrough(NoteThrough throughValue) -> NoteThrough;
     auto addTwelveNotes(MIDI::Note noteValue) -> int;
     auto addAllNotes(MIDI::Note noteValue) -> int;
-    auto enable() -> bool;
-    auto disable() -> bool;
-    auto disableThrough() -> bool;
-    auto enableThrough() -> bool;
+    auto enable() -> QuantizeEnable;
+    auto disable() -> QuantizeEnable;
+    auto disableThrough() -> NoteThrough;
+    auto enableThrough() -> NoteThrough;
     auto modeTwelveNotes() -> bool;
     auto modeAllNotes() -> bool;
     auto keyboardIndex() -> int;
@@ -62,8 +65,8 @@ private:
     QuantizeMode mode = QuantizeMode::TWELVE_NOTES;
 
     bool keyboard[2][MIDI::KEYBOARD_SIZE];
-    bool quantize_on = true;
-    bool noteThrough = false;
+    QuantizeEnable quantizeEnabled_ = QuantizeEnable::ON;
+    NoteThrough noteThrough_ = NoteThrough::ON;
 
     int note_count[2] = { 0, 0 };
 };

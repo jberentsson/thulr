@@ -1,15 +1,15 @@
 #include "Quantizer.hpp"
 
-auto Quantizer::disable() -> bool {
+auto Quantizer::disable() -> QuantizeEnable {
     // Disable the quantizer.
-    this->quantize_on = false;
-    return this->quantize_on;
+    this->quantizeEnabled_ = QuantizeEnable::OFF;
+    return this->quantizeEnabled_;
 }
 
-auto Quantizer::enable() -> bool {
+auto Quantizer::enable() -> QuantizeEnable {
     // Enable the quantizer.
-    this->quantize_on = true;
-    return this->quantize_on;
+    this->quantizeEnabled_ = QuantizeEnable::ON;
+    return this->quantizeEnabled_;
 }
 
 auto Quantizer::setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int {
@@ -53,14 +53,14 @@ auto Quantizer::modeAllNotes() -> bool {
     return true;
 }
 
-auto Quantizer::enableThrough() -> bool {
-    this->noteThrough = false;
-    return this->noteThrough;
+auto Quantizer::enableThrough() -> NoteThrough {
+    this->noteThrough_ = NoteThrough::ON;
+    return this->noteThrough_;
 }
 
-auto Quantizer::disableThrough() -> bool {
-    this->noteThrough = false;
-    return this->noteThrough;
+auto Quantizer::disableThrough() -> NoteThrough {
+    this->noteThrough_ = NoteThrough::OFF;
+    return this->noteThrough_;
 }
 
 auto Quantizer::keyboardIndex() -> int {

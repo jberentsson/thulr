@@ -29,7 +29,7 @@ auto Quantizer::quantize(MIDI::Note noteValue) -> int {
 
     // Return the original note if
     // the quantizer is disabled.
-    if (!this->quantize_on) {
+    if (this->quantizeEnabled_ == QuantizeEnable::OFF) {
         noteFound = true;
     }
 
@@ -112,9 +112,14 @@ auto Quantizer::addTwelveNotes(MIDI::Note noteValue) -> int {
 
 auto Quantizer::addAllNotes(MIDI::Note noteValue) -> int {
     // ALL_NOTES mode - just add the single note.
-
     this->keyboard[static_cast<int> (QuantizeMode::ALL_NOTES)][(uint8_t) noteValue] = true;
     this->note_count[static_cast<int> (QuantizeMode::ALL_NOTES)]++;
     
     return 0;
 }
+
+auto Quantizer::setThrough(NoteThrough throughValue) -> NoteThrough {
+    // Enable/Disable note through.
+    this->noteThrough_ = throughValue;
+    return this->noteThrough_;
+};

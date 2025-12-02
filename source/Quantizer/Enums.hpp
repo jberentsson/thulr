@@ -23,4 +23,14 @@ namespace QuantizerEnums {
         OFF = 0,
         ON = 1
     };
+    
+    enum class NoteThrough : uint8_t {
+        OFF = 0,
+        ON = 1
+    };
+
+    enum class QuantizeEnable : uint8_t {
+        OFF = 0,
+        ON = 1
+    };
 };
