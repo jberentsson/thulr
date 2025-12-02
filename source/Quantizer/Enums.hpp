@@ -19,18 +19,18 @@ namespace QuantizerEnums {
         ALL_NOTES = 1
     };
 
-    enum class NoteData : uint8_t { 
-        OFF = 0,
-        ON = 1
+    enum class NoteData : bool { 
+        OFF = false,
+        ON = true
     };
     
-    enum class NoteThrough : uint8_t {
-        OFF = 0,
-        ON = 1
+    enum class NoteThrough : bool {
+        OFF = false,
+        ON = true
     };
 
-    enum class QuantizeEnable : uint8_t {
-        OFF = 0,
-        ON = 1
+    enum class QuantizeEnable : bool {
+        OFF = false,
+        ON = true
     };
 };

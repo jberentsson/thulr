@@ -4,8 +4,7 @@
 #include <Utils/MIDI.hpp>
 #include "RandomOctave/Note/ActiveNote.hpp"
 #include "RandomOctave/Note/Note.hpp"
-    
-
+#include <iostream>
 
 class Keyboard {
 private:
@@ -37,26 +36,32 @@ public:
 
     auto add(int originalPitch, int randomPitch, int velocity) -> NoteReturnCodes {
         if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
+            std::cerr << "Add: Degree mismatch.\n";
             return NoteReturnCodes::DEGREE_MISMATCH;
         }
 
         if (originalPitch < 0 || originalPitch >= static_cast<int>(keyboard_.size())) {
+            std::cerr << "Add: Out of range.\n";
             return NoteReturnCodes::OUT_OF_RANGE;
         }
 
         if (velocity > 0) {
             // NOTE ON
             if (keyboard_[originalPitch].getActiveNotes().size() >= MAX_NOTES) {
+                std::cerr << "Add: Key out of space.\n";
                 return NoteReturnCodes::OUT_OF_SPACE;
             }
 
             auto result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             if (result == nullptr) {
+                std::cerr << "Add: Something else.\n";
                 return NoteReturnCodes::SOMETHING_ELSE;
             }
 
             noteQueue_.push_back(result);
             activeNotes_.push_back(result);
+            std::cout << "Add: pushing back Note(" << originalPitch << ", " << randomPitch << ", " << velocity << ").\n";
+
         } else {
             // NOTE OFF - Use your remove logic
             if (!keyboard_[originalPitch].getActiveNotes().empty()) {
