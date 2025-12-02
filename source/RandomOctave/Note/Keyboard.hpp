@@ -68,13 +68,13 @@ public:
                 // Add note-offs for all active notes on this key
                 for (const auto &activeNote : keyboard_[originalPitch].getActiveNotes()) {
                     noteQueue_.push_back(std::make_shared<ActiveNote>(
-                        ActiveNote(activeNote->pitch(), activeNote->pitch(), 0)
+                        ActiveNote(activeNote->pitch(), activeNote->pitch(), velocity)
                     ));
                 }
             } else {
                 // NOTE THROUGH - original pitch matches random pitch
                 noteQueue_.push_back(std::make_shared<ActiveNote>(
-                    ActiveNote(originalPitch, originalPitch, 0)
+                    ActiveNote(randomPitch, originalPitch, velocity)
                 ));
             }
 
