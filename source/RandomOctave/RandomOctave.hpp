@@ -11,6 +11,8 @@ class RandomOctave {
     public:
         Keyboard keyboard_;
 
+        using NoteReturnCodes = Keyboard::NoteReturnCodes;
+
     private:
         int rangeLow_  = MIDI::RANGE_LOW;
         int rangeHigh_ = MIDI::RANGE_HIGH;

@@ -4,15 +4,8 @@
 #include <Utils/MIDI.hpp>
 #include "RandomOctave/Note/ActiveNote.hpp"
 #include "RandomOctave/Note/Note.hpp"
-#include <iostream>
     
-enum class NoteReturnCodes : uint8_t {
-    OK = 0,
-    OUT_OF_RANGE = 1,
-    SOMETHING_ELSE = 2,
-    DEGREE_MISMATCH = 3,
-    OUT_OF_SPACE = 4
-};
+
 
 class Keyboard {
 private:
@@ -25,6 +18,14 @@ private:
     };
 
 public:
+    enum class NoteReturnCodes : uint8_t {
+        OK = 0,
+        OUT_OF_RANGE = 1,
+        SOMETHING_ELSE = 2,
+        DEGREE_MISMATCH = 3,
+        OUT_OF_SPACE = 4
+    };
+    
     Keyboard() {
         // Populate the keyboard.
         keyboard_.reserve(MIDI::KEYBOARD_SIZE);
@@ -35,46 +36,49 @@ public:
     }
 
     auto add(int originalPitch, int randomPitch, int velocity) -> NoteReturnCodes {
-        // Check if the notes have the same degree.        
         if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
             return NoteReturnCodes::DEGREE_MISMATCH;
         }
 
-        // If there is no more space for notes.
-        if (!(keyboard_[originalPitch].getActiveNotes().size() < MAX_NOTES)) {
-            return NoteReturnCodes::OUT_OF_SPACE;
+        if (originalPitch < 0 || originalPitch >= static_cast<int>(keyboard_.size())) {
+            return NoteReturnCodes::OUT_OF_RANGE;
         }
-        
-        // Add a new note to a key.
-        if (originalPitch >= 0 && originalPitch < keyboard_.size()) {
-            std::shared_ptr<ActiveNote> result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
-            
-            if (result != nullptr) {
-                // If our new note message is valid.
-                if (velocity > 0) {
-                    // NOTE ON
-                    noteQueue_.push_back(result);
-                } else {
-                    // NOTE OFF
-                    if (!keyboard_[originalPitch].getActiveNotes().empty()) {
-                        std::cout << "Is this doing something?\n";
-                        noteQueue_.insert(noteQueue_.end(), activeNotes_.begin(), activeNotes_.end());
-                    } else {
-                        std::cout << "Something else 0\n";
-                    }
-                }
 
-                this->updateActiveNotes();
-                return NoteReturnCodes::OK;
-            } else { // NOLINT
-                std::cout << "Something else 1 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";
+        if (velocity > 0) {
+            // NOTE ON
+            if (keyboard_[originalPitch].getActiveNotes().size() >= MAX_NOTES) {
+                return NoteReturnCodes::OUT_OF_SPACE;
+            }
+
+            auto result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
+            if (result == nullptr) {
                 return NoteReturnCodes::SOMETHING_ELSE;
             }
-        } else { // NOLINT
-            std::cout << "Something else 2 - "<< originalPitch << " " << randomPitch << " " << velocity <<"\n";
+
+            noteQueue_.push_back(result);
+            activeNotes_.push_back(result);
+        } else {
+            // NOTE OFF - Use your remove logic
+            if (!keyboard_[originalPitch].getActiveNotes().empty()) {
+                // Add note-offs for all active notes on this key
+                for (const auto &activeNote : keyboard_[originalPitch].getActiveNotes()) {
+                    noteQueue_.push_back(std::make_shared<ActiveNote>(
+                        ActiveNote(activeNote->pitch(), activeNote->pitch(), 0)
+                    ));
+                }
+            } else {
+                // NOTE THROUGH - original pitch matches random pitch
+                noteQueue_.push_back(std::make_shared<ActiveNote>(
+                    ActiveNote(originalPitch, originalPitch, 0)
+                ));
+            }
+
+            // Clear active notes from this key
+            keyboard_[originalPitch].getActiveNotes().clear();
         }
 
-        return NoteReturnCodes::OUT_OF_RANGE;
+        updateActiveNotes();
+        return NoteReturnCodes::OK;
     }
 
     auto remove(int originalPitch) -> std::vector<std::shared_ptr<ActiveNote>> {
@@ -102,19 +106,6 @@ public:
         return this->noteQueue_;
     }
 
-/*     auto clear(int note) -> size_t {
-        // Clear each of the active notes from each key.
-        // TODO: Is this a duplicated function?
-        if (note >= 0 && note < keyboard_.size()) {
-            size_t cleared = keyboard_[note].getActiveNotes().size();
-            keyboard_[note].getActiveNotes().clear();
-            this->updateActiveNotes();
-            return cleared;
-        }
-
-        return 0;
-    } */
-
     auto getActiveNotes(int note) -> std::vector<std::shared_ptr<ActiveNote>> {
         // Get all active notes from each of the notes of the keyboard.
         static std::vector<std::shared_ptr<ActiveNote>> empty;
@@ -141,8 +132,6 @@ public:
                 }
             }
         }
-
-        std::cout << "did not contain note " << noteValue << "\n";
 
         return false;
     }

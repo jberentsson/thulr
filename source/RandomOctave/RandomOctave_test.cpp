@@ -5,7 +5,6 @@
 #include <catch2/catch.hpp>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
 using namespace MIDI::Notes;
 
@@ -28,13 +27,13 @@ SCENARIO("test the keyboard class") {
     Keyboard keyboardTest = Keyboard();
     REQUIRE(keyboardTest.getActiveNotes().empty());
     REQUIRE(keyboardTest.getNoteQueue().empty());
-    REQUIRE(keyboardTest.add(47, 46, 127) == NoteReturnCodes::DEGREE_MISMATCH);
-    REQUIRE(keyboardTest.add(48, 36, 127) == NoteReturnCodes::OK);
-    REQUIRE(keyboardTest.add(48, 46, 127) == NoteReturnCodes::DEGREE_MISMATCH);
-    REQUIRE(keyboardTest.add(48, 48, 127) == NoteReturnCodes::OK);
-    REQUIRE(keyboardTest.add(48, 60, 127) == NoteReturnCodes::OK);
-    REQUIRE(keyboardTest.add(48, 72, 127) == NoteReturnCodes::OK);
-    REQUIRE(keyboardTest.add(48, 84, 127) == NoteReturnCodes::OUT_OF_SPACE);
+    REQUIRE(keyboardTest.add(47, 46, 127) == RandomOctave::NoteReturnCodes::DEGREE_MISMATCH);
+    REQUIRE(keyboardTest.add(48, 36, 127) == RandomOctave::NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 46, 127) == RandomOctave::NoteReturnCodes::DEGREE_MISMATCH);
+    REQUIRE(keyboardTest.add(48, 48, 127) == RandomOctave::NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 60, 127) == RandomOctave::NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 72, 127) == RandomOctave::NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(48, 84, 127) == RandomOctave::NoteReturnCodes::OUT_OF_SPACE);
     REQUIRE(keyboardTest.getActiveNotes().size() == 4);
     REQUIRE(!keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.getNoteQueue().size() == 4);
@@ -51,9 +50,9 @@ SCENARIO("test the keyboard class") {
 SCENARIO("test the something") {
     Keyboard keyboardTest = Keyboard();
     REQUIRE(keyboardTest.getActiveNotes().empty());
-    REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) == NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA5, 127) == RandomOctave::NoteReturnCodes::OK);
     REQUIRE(keyboardTest.getActiveNotes().size() == 1);
-    REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) == NoteReturnCodes::OK);
+    REQUIRE(keyboardTest.add(NoteA5, NoteA6, 127) == RandomOctave::NoteReturnCodes::OK);
     REQUIRE(!keyboardTest.remove(NoteA5).empty());
     REQUIRE(keyboardTest.getActiveNotes().empty());
 }
@@ -113,7 +112,6 @@ SCENARIO("RandomOctave range setting works") {
 }
 
 SCENARIO("RandomOctave multiple notes can be added") {
-    std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
     const std::vector<int> notes = { NoteE5, NoteD2, NoteG4 };
     
@@ -126,11 +124,9 @@ SCENARIO("RandomOctave multiple notes can be added") {
     for (const int note : notes) {
         REQUIRE(randomOctave.containsNote(note));
     }
-    std::cout << "---------------------------------------------------------\n";
 }
 
 SCENARIO("RandomOctave multiple notes can be removed") {
-    std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
     const std::vector<int> notes = { NoteE5, NoteD2, NoteG4 };
     
@@ -145,11 +141,9 @@ SCENARIO("RandomOctave multiple notes can be removed") {
     }
     
     REQUIRE(randomOctave.getActiveNotes().empty());
-    std::cout << "---------------------------------------------------------\n";
 }
 
 SCENARIO("RandomOctave adding notes increases count") {
-    std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
     const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
     const std::vector<int> additionalNotes = { NoteA4, NoteB4 };
@@ -163,14 +157,12 @@ SCENARIO("RandomOctave adding notes increases count") {
     }
     
     REQUIRE(!randomOctave.getActiveNotes().empty());
-    // TODO: This output should be consistant number.
-    //REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size());
-    std::cout << "---------------------------------------------------------\n";
+    REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size());
 }
 
 SCENARIO("RandomOctave removing notes decreases count") {
-    std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
+
     const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
     const std::vector<int> additionalNotes = { NoteA4, NoteB4 };
     
@@ -186,13 +178,10 @@ SCENARIO("RandomOctave removing notes decreases count") {
     randomOctave.note(initialNotes[0], 0);
     randomOctave.note(initialNotes[1], 0);
 
-    // TODO: This output should be consistant number.
-    //REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size() - 2);
-    std::cout << "---------------------------------------------------------\n";
+    REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size() - 2);
 }
 
 SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
-    std::cout << "---------------------------------------------------------\n";
     RandomOctave randomOctave;
     const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
     const std::vector<int> additionalNotes = { NoteA4, NoteB4 };
@@ -228,7 +217,6 @@ SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
             }
         }
     }
-    std::cout << "---------------------------------------------------------\n";
 }
 
 SCENARIO("RandomOctave removed notes are gone") {
@@ -344,4 +332,42 @@ SCENARIO("assa"){
 
     REQUIRE(randomOctave.getNoteQueue().empty());
     REQUIRE(randomOctave.getActiveNotes().empty());
+};
+
+SCENARIO("a chromatic scale is played") { // NOLINT
+    RandomOctave randomOctaveTestObject;
+
+    THEN("all chromatic notes are processed without crashing") {
+        // Play chromatic scale note-ons.
+        for (int note = NoteC5; note <= NoteC6; note++) {
+            REQUIRE_NOTHROW(randomOctaveTestObject.note(note, 100));
+        }
+        
+        // Should have 13 active notes (if no degree mismatches).
+        REQUIRE(randomOctaveTestObject.getActiveNotes().size() == 13);
+
+        // Play note-offs.
+        for (int note = NoteC5; note <= NoteC6; note++) {
+            REQUIRE_NOTHROW(randomOctaveTestObject.note(note, 0));
+        }
+
+        // Should be no active notes after note-offs.
+        REQUIRE(randomOctaveTestObject.getActiveNotes().empty());
+        
+        // Get the note queue,
+        auto noteQueue = randomOctaveTestObject.getNoteQueue();
+        
+        // Queue should have 26 notes total (13 note-ons + 13 note-offs).
+        REQUIRE(noteQueue.size() == 26);
+        
+        // Check first 13 are note-ons (velocity 100).
+        for (int i = 0; i < 13; i++) { // NOLINT
+            REQUIRE(noteQueue[i]->velocity() == 100);
+        }
+        
+        // Check last 13 are note-offs (velocity 0),
+        for (int i = 13; i < 26; i++) { // NOLINT
+            REQUIRE(noteQueue[i]->velocity() == 0);
+        }
+    }
 };
