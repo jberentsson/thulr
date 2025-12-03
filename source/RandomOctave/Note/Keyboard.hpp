@@ -36,7 +36,7 @@ public:
 
     auto add(int originalPitch, int randomPitch, int velocity) -> NoteReturnCodes {
         // Validate pitches are in range.
-        if (originalPitch < 0 || originalPitch >= static_cast<int>(keyboard_.size())) {
+        if (originalPitch < 0 || originalPitch >= static_cast<int>(this->keyboard_.size())) {
             return NoteReturnCodes::OUT_OF_RANGE;
         }
         
@@ -46,41 +46,43 @@ public:
         }
 
         if (velocity > 0) {
-            // === NOTE ON ===
+            // NOTE ON ------------------------------------------------------------------------------------
             // Check if key has space for more notes.
-            if (keyboard_[originalPitch].getActiveNotes().size() >= MAX_NOTES) {
+            if (this->keyboard_[originalPitch].getActiveNotes().size() >= MAX_NOTES) {
                 return NoteReturnCodes::OUT_OF_SPACE;
             }
             
             // Add the note.
-            auto result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
+            auto result = this->keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             if (result == nullptr) {
                 return NoteReturnCodes::SOMETHING_ELSE;
             }
             
             // Add to queues.
-            noteQueue_.push_back(result);
+            this->noteQueue_.push_back(result);
 
             // Refresh active notes list.
             updateActiveNotes();
             
         } else {
-            // === NOTE OFF ===
-            // Find and remove all active notes with this original pitch.
-            for (auto it = activeNotes_.begin(); it != activeNotes_.end(); ) {
-                if ((*it)->originalPitch() == originalPitch) {
-                    // Create note-off message,
+            // NOTE OFF -----------------------------------------------------------------------------------
+            if (!this->keyboard_[originalPitch].getActiveNotes().empty()) {
+                // There are active notes on this key - create note-offs for all of them.
+                for (const auto& activeNote : keyboard_[originalPitch].getActiveNotes()) {
                     noteQueue_.push_back(std::make_shared<ActiveNote>(
-                        ActiveNote(originalPitch, (*it)->pitch(), 0)
+                        ActiveNote(activeNote->originalPitch(), activeNote->pitch(), 0)
                     ));
-                    it = activeNotes_.erase(it);
-                } else {
-                    ++it;
                 }
+            } else {
+                // NOTE THROUGH - no active notes, pass through original pitch.
+                this->noteQueue_.push_back(std::make_shared<ActiveNote>(
+                    ActiveNote(originalPitch, originalPitch, 0)
+                ));
             }
             
-            // Also clear from the specific key.
-            keyboard_[originalPitch].getActiveNotes().clear();
+            // Clear active notes from this key.
+            this->keyboard_[originalPitch].getActiveNotes().clear();
+            updateActiveNotes();
         }
         
         return NoteReturnCodes::OK;

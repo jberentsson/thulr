@@ -47,6 +47,21 @@ SCENARIO("test the keyboard class") {
     REQUIRE(keyboardTest.getNoteQueue().empty());
 }
 
+SCENARIO("keyboard add function") {
+    Keyboard keyboardTest = Keyboard();
+    REQUIRE_NOTHROW(keyboardTest.add(60, 60, 0));   // Note-off first.
+    REQUIRE_NOTHROW(keyboardTest.add(60, 72, 100)); // Note-on second.
+
+    REQUIRE_NOTHROW(keyboardTest.add(60, 72, 100)); // Note-on first.
+    REQUIRE_NOTHROW(keyboardTest.add(60, 72, 0));   // Note-off second.
+
+    REQUIRE(keyboardTest.getActiveNotes().empty());
+    REQUIRE(keyboardTest.getNoteQueue().size() == 3);
+    REQUIRE(keyboardTest.getNoteQueue().at(0)->velocity() == 0);
+    REQUIRE(keyboardTest.getNoteQueue().at(1)->velocity() == 100);
+    REQUIRE(keyboardTest.getNoteQueue().at(2)->velocity() == 0);
+}
+
 SCENARIO("test the something") {
     Keyboard keyboardTest = Keyboard();
     REQUIRE(keyboardTest.getActiveNotes().empty());
@@ -209,11 +224,8 @@ SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
                 
                 // Check remaining notes exist
                 REQUIRE(randomOctave.containsNote(initialNotes[2]));
-
-                // TODO: This is still failing.
-                // TODO: This output should be consistant number.
-                //REQUIRE(randomOctave.containsNote(additionalNotes[0]));
-                //REQUIRE(randomOctave.containsNote(additionalNotes[1]));
+                REQUIRE(randomOctave.containsNote(additionalNotes[0]));
+                REQUIRE(randomOctave.containsNote(additionalNotes[1]));
             }
         }
     }
@@ -310,14 +322,14 @@ SCENARIO("assa"){
     REQUIRE_NOTHROW(randomOctave.note( NoteE5, 0 ));
 
     // No change.
-    REQUIRE(randomOctave.getNoteQueue().size() == 2);
+    REQUIRE(randomOctave.getNoteQueue().size() == 3);
     REQUIRE(!randomOctave.getActiveNotes().empty());
-    REQUIRE(randomOctave.getNoteQueue().size() == 2);
+    REQUIRE(randomOctave.getNoteQueue().size() == 3);
 
     // Remove C5
     REQUIRE_NOTHROW(randomOctave.note( NoteC5, 0 ));
 
-    REQUIRE(randomOctave.getNoteQueue().size() == 3);
+    REQUIRE(randomOctave.getNoteQueue().size() == 4);
     
     REQUIRE(randomOctave.getNoteQueue().at(0)->velocity() == 0);
     REQUIRE(randomOctave.getNoteQueue().at(1)->velocity() == 0);
@@ -325,8 +337,8 @@ SCENARIO("assa"){
     
     REQUIRE(randomOctave.getNoteQueue().at(0)->pitch() % 12 == 7);
     REQUIRE(randomOctave.getNoteQueue().at(1)->pitch() % 12 == 4);
-    REQUIRE(randomOctave.getNoteQueue().at(2)->pitch() % 12 == 0);
-    //REQUIRE(randomOctave.getNoteQueue().at(3)->pitch() % 12 == 3);
+    REQUIRE(randomOctave.getNoteQueue().at(2)->pitch() % 12 == 4);
+    REQUIRE(randomOctave.getNoteQueue().at(3)->pitch() % 12 == 0);
 
     REQUIRE_NOTHROW(randomOctave.clearQueue());
 
