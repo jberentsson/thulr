@@ -1,11 +1,20 @@
 #include "Counter.hpp"
-#include "Utils/Exceptions.hpp"
-#include <type_traits>
 
 auto Counter::reset() -> unsigned int {
     // Reset counter to zero.
     this->counter = this->firstStep;
+    this->resetTriggered = true;
     return this->counter;
+}
+
+auto Counter::step() -> unsigned int {
+    // Trigger next step.
+
+    if (this->dir == Counter::Direction::FORWARD) {
+        return this->forward();
+    }
+
+    return this->back();
 }
 
 auto Counter::forward() -> unsigned int {
@@ -21,6 +30,7 @@ auto Counter::forward() -> unsigned int {
 
 auto Counter::back() -> unsigned int {
     // Step backwards.
+    
     if (this->counter == this->firstStep) {
         this->counter = this->maxValue - 1;
     } else {
@@ -58,7 +68,7 @@ auto Counter::set(unsigned int value) -> unsigned int {
 
 auto Counter::preset() -> unsigned int {
     // Set the counter to the preset value.
-    this->counter = this->presetValue - 1;
+    this->counter = this->presetValue;
     return this->counter;
 }
 
@@ -66,15 +76,6 @@ auto Counter::setPreset(unsigned int presetValue) -> unsigned int {
     // Set a new preset value.
     this->presetValue = presetValue;
     return this->presetValue;
-}
-
-auto Counter::step() -> unsigned int {
-    // Trigger next step.
-    if (this->dir == Counter::Direction::FORWARD) {
-        return this->forward();
-    }
-
-    return this->back();
 }
 
 auto Counter::enable() -> Status {

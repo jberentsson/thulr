@@ -10,3 +10,12 @@ Choose notes from an octive and the whole keyboard will be quantized to those tw
 ### 128 note scale
 Instead of just an octave we can quantize to individual notes on the keyboard.
 
+## Ideas
+Rounding variations
+- Normal
+- Alternate
+- Random
+
+Chance on parameters.
+What should happen if we try to quantize a note that's higher than our highest note and should we then quantize down?
+Binary search quantizing?
