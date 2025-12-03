@@ -4,7 +4,6 @@
 #include <Utils/MIDI.hpp>
 #include "RandomOctave/Note/ActiveNote.hpp"
 #include "RandomOctave/Note/Note.hpp"
-#include <iostream>
 
 class Keyboard {
 private:

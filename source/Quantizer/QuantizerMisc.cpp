@@ -15,8 +15,8 @@ auto Quantizer::enable() -> QuantizeEnable {
 auto Quantizer::setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int {
     // Set the quantizer output range.
     if (rangeLow >= 0 && rangeLow < MIDI::KEYBOARD_SIZE && rangeHigh >= 0 && rangeHigh < MIDI::KEYBOARD_SIZE && rangeLow <= rangeHigh) {
-        this->range_low = rangeLow;
-        this->range_high = rangeHigh;
+        this->rangeLow_ = rangeLow;
+        this->rangeHigh_ = rangeHigh;
         return 0;
     }
 
@@ -26,30 +26,30 @@ auto Quantizer::setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int {
 auto Quantizer::clear() -> int {
     // Clear all set notes from the keyboard.
     for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-        this->keyboard[0][i] = false;
-        this->keyboard[1][i] = false;
+        this->keyboard_[0][i] = MIDI::Note(MIDI::INVALID_NOTE);
+        this->keyboard_[1][i] = MIDI::Note(MIDI::INVALID_NOTE);
     }
 
     return 0;
 }
 
 auto Quantizer::setRoundDirection(RoundDirection direction) -> RoundDirection {
-    this->round_direction = direction;
-    return this->round_direction;
+    this->roundDirection_ = direction;
+    return this->roundDirection_;
 }
 
 auto Quantizer::setMode(QuantizeMode mode) -> QuantizeMode {
-    this->mode = mode;
-    return this->mode;
+    this->mode_ = mode;
+    return this->mode_;
 }
 
 auto Quantizer::modeTwelveNotes() -> bool {
-    this->mode = QuantizeMode::TWELVE_NOTES;
+    this->mode_ = QuantizeMode::TWELVE_NOTES;
     return true;
 }
 
 auto Quantizer::modeAllNotes() -> bool {
-    this->mode = QuantizeMode::ALL_NOTES;
+    this->mode_ = QuantizeMode::ALL_NOTES;
     return true;
 }
 
@@ -64,10 +64,10 @@ auto Quantizer::disableThrough() -> NoteThrough {
 }
 
 auto Quantizer::keyboardIndex() -> int {
-    return static_cast<int> (this->mode);
+    return static_cast<int>(this->mode_);
 }
 
 auto Quantizer::noteCount() -> int {
     int index = keyboardIndex();
-    return this->note_count[index];
+    return this->noteCount_[index];
 }

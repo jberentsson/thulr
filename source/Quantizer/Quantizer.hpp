@@ -6,7 +6,7 @@
 
 class Quantizer {
 private:
-    std::shared_ptr<MIDI::Note> lastNote;
+    std::shared_ptr<MIDI::Note> lastNote_;
 
 public:
     using Note = MIDI::Note;
@@ -22,9 +22,9 @@ public:
     auto quantize(MIDI::Note noteValue) -> int;
     auto addNote(MIDI::Note noteValue) -> int;
     auto deleteNote(MIDI::Note noteValue) -> int;
-    auto getNote(MIDI::Note noteValue) -> NoteData;
+    auto getNote(MIDI::Note noteValue) -> MIDI::Note;
     auto setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int;
-    auto getLastNote() -> std::shared_ptr<Note> { return this->lastNote; }
+    auto getLastNote() -> std::shared_ptr<Note> { return this->lastNote_; }
 
     auto round(MIDI::Note noteValue) -> int;
     auto roundUp(MIDI::Note noteValue) -> int;
@@ -51,22 +51,22 @@ public:
     auto noteCount() -> int;
     auto clear() -> int;
 
-    [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->round_direction; }
-    [[nodiscard]] auto high() const -> int { return this->currentNoteLow; }
-    [[nodiscard]] auto low() const -> int { return this->currentNoteLow; }
+    [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->roundDirection_; }
+    [[nodiscard]] auto high() const -> int { return this->currentNoteLow_; }
+    [[nodiscard]] auto low() const -> int { return this->currentNoteLow_; }
 
 private:
-    MIDI::Note range_low = MIDI::Note(MIDI::RANGE_LOW);
-    MIDI::Note range_high = MIDI::Note(MIDI::RANGE_HIGH);
-    MIDI::Note currentNoteLow = MIDI::Note(MIDI::RANGE_HIGH + 1);
-    MIDI::Note currentNoteHigh = MIDI::Note(MIDI::RANGE_LOW - 1);
+    MIDI::Note rangeLow_ = MIDI::Note(MIDI::RANGE_LOW);
+    MIDI::Note rangeHigh_ = MIDI::Note(MIDI::RANGE_HIGH);
+    MIDI::Note currentNoteLow_ = MIDI::Note(MIDI::RANGE_HIGH);
+    MIDI::Note currentNoteHigh_ = MIDI::Note(MIDI::RANGE_LOW);
     
-    RoundDirection round_direction = RoundDirection::UP;
-    QuantizeMode mode = QuantizeMode::TWELVE_NOTES;
+    RoundDirection roundDirection_ = RoundDirection::UP;
+    QuantizeMode mode_ = QuantizeMode::TWELVE_NOTES;
 
-    bool keyboard[2][MIDI::KEYBOARD_SIZE];
+    MIDI::Note keyboard_[2][MIDI::KEYBOARD_SIZE];
     QuantizeEnable quantizeEnabled_ = QuantizeEnable::ON;
     NoteThrough noteThrough_ = NoteThrough::ON;
 
-    int note_count[2] = { 0, 0 };
+    int noteCount_[2] = { 0, 0 };
 };

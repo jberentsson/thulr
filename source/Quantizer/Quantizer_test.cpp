@@ -106,16 +106,16 @@ SCENARIO("twelve notes mode") {
         quantizerTestObject.addNote(MIDI::Note(NoteC4));
 
         THEN("all C notes are active across octaves") {
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC0)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC1)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC2)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC3)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC5)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC6)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC7)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC8)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC9)) == Quantizer::NoteData::ON);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC0)) == NoteC0);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC1)) == NoteC1);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC2)) == NoteC2);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC3)) == NoteC3);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == NoteC4);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC5)) == NoteC5);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC6)) == NoteC6);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC7)) == NoteC7);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC8)) == NoteC8);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC9)) == NoteC9);
         }
     }
 }
@@ -131,9 +131,9 @@ SCENARIO("debug test") {
             quantizerTestObject.setRoundDirection(Quantizer::RoundDirection::UP);
             int result = quantizerTestObject.quantize(MIDI::Note(NoteB3));
 
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == Quantizer::NoteData::ON);  // Should be active
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteB3)) == Quantizer::NoteData::OFF); // Should be inactive
-            REQUIRE(result == MIDI::Note(NoteC4));                                             // Should find note C4
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == MIDI::Note(NoteC4));             // Should be active
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteB3)) == MIDI::Note(MIDI::INVALID_NOTE)); // Should be inactive
+            REQUIRE(result == MIDI::Note(NoteC4));                                                      // Should find note C4
         }
     }
 }
