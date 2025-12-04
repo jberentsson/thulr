@@ -19,7 +19,6 @@ private:
     std::vector<std::shared_ptr<ActiveNote>> activeNotes;
 
 public:
-    Key() = default;
     Key(Range &range, int originalPitch) : mPitch_(originalPitch),range_(range) {}
     
     [[nodiscard]] virtual auto pitch() const -> int {
