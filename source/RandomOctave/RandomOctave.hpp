@@ -5,33 +5,29 @@
 #include <vector>
 #include <ctime>
 #include <random>
-#include "Utils/MIDI.hpp"
 #include "Note/Keyboard.hpp"
-#include "Note/Note.hpp"
+#include "Note/Range.hpp"
+#include "Note/Key.hpp"
 
 class RandomOctave {
     public:
-        Keyboard keyboard_;
-
-        using NoteReturnCodes = Keyboard::NoteReturnCodes;
+        using NoteReturnCodes = MIDI::NoteReturnCodes;
 
     private:
-        int rangeLow_  = MIDI::RANGE_LOW;
-        int rangeHigh_ = MIDI::RANGE_HIGH;
-        int minOctave_ = MIDI::RANGE_LOW;
-        int maxOctave_ = MIDI::KEYBOARD_OCTAVES;
+        Range range_;
+        Keyboard keyboard_ = Keyboard(range_);
 
     public:
         std::mt19937 gen{std::random_device{}()}; 
 
-        explicit RandomOctave(int low = MIDI::RANGE_LOW, int high = MIDI::RANGE_HIGH);
-        
-        [[nodiscard]] auto clampPitchToRange(int pitch) const -> int;
-        
-        static auto getPitchClass(int pitch) -> int;
+        explicit RandomOctave() {
+            this->range_ = Range();
+        };
 
-        auto randomizeNote(int pitch, std::mt19937& gen) const -> int;
-        auto note(int pitch, int velocity) -> int;
+        auto clampPitchToRange(int pitch) -> int;
+
+        auto randomizeNote(int pitch, std::mt19937& gen) -> int;
+        auto note(int pitch, int velocity) -> NoteReturnCodes;
         auto removeAll() -> size_t;
         auto setRange(int low, int high) -> int;
 

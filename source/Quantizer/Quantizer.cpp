@@ -81,7 +81,7 @@ auto Quantizer::deleteNote(MIDI::Note noteValue) -> int {
     }
 
     // TWELVE_NOTES
-    for (int i = (uint8_t) noteValue % MIDI::OCTAVE; i < MIDI::KEYBOARD_SIZE; i = i +  MIDI::OCTAVE){
+    for (int i = MIDI::getPitchClass(noteValue); i < MIDI::KEYBOARD_SIZE; i = i +  MIDI::OCTAVE){
         this->keyboard_[static_cast<int>(QuantizeMode::TWELVE_NOTES)][i] = MIDI::Note(MIDI::INVALID_NOTE);
         this->noteCount_[static_cast<int>(QuantizeMode::TWELVE_NOTES)]--;
     }
@@ -95,11 +95,10 @@ auto Quantizer::deleteNote(MIDI::Note noteValue) -> int {
 
 auto Quantizer::addTwelveNotes(MIDI::Note noteValue) -> int {
     // TWELVE_NOTES mode - add a note in every octave.
-    int degree = (uint8_t) noteValue % MIDI::OCTAVE;
 
     // Add this note degree in every octave.
     for (int octave = 0; octave <= MIDI::KEYBOARD_OCTAVES; octave++) {
-        int currentNote = (MIDI::OCTAVE * octave) + degree;
+        int currentNote = (MIDI::OCTAVE * octave) + MIDI::getPitchClass(noteValue);
 
         if (currentNote < MIDI::KEYBOARD_SIZE && 
             !this->keyboard_[static_cast<int>(QuantizeMode::TWELVE_NOTES)][currentNote].valid()) {
