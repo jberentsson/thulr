@@ -150,7 +150,7 @@ SCENARIO("set the range") {
 
         THEN("verify basic functionality") {
             REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteB1)) == MIDI::Note(NoteC2));
-            REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteDS3)) == MIDI::Note(NoteC2));
+            REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteDS2)) == MIDI::Note(NoteC2));
         }
     }
 }
@@ -327,3 +327,21 @@ SCENARIO("clear the notes") {
     }
 }
 
+SCENARIO("we want to nurn off the correct note if we UPDATe notes after it has been played") {
+    Quantizer quantizerTest;
+
+    // First we add C4 to the quantizer.
+    REQUIRE_NOTHROW(quantizerTest.addNote(MIDI::Note(NoteC4)));
+
+    // We play the C4
+    REQUIRE(quantizerTest.quantize(MIDI::Note(NoteC4, 100)) == MIDI::Note(NoteC4, 100));
+
+    // Remove C4 from the quantizer.
+    REQUIRE_NOTHROW(quantizerTest.deleteNote(MIDI::Note(NoteC4)));
+    
+    // We add C5 to the sequencer.
+    REQUIRE_NOTHROW(quantizerTest.addNote(MIDI::Note(NoteC5)));
+
+    // And the old note should be muted.
+    REQUIRE(quantizerTest.quantize(MIDI::Note(NoteC4, 0)) == MIDI::Note(NoteC4, 0));
+}

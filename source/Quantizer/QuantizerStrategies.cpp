@@ -3,6 +3,7 @@
 
 auto Quantizer::round(MIDI::Note noteValue) -> int {
     // Round depending on what rounding mode is active.
+
     switch(this->roundDirection_){
         case RoundDirection::UP:
             return this->roundUp(noteValue);

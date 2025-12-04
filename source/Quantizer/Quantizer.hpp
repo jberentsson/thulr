@@ -50,7 +50,8 @@ public:
     auto keyboardIndex() -> int;
     auto noteCount() -> int;
     auto clear() -> int;
-
+    auto mutePreviousNote() -> void;
+    
     [[nodiscard]] auto getRoundDirection() const -> RoundDirection { return this->roundDirection_; }
     [[nodiscard]] auto high() const -> int { return this->currentNoteLow_; }
     [[nodiscard]] auto low() const -> int { return this->currentNoteLow_; }

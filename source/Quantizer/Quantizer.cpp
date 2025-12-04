@@ -3,46 +3,75 @@
 #include "QuantizerStrategies.cpp" // NOLINT
 
 Quantizer::Quantizer() {
-    this->clear();
     this->rangeLow_ = MIDI::Note(MIDI::RANGE_LOW);
     this->rangeHigh_ = MIDI::Note(MIDI::RANGE_HIGH);
+    this->clear();
+}
+
+auto Quantizer::mutePreviousNote() -> void {
+    if (!this->lastNote_) {
+        return;
+    }
+    
+    int lastPitch = this->lastNote_->pitch();
+    int index = this->keyboardIndex();
+    
+    if (lastPitch >= 0 && lastPitch < MIDI::KEYBOARD_SIZE) {
+        // Mark as released on keyboard.
+        this->keyboard_[index][lastPitch] = MIDI::Note(lastPitch, 0);
+    }
 }
 
 auto Quantizer::quantize(MIDI::Note noteValue) -> int {
-    // Check if the note is in range.
+    // Quantize a note.
 
-    if (noteValue < this->rangeLow_) {
-        noteValue = this->rangeLow_;
+    // 1. Mute previous note if needed.
+    if (this->lastNote_ && this->lastNote_->pitch() != noteValue.pitch()) {
+        this->mutePreviousNote();
     }
-
-    if (noteValue > this->rangeHigh_) {
-        noteValue = this->rangeHigh_;
-    }
-
+    
+    // 2. Get pitch and clamp to range.
+    int notePitch = noteValue.pitch();
+    
+    // 3. Fit the note inside the range.
+    notePitch = std::max(notePitch, (int) this->rangeLow_.pitch());
+    notePitch = std::min(notePitch, (int) this->rangeHigh_.pitch());
+    
+    // 4. Check if this exact pitch exists in keyboard.
     bool noteFound = false;
-    int index = static_cast<int>(QuantizeMode::ALL_NOTES);
-
-    // If current note is already a valid key.
-    if ((this->noteCount_[index] == 0) || this->keyboard_[index][noteValue] != MIDI::Note(MIDI::INVALID_NOTE)) {
+    int index = this->keyboardIndex();
+    
+    if (this->keyboard_[index][notePitch].valid()) {
         noteFound = true;
     }
-
-    // Return the original note if
-    // the quantizer is disabled.
+    
+    // 5. If quantizer is disabled, return the clamped input.
     if (this->quantizeEnabled_ == QuantizeEnable::OFF) {
         noteFound = true;
     }
-
-    // Round if we have not found the value else return original value.
-    int quantizedNoteValue = noteFound ? noteValue : this->round(noteValue);
-
-    std::shared_ptr<Note> quantizedNote = std::make_shared<Note>(
-        static_cast<uint8_t>(quantizedNoteValue)
-    );
-
-    this->lastNote_ = quantizedNote;
-
-    return quantizedNoteValue;
+    
+    // 6. Check if note is released (velocity 0).
+    MIDI::Note currentNote = this->keyboard_[index][notePitch];
+    if (currentNote.valid() && currentNote.velocity() == 0) {
+        noteFound = true;
+    }
+    
+    // 7. Round if needed.
+    int quantizedPitch = noteFound ? notePitch : this->round(MIDI::Note(notePitch));
+    
+    // 8. If round() failed, return the clamped input.
+    if (quantizedPitch == MIDI::INVALID_NOTE || quantizedPitch < 0 || quantizedPitch >= MIDI::KEYBOARD_SIZE) {
+        quantizedPitch = notePitch;
+    }
+    
+    // 9. Create and store the new note.
+    uint8_t originalVelocity = noteValue.velocity();
+    this->lastNote_ = std::make_shared<Note>(static_cast<uint8_t>(quantizedPitch), originalVelocity);
+    
+    // 10. Update keyboard.
+    this->keyboard_[index][quantizedPitch] = MIDI::Note(quantizedPitch, originalVelocity);
+    
+    return quantizedPitch;
 }
 
 auto Quantizer::getNote(MIDI::Note noteValue) -> MIDI::Note {
@@ -66,7 +95,7 @@ auto Quantizer::addNote(MIDI::Note noteValue) -> int {
     this->addAllNotes(noteValue);
     this->addTwelveNotes(noteValue);
 
-    // TODO: Here we are comparing some weird values.
+    // Update the high and lowest current notes..
     this->currentNoteHigh_ = std::max(this->currentNoteHigh_, noteValue);
     this->currentNoteLow_ = std::min(this->currentNoteLow_, noteValue);
     

@@ -42,10 +42,19 @@ private:
 public:
     // MIDI Note Datatype
     constexpr Note() : pitch_(0), velocity_(0) {}
+
     constexpr explicit Note(uint8_t note, uint8_t velocity = 0) : pitch_(note), velocity_(velocity) {
         if (note <= RANGE_HIGH && velocity <= RANGE_HIGH) {
             this->valid_ = true;
         }
+    }
+
+    [[nodiscard]] auto pitch() const -> uint8_t {
+        return this->pitch_;
+    }
+
+    [[nodiscard]] auto velocity() const -> uint {
+        return this->velocity_;
     }
 
     [[nodiscard]] auto valid() const -> bool {
