@@ -53,7 +53,7 @@ public:
         return this->pitch_;
     }
 
-    [[nodiscard]] auto velocity() const -> uint {
+    [[nodiscard]] auto velocity() const -> uint8_t {
         return this->velocity_;
     }
 
