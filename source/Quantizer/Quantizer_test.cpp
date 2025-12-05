@@ -106,16 +106,16 @@ SCENARIO("twelve notes mode") {
         quantizerTestObject.addNote(MIDI::Note(NoteC4));
 
         THEN("all C notes are active across octaves") {
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC0)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC1)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC2)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC3)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC5)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC6)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC7)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC8)) == Quantizer::NoteData::ON);
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC9)) == Quantizer::NoteData::ON);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC0)) == NoteC0);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC1)) == NoteC1);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC2)) == NoteC2);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC3)) == NoteC3);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == NoteC4);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC5)) == NoteC5);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC6)) == NoteC6);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC7)) == NoteC7);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC8)) == NoteC8);
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC9)) == NoteC9);
         }
     }
 }
@@ -131,9 +131,9 @@ SCENARIO("debug test") {
             quantizerTestObject.setRoundDirection(Quantizer::RoundDirection::UP);
             int result = quantizerTestObject.quantize(MIDI::Note(NoteB3));
 
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == Quantizer::NoteData::ON);  // Should be active
-            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteB3)) == Quantizer::NoteData::OFF); // Should be inactive
-            REQUIRE(result == MIDI::Note(NoteC4));                                             // Should find note C4
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteC4)) == MIDI::Note(NoteC4));             // Should be active
+            REQUIRE(quantizerTestObject.getNote(MIDI::Note(NoteB3)) == MIDI::Note(MIDI::INVALID_NOTE)); // Should be inactive
+            REQUIRE(result == MIDI::Note(NoteC4));                                                      // Should find note C4
         }
     }
 }
@@ -150,7 +150,7 @@ SCENARIO("set the range") {
 
         THEN("verify basic functionality") {
             REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteB1)) == MIDI::Note(NoteC2));
-            REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteDS3)) == MIDI::Note(NoteC2));
+            REQUIRE(quantizerTestObject.quantize(MIDI::Note(NoteDS2)) == MIDI::Note(NoteC2));
         }
     }
 }
@@ -327,3 +327,21 @@ SCENARIO("clear the notes") {
     }
 }
 
+SCENARIO("we want to nurn off the correct note if we UPDATe notes after it has been played") {
+    Quantizer quantizerTest;
+
+    // First we add C4 to the quantizer.
+    REQUIRE_NOTHROW(quantizerTest.addNote(MIDI::Note(NoteC4)));
+
+    // We play the C4
+    REQUIRE(quantizerTest.quantize(MIDI::Note(NoteC4, 100)) == MIDI::Note(NoteC4, 100));
+
+    // Remove C4 from the quantizer.
+    REQUIRE_NOTHROW(quantizerTest.deleteNote(MIDI::Note(NoteC4)));
+    
+    // We add C5 to the sequencer.
+    REQUIRE_NOTHROW(quantizerTest.addNote(MIDI::Note(NoteC5)));
+
+    // And the old note should be muted.
+    REQUIRE(quantizerTest.quantize(MIDI::Note(NoteC4, 0)) == MIDI::Note(NoteC4, 0));
+}

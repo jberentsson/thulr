@@ -3,34 +3,25 @@
 #include <vector>
 #include <Utils/MIDI.hpp>
 #include "RandomOctave/Note/ActiveNote.hpp"
-#include "RandomOctave/Note/Note.hpp"
-#include <iostream>
+#include "RandomOctave/Note/Key.hpp"
 
 class Keyboard {
 private:
-    std::vector<Note> keyboard_;
+    std::vector<Key> keyboard_;
     std::vector<std::shared_ptr<ActiveNote>> activeNotes_;
     std::vector<std::shared_ptr<ActiveNote>> noteQueue_;
+    
+    Range &range_;
 
-    enum : uint8_t {
-        MAX_NOTES = 4
-    };
+    using NoteReturnCodes = MIDI::NoteReturnCodes;
 
 public:
-    enum class NoteReturnCodes : uint8_t {
-        OK = 0,
-        OUT_OF_RANGE = 1,
-        SOMETHING_ELSE = 2,
-        DEGREE_MISMATCH = 3,
-        OUT_OF_SPACE = 4
-    };
-    
-    Keyboard() {
+    Keyboard(Range &range) : range_(range) {
         // Populate the keyboard.
         keyboard_.reserve(MIDI::KEYBOARD_SIZE);
 
         for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-            keyboard_.emplace_back(MIDI::Note(i)); // NOLINT
+            keyboard_.emplace_back(Key(this->range_, i)); // NOLINT
         }
     }
 
@@ -41,14 +32,14 @@ public:
         }
         
         // Check degree match (pitch class must be same).
-        if (originalPitch % MIDI::OCTAVE != randomPitch % MIDI::OCTAVE) {
+        if (MIDI::getPitchClass(originalPitch) != MIDI::getPitchClass(randomPitch)) {
             return NoteReturnCodes::DEGREE_MISMATCH;
         }
 
         if (velocity > 0) {
             // NOTE ON ----------------------------------------------------------------------------------------------
             // Check if key has space for more notes.
-            if (keyboard_[originalPitch].getActiveNotes().size() >= MAX_NOTES) {
+            if (keyboard_[originalPitch].getActiveNotes().size() >= this->range_.maxNotes()) {
                 return NoteReturnCodes::OUT_OF_SPACE;
             }
             
@@ -103,17 +94,17 @@ public:
         return empty;
     }
 
-    [[nodiscard]] auto getNote(int noteValue) const -> const Note& {
+    [[nodiscard]] auto getNote(int noteValue) const -> const Key& {
         // Get the note data from each of the keys.
         return keyboard_[noteValue];
     }
 
     auto containsNote(int noteValue) -> bool {
         // Check if a key has an active note with a specific pitch.
-        for (int i = (noteValue % MIDI::OCTAVE); i < keyboard_.size(); i += MIDI::OCTAVE) { // NOLINT
+        for (int i = MIDI::getPitchClass(noteValue); i < keyboard_.size(); i += MIDI::OCTAVE) { // NOLINT
             // Check each of the active notes for every key.
             for (const auto &currentActiveNote : keyboard_[i].getActiveNotes()) {
-                if ((currentActiveNote->pitch() % MIDI::OCTAVE) == (noteValue % MIDI::OCTAVE)) {
+                if (currentActiveNote->pitchClass() == MIDI::getPitchClass(noteValue)) {
                     return true;
                 }
             }

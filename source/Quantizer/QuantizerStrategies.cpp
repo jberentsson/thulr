@@ -3,7 +3,8 @@
 
 auto Quantizer::round(MIDI::Note noteValue) -> int {
     // Round depending on what rounding mode is active.
-    switch(this->round_direction){
+
+    switch(this->roundDirection_){
         case RoundDirection::UP:
             return this->roundUp(noteValue);
         case RoundDirection::DOWN:
@@ -29,14 +30,14 @@ auto Quantizer::roundUp(MIDI::Note noteValue) -> int {
     // Search up from n.
     for (int i = noteValue + 1; i < MIDI::KEYBOARD_SIZE; i++) {
         // We have reached the high limit.
-        if (i > this->range_high) {
+        if (i > this->rangeHigh_) {
             return this->roundDown(noteValue);
         }
 
         // We have found the correct note.
         int index = this->keyboardIndex();
 
-        if (this->keyboard[index][i]) {
+        if (this->keyboard_[index][i].valid()) {
             return i;
         }
     }
@@ -48,13 +49,13 @@ auto Quantizer::roundDown(MIDI::Note noteValue) -> int {
     // Search down from n.
     for (int i = noteValue - 1; i >= 0; i--) {
         // We have reached the low limit.
-        if (i < this->range_low) {
+        if (i < this->rangeLow_) {
             return this->roundUp(noteValue);
         }
 
         // We have found the correct note.
         int index = this->keyboardIndex();
-        if (this->keyboard[index][i]) {
+        if (this->keyboard_[index][i].valid()) {
             return i;
         }
     }
@@ -87,7 +88,7 @@ auto Quantizer::roundUpOverflow(MIDI::Note noteValue) -> int {
 
     if (roundedUp == MIDI::INVALID_NOTE) {
         // No valid note above so se start from the lowest note.
-        return this->roundUp((MIDI::Note) this->range_low);
+        return this->roundUp((MIDI::Note) this->rangeLow_);
     }
 
     return roundedUp;
@@ -98,7 +99,7 @@ auto Quantizer::roundDownUnderflow(MIDI::Note noteValue) -> int {
 
     if (roundedUp == MIDI::INVALID_NOTE) {
         // No valid note below so se start from the highest note.
-        return this->roundDown((MIDI::Note) this->range_high);
+        return this->roundDown((MIDI::Note) this->rangeHigh_);
     }
 
     return roundedUp;

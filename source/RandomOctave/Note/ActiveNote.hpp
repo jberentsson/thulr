@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils/MIDI.hpp"
+
 class ActiveNote {
 private:
     int mOriginalPitch_;
@@ -19,6 +21,10 @@ public:
 
     [[nodiscard]] virtual auto pitch() const -> int {
         return mProcessedPitch_;
+    }
+
+    virtual auto pitchClass() -> int {
+        return MIDI::getPitchClass(this->mOriginalPitch_);
     }
 
     [[nodiscard]] virtual auto velocity() const -> int {

@@ -1,30 +1,25 @@
 #include "RandomOctave.hpp"
-#include "Utils/MIDI.hpp"
 #include <vector>
 
 using namespace MIDI;
 
-RandomOctave::RandomOctave(int low, int high) : rangeLow_(low), rangeHigh_(high) {} // NOLINT
+RandomOctave::RandomOctave() {
+    this->range_ = Range(MIDI::RANGE_LOW, MIDI::RANGE_HIGH);
+};
 
-auto RandomOctave::note(int pitch, int velocity) -> int { // NOLINT
-    int randomPitch = this->randomizeNote(pitch, gen);
-    
+auto RandomOctave::note(int pitch, int velocity) -> NoteReturnCodes { // NOLINT
     // Check if the pitch is in the correct pitch range.
-    if (pitch < this->rangeLow_ || pitch > this->rangeHigh_ || velocity < this->rangeLow_ || velocity > this->rangeHigh_) {
-        return -1;
+    if (!MIDI::Note(pitch, velocity).valid() || !this->range_.inRange(MIDI::Note(pitch))) {
+        return NoteReturnCodes::OUT_OF_RANGE;
     }
 
-    this->keyboard_.add(pitch, randomPitch, velocity);
+    this->keyboard_.add(pitch, this->randomizeNote(pitch, gen), velocity);
 
-    return 0;
+    return NoteReturnCodes::OK;
 }
 
-auto RandomOctave::clampPitchToRange(int pitch) const -> int {
-    return std::max(rangeLow_, std::min(pitch, rangeHigh_));
-}
-
-auto RandomOctave::getPitchClass(int pitch) -> int {
-    return pitch % MIDI::OCTAVE;
+auto RandomOctave::clampPitchToRange(int pitch) -> int {
+    return std::max((int) this->range_.low(), std::min(pitch, (int) this->range_.high()));
 }
 
 auto RandomOctave::removeAll() -> size_t {
@@ -32,14 +27,13 @@ auto RandomOctave::removeAll() -> size_t {
 }
 
 auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
-    this->rangeLow_ = low;
-    this->rangeHigh_ = high;
+    this->range_ = Range(low, high);
     return 0;
 }
 
-auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) const -> int {        
+auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) -> int {        
     std::uniform_int_distribution<> dist(0, 9); // NOLINT
     int randomInt = dist(gen);
-    int randomPitch = getPitchClass(pitch) + (randomInt * MIDI::OCTAVE);
+    int randomPitch = MIDI::valueInOctave(pitch, randomInt);
     return clampPitchToRange(randomPitch);
 }

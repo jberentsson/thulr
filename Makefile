@@ -6,14 +6,14 @@ clean:
 	rm -rf build
 
 tidy:
-	clang-tidy source/*/*.hpp source/*/*.cpp --system-headers=0 \
+	@find ./source/ -name "*.cpp" -exec clang-tidy --system-headers=0  -p build {} \
                -- -std=c++17 \
 	           -I source \
 	           -isystem build/_deps/catch2-src/single_include \
 	           -Wno-everything \;
 
 tidy-ci:
-	clang-tidy source/*/*.hpp source/*/*.cpp --system-headers=0 \
+	@find ./source/ -name "*.cpp" -exec clang-tidy --system-headers=0  -p build {} \
 	           -checks='readability-*,modernize-*,performance-*,bugprone-*,-modernize-avoid-c-arrays,-readability-identifier-naming,-bugprone-chained-comparison,-llvmlibc-restrict-system-libc-headers,-cppcoreguidelines-use-enum-class' \
 	           -- -std=c++17 \
 	           -I source \

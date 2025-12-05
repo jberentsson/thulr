@@ -3,25 +3,19 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
+#include "Range.hpp"
 #include "ActiveNote.hpp"
 #include "Utils/MIDI.hpp"
 
-// TODO: Rename this to key?
-class Note {
+class Key {
 private:
-    enum : uint8_t {
-        MAX_NOTES = 4
-    };
-
     int mPitch_ = 0;
-    int rangeHigh_ = MIDI::RANGE_HIGH;
-    int rangeLow_ = MIDI::RANGE_LOW;
+    Range &range_;
     
     std::vector<std::shared_ptr<ActiveNote>> activeNotes;
 
 public:
-    Note() = default;
-    Note(int originalPitch) : mPitch_(originalPitch) {}
+    Key(Range &range, int originalPitch) : mPitch_(originalPitch), range_(range) {}
     
     [[nodiscard]] virtual auto pitch() const -> int {
         return mPitch_;
@@ -35,7 +29,6 @@ public:
 
         auto newNote = std::make_shared<ActiveNote>(originalPitch, randomPitch, velocity);
 
-        // TODO: Do we need this?
         if (MIDI::RANGE_LOW < velocity && velocity <= MIDI::RANGE_HIGH) {
             activeNotes.push_back(newNote);
         }
@@ -45,12 +38,6 @@ public:
 
     auto getActiveNotes() -> std::vector<std::shared_ptr<ActiveNote>>& {
         return activeNotes;
-    }
-
-    // TODO: Can this be simplified with pointers?
-    auto setRange(int low, int high) -> void { // NOLINT
-        rangeLow_ = low;
-        rangeHigh_ = high;
     }
 
     auto contains(int note) -> bool {
@@ -66,21 +53,21 @@ public:
 
     auto isValidNote(int originalPitch, int randomPitch, int velocity) -> bool { // NOLINT
         // Octave check
-        if (Note::getPitchClass(originalPitch) != Note::getPitchClass(randomPitch)) {
+        if (MIDI::getPitchClass(originalPitch) != MIDI::getPitchClass(randomPitch)) {
             return false;
         }
         
         // Note limit check (only for note-on events)
         if (velocity > 0) {
-            if (this->activeNotes.size() >= MAX_NOTES || this->contains(randomPitch)) {
+            if (this->activeNotes.size() >= this->range_.maxNotes() || this->contains(randomPitch)) {
                 return false;
             }
         }
         
         return true;
     }
-    
-    static auto getPitchClass(int pitch) -> int {
-        return pitch % MIDI::OCTAVE;
+
+    auto maxNotes() -> int {
+        return this->range_.maxNotes();
     }
 };

@@ -3,55 +3,84 @@
 #include "QuantizerStrategies.cpp" // NOLINT
 
 Quantizer::Quantizer() {
+    this->rangeLow_ = MIDI::Note(MIDI::RANGE_LOW);
+    this->rangeHigh_ = MIDI::Note(MIDI::RANGE_HIGH);
     this->clear();
-    this->range_low = MIDI::Note(MIDI::RANGE_LOW);
-    this->range_high = MIDI::Note(MIDI::RANGE_HIGH);
+}
+
+auto Quantizer::mutePreviousNote() -> void {
+    if (!this->lastNote_) {
+        return;
+    }
+    
+    int lastPitch = this->lastNote_->pitch();
+    int index = this->keyboardIndex();
+    
+    if (lastPitch >= 0 && lastPitch < MIDI::KEYBOARD_SIZE) {
+        // Mark as released on keyboard.
+        this->keyboard_[index][lastPitch] = MIDI::Note(lastPitch, 0);
+    }
 }
 
 auto Quantizer::quantize(MIDI::Note noteValue) -> int {
-    // Check if the note is in range.
+    // Quantize a note.
 
-    if (noteValue < this->range_low) {
-        noteValue = this->range_low;
+    // 1. Mute previous note if needed.
+    if (this->lastNote_ && this->lastNote_->pitch() != noteValue.pitch()) {
+        this->mutePreviousNote();
     }
-
-    if (noteValue > this->range_high) {
-        noteValue = this->range_high;
-    }
-
+    
+    // 2. Get pitch and clamp to range.
+    int notePitch = noteValue.pitch();
+    
+    // 3. Fit the note inside the range.
+    notePitch = std::max(notePitch, (int) this->rangeLow_.pitch());
+    notePitch = std::min(notePitch, (int) this->rangeHigh_.pitch());
+    
+    // 4. Check if this exact pitch exists in keyboard.
     bool noteFound = false;
-    int index = static_cast<int> (QuantizeMode::ALL_NOTES);
-
-    // If current note is already a valid key.
-    if ((this->note_count[index] == 0) || this->keyboard[index][noteValue]) {
+    int index = this->keyboardIndex();
+    
+    if (this->keyboard_[index][notePitch].valid()) {
         noteFound = true;
     }
-
-    // Return the original note if
-    // the quantizer is disabled.
+    
+    // 5. If quantizer is disabled, return the clamped input.
     if (this->quantizeEnabled_ == QuantizeEnable::OFF) {
         noteFound = true;
     }
-
-    // Round if we have not found the value else return original value.
-    int quantizedNoteValue = noteFound ? noteValue : this->round(noteValue);
-
-    std::shared_ptr<Note> quantizedNote = std::make_shared<Note>(
-        static_cast<uint8_t>(quantizedNoteValue)
-    );
-
-    this->lastNote = quantizedNote;
-
-    return quantizedNoteValue;
+    
+    // 6. Check if note is released (velocity 0).
+    MIDI::Note currentNote = this->keyboard_[index][notePitch];
+    if (currentNote.valid() && currentNote.velocity() == 0) {
+        noteFound = true;
+    }
+    
+    // 7. Round if needed.
+    int quantizedPitch = noteFound ? notePitch : this->round(MIDI::Note(notePitch));
+    
+    // 8. If round() failed, return the clamped input.
+    if (quantizedPitch == MIDI::INVALID_NOTE || quantizedPitch < 0 || quantizedPitch >= MIDI::KEYBOARD_SIZE) {
+        quantizedPitch = notePitch;
+    }
+    
+    // 9. Create and store the new note.
+    uint8_t originalVelocity = noteValue.velocity();
+    this->lastNote_ = std::make_shared<Note>(static_cast<uint8_t>(quantizedPitch), originalVelocity);
+    
+    // 10. Update keyboard.
+    this->keyboard_[index][quantizedPitch] = MIDI::Note(quantizedPitch, originalVelocity);
+    
+    return quantizedPitch;
 }
 
-auto Quantizer::getNote(MIDI::Note noteValue) -> Quantizer::NoteData {
+auto Quantizer::getNote(MIDI::Note noteValue) -> MIDI::Note {
     // Check if the note has been set.
     if ((noteValue < 0) || (noteValue >= MIDI::KEYBOARD_SIZE)) {
-        return NoteData::OFF;
+        return MIDI::Note(MIDI::INVALID_NOTE);
     }
 
-    return this->keyboard[static_cast<int> (this->mode)][noteValue] ? NoteData::ON : NoteData::OFF;
+    return this->keyboard_[static_cast<int>(this->mode_)][noteValue];
 }
 
 auto Quantizer::addNote(MIDI::Note noteValue) -> int {
@@ -66,9 +95,10 @@ auto Quantizer::addNote(MIDI::Note noteValue) -> int {
     this->addAllNotes(noteValue);
     this->addTwelveNotes(noteValue);
 
-    this->currentNoteHigh = std::max(this->currentNoteHigh, noteValue);
-    this->currentNoteLow = std::min(this->currentNoteLow, noteValue);
-
+    // Update the high and lowest current notes..
+    this->currentNoteHigh_ = std::max(this->currentNoteHigh_, noteValue);
+    this->currentNoteLow_ = std::min(this->currentNoteLow_, noteValue);
+    
     return 0;
 }
 
@@ -80,30 +110,29 @@ auto Quantizer::deleteNote(MIDI::Note noteValue) -> int {
     }
 
     // TWELVE_NOTES
-    for (int i = (uint8_t) noteValue % MIDI::OCTAVE; i < MIDI::KEYBOARD_SIZE; i = i +  MIDI::OCTAVE){
-        this->keyboard[static_cast<int> (QuantizeMode::TWELVE_NOTES)][i] = false;
-        this->note_count[static_cast<int> (QuantizeMode::TWELVE_NOTES)]--;
+    for (int i = MIDI::getPitchClass(noteValue); i < MIDI::KEYBOARD_SIZE; i = i +  MIDI::OCTAVE){
+        this->keyboard_[static_cast<int>(QuantizeMode::TWELVE_NOTES)][i] = MIDI::Note(MIDI::INVALID_NOTE);
+        this->noteCount_[static_cast<int>(QuantizeMode::TWELVE_NOTES)]--;
     }
 
     // ALL_NOTES
-    this->keyboard[static_cast<int> (QuantizeMode::ALL_NOTES)][noteValue] = false;
-    this->note_count[static_cast<int> (QuantizeMode::ALL_NOTES)]--;
+    this->keyboard_[static_cast<int>(QuantizeMode::ALL_NOTES)][noteValue] = MIDI::Note(MIDI::INVALID_NOTE);
+    this->noteCount_[static_cast<int>(QuantizeMode::ALL_NOTES)]--;
 
     return 0;
 }
 
 auto Quantizer::addTwelveNotes(MIDI::Note noteValue) -> int {
     // TWELVE_NOTES mode - add a note in every octave.
-    int degree = (uint8_t) noteValue % MIDI::OCTAVE;
 
     // Add this note degree in every octave.
     for (int octave = 0; octave <= MIDI::KEYBOARD_OCTAVES; octave++) {
-        int current_note = (MIDI::OCTAVE * octave) + degree;
+        int currentNote = (MIDI::OCTAVE * octave) + MIDI::getPitchClass(noteValue);
 
-        if (current_note < MIDI::KEYBOARD_SIZE && 
-            !this->keyboard[static_cast<int> (QuantizeMode::TWELVE_NOTES)][current_note]) {
-            this->keyboard[static_cast<int> (QuantizeMode::TWELVE_NOTES)][current_note] = true;
-            this->note_count[static_cast<int> (QuantizeMode::TWELVE_NOTES)]++;
+        if (currentNote < MIDI::KEYBOARD_SIZE && 
+            !this->keyboard_[static_cast<int>(QuantizeMode::TWELVE_NOTES)][currentNote].valid()) {
+            this->keyboard_[static_cast<int>(QuantizeMode::TWELVE_NOTES)][currentNote] = MIDI::Note(currentNote);
+            this->noteCount_[static_cast<int>(QuantizeMode::TWELVE_NOTES)]++;
         }
     }
 
@@ -112,8 +141,8 @@ auto Quantizer::addTwelveNotes(MIDI::Note noteValue) -> int {
 
 auto Quantizer::addAllNotes(MIDI::Note noteValue) -> int {
     // ALL_NOTES mode - just add the single note.
-    this->keyboard[static_cast<int> (QuantizeMode::ALL_NOTES)][(uint8_t) noteValue] = true;
-    this->note_count[static_cast<int> (QuantizeMode::ALL_NOTES)]++;
+    this->keyboard_[static_cast<int>(QuantizeMode::ALL_NOTES)][(uint8_t) noteValue] = noteValue;
+    this->noteCount_[static_cast<int>(QuantizeMode::ALL_NOTES)]++;
     
     return 0;
 }

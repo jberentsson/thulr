@@ -13,33 +13,61 @@ constexpr int RANGE_LOW = 0;
 constexpr int RANGE_HIGH = 127;
 constexpr int INVALID_NOTE = 255;
 
+inline auto inRange(int pitch) -> bool {
+    return false;
+}
+
+inline auto getPitchClass(int pitch) -> int {
+    return pitch % MIDI::OCTAVE;
+}
+
+inline auto valueInOctave(int pitch, int octave) -> int {
+    return MIDI::getPitchClass(pitch) + (octave * MIDI::OCTAVE);
+}
+
+enum class NoteReturnCodes : uint8_t {
+    OK = 0,
+    OUT_OF_RANGE = 1,
+    SOMETHING_ELSE = 2,
+    DEGREE_MISMATCH = 3,
+    OUT_OF_SPACE = 4
+};
 
 class Note {
 private:
-    uint8_t value_;
-    //uint8_t velocity_;
+    uint8_t pitch_;
+    uint8_t velocity_;
     bool valid_ = false;
 
 public:
     // MIDI Note Datatype
-    constexpr Note() : value_(0) {}
-    constexpr explicit Note(uint8_t note) : value_(note) {
-        if (note <= RANGE_HIGH) {
+    constexpr Note() : pitch_(0), velocity_(0) {}
+
+    constexpr explicit Note(uint8_t note, uint8_t velocity = 0) : pitch_(note), velocity_(velocity) {
+        if (note <= RANGE_HIGH && velocity <= RANGE_HIGH) {
             this->valid_ = true;
         }
+    }
+
+    [[nodiscard]] auto pitch() const -> uint8_t {
+        return this->pitch_;
+    }
+
+    [[nodiscard]] auto velocity() const -> uint8_t {
+        return this->velocity_;
     }
 
     [[nodiscard]] auto valid() const -> bool {
         return this->valid_;
     }
 
-    constexpr operator int() const { return value_; }
-    constexpr auto operator<=(const Note& other) const -> bool { return value_ <= other.value_; }
-    constexpr auto operator>=(const Note& other) const -> bool { return value_ >= other.value_; }
-    constexpr auto operator<(const Note& other) const -> bool { return value_ < other.value_; }
-    constexpr auto operator>(const Note& other) const -> bool { return value_ > other.value_; }
-    constexpr auto operator==(const Note& other) const -> bool { return value_ == other.value_; }
-    constexpr auto operator!=(const Note& other) const -> bool { return value_ != other.value_; }
+    constexpr operator int() const { return pitch_; }
+    constexpr auto operator<=(const Note& other) const -> bool { return pitch_ <= other.pitch_; }
+    constexpr auto operator>=(const Note& other) const -> bool { return pitch_ >= other.pitch_; }
+    constexpr auto operator<(const Note& other) const -> bool { return pitch_ < other.pitch_; }
+    constexpr auto operator>(const Note& other) const -> bool { return pitch_ > other.pitch_; }
+    constexpr auto operator==(const Note& other) const -> bool { return pitch_ == other.pitch_; }
+    constexpr auto operator!=(const Note& other) const -> bool { return pitch_ != other.pitch_; }
 };
 
 class Velocity : public Note {};
