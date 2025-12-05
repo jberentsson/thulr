@@ -12,7 +12,7 @@ auto Quantizer::enable() -> QuantizeEnable {
     return this->quantizeEnabled_;
 }
 
-auto Quantizer::setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int {
+auto Quantizer::setRange(int rangeLow, int rangeHigh) -> int {
     // Set the quantizer output range.
     if (rangeLow >= 0 && rangeLow < MIDI::KEYBOARD_SIZE && rangeHigh >= 0 && rangeHigh < MIDI::KEYBOARD_SIZE && rangeLow <= rangeHigh) {
         this->rangeLow_ = rangeLow;
