@@ -11,21 +11,17 @@ private:
     std::vector<std::shared_ptr<ActiveNote>> activeNotes_;
     std::vector<std::shared_ptr<ActiveNote>> noteQueue_;
     
-    Range *range_;
+    Range &range_;
 
     using NoteReturnCodes = MIDI::NoteReturnCodes;
 
-    enum : uint8_t {
-        MAX_NOTES = 4
-    };
-
 public:
-    Keyboard(Range &range) {
+    Keyboard(Range &range) : range_(range) {
         // Populate the keyboard.
         keyboard_.reserve(MIDI::KEYBOARD_SIZE);
 
         for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-            keyboard_.emplace_back(Key(*this->range_, i)); // NOLINT
+            keyboard_.emplace_back(Key(this->range_, i)); // NOLINT
         }
     }
 
@@ -43,7 +39,7 @@ public:
         if (velocity > 0) {
             // NOTE ON ----------------------------------------------------------------------------------------------
             // Check if key has space for more notes.
-            if (keyboard_[originalPitch].getActiveNotes().size() >= MAX_NOTES) {
+            if (keyboard_[originalPitch].getActiveNotes().size() >= this->range_.maxNotes()) {
                 return NoteReturnCodes::OUT_OF_SPACE;
             }
             

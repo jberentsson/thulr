@@ -9,17 +9,13 @@
 
 class Key {
 private:
-    enum : uint8_t {
-        MAX_NOTES = 4
-    };
-
     int mPitch_ = 0;
     Range &range_;
     
     std::vector<std::shared_ptr<ActiveNote>> activeNotes;
 
 public:
-    Key(Range &range, int originalPitch) : mPitch_(originalPitch),range_(range) {}
+    Key(Range &range, int originalPitch) : mPitch_(originalPitch), range_(range) {}
     
     [[nodiscard]] virtual auto pitch() const -> int {
         return mPitch_;
@@ -63,11 +59,15 @@ public:
         
         // Note limit check (only for note-on events)
         if (velocity > 0) {
-            if (this->activeNotes.size() >= MAX_NOTES || this->contains(randomPitch)) {
+            if (this->activeNotes.size() >= this->range_.maxNotes() || this->contains(randomPitch)) {
                 return false;
             }
         }
         
         return true;
+    }
+
+    auto maxNotes() -> int {
+        return this->range_.maxNotes();
     }
 };

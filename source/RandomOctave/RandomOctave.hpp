@@ -14,15 +14,13 @@ class RandomOctave {
         using NoteReturnCodes = MIDI::NoteReturnCodes;
 
     private:
-        Range range_;
+        Range range_ = Range(MIDI::RANGE_LOW, MIDI::RANGE_HIGH);
         Keyboard keyboard_ = Keyboard(range_);
 
     public:
         std::mt19937 gen{std::random_device{}()}; 
 
-        explicit RandomOctave() {
-            this->range_ = Range();
-        };
+        explicit RandomOctave();
 
         auto clampPitchToRange(int pitch) -> int;
 
@@ -36,4 +34,5 @@ class RandomOctave {
 
         auto containsNote(int noteValue) -> bool { return this->keyboard_.containsNote(noteValue); }
         auto clearQueue() -> void { this->keyboard_.clearQueue(); }
+        auto maxNotes() -> int { return this->range_.maxNotes(); }
 };

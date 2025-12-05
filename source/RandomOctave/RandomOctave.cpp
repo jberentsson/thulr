@@ -3,6 +3,10 @@
 
 using namespace MIDI;
 
+RandomOctave::RandomOctave() {
+    this->range_ = Range(MIDI::RANGE_LOW, MIDI::RANGE_HIGH);
+};
+
 auto RandomOctave::note(int pitch, int velocity) -> NoteReturnCodes { // NOLINT
     // Check if the pitch is in the correct pitch range.
     if (!MIDI::Note(pitch, velocity).valid() || !this->range_.inRange(MIDI::Note(pitch))) {
@@ -23,7 +27,7 @@ auto RandomOctave::removeAll() -> size_t {
 }
 
 auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
-    this->range_ = Range(MIDI::Note(low), MIDI::Note(high));
+    this->range_ = Range(low, high);
     return 0;
 }
 

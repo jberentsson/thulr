@@ -8,6 +8,8 @@ using NoteReturnCodes = MIDI::NoteReturnCodes;
 
 SCENARIO("test the range") {
     Range range = Range();
+
+    REQUIRE(range.maxNotes() == 10);
     
     REQUIRE(range.inRange(MIDI::Note(NoteC4)));
     REQUIRE(!range.inRange(MIDI::Note(128)));
@@ -20,8 +22,16 @@ SCENARIO("test the range") {
 }
 
 SCENARIO("test the note class") {
-    Range range = Range();
-    Key keyTest = Key(range, 48); // NOLINT
+    Range rangeTest = Range();
+
+    REQUIRE(rangeTest.maxNotes() == 10);
+    
+    Key keyTest = Key(rangeTest, 48); // NOLINT
+    
+    REQUIRE(keyTest.maxNotes() == 10);
+    REQUIRE_NOTHROW(rangeTest.set(NoteC3, NoteC7));
+    REQUIRE(keyTest.maxNotes() == 4);
+    
     REQUIRE(keyTest.getActiveNotes().empty());
     REQUIRE(keyTest.add(47, 46, 127) == nullptr);
     REQUIRE(keyTest.add(48, 36, 127) != nullptr);
@@ -36,8 +46,10 @@ SCENARIO("test the note class") {
 }
 
 SCENARIO("test the keyboard class") {
-    Range range = Range();
-    Keyboard keyboardTest = Keyboard(range);
+    Range rangeTest = Range();
+    Keyboard keyboardTest = Keyboard(rangeTest);
+    REQUIRE(rangeTest.maxNotes() == 10);
+    REQUIRE(rangeTest.set(NoteC2, NoteC6));
     REQUIRE(keyboardTest.getActiveNotes().empty());
     REQUIRE(keyboardTest.getNoteQueue().empty());
     REQUIRE(keyboardTest.add(47, 46, 127) == RandomOctave::NoteReturnCodes::DEGREE_MISMATCH);
@@ -94,7 +106,11 @@ SCENARIO("RandomOctave starts empty") {
 
 SCENARIO("RandomOctave note on adds note") {
     RandomOctave randomOctave;
+
+    REQUIRE(randomOctave.maxNotes() == 10);
+
     REQUIRE(randomOctave.note(NoteC5, 100) == NoteReturnCodes::OK); // NOLINT
+    REQUIRE(!randomOctave.getActiveNotes().empty());
     REQUIRE(randomOctave.getActiveNotes().size() == 1);
     REQUIRE(randomOctave.containsNote(NoteC5));
 }
@@ -212,7 +228,7 @@ SCENARIO("RandomOctave removing notes decreases count") {
 
     REQUIRE(randomOctave.getActiveNotes().size() == initialNotes.size() + additionalNotes.size() - 2);
 }
-
+ 
 SCENARIO("RandomOctave remaining notes are correct after removal") { // NOLINT
     RandomOctave randomOctave;
     const std::vector<int> initialNotes = { NoteC4, NoteE4, NoteG4 };
@@ -360,9 +376,10 @@ SCENARIO("assa"){
     REQUIRE(randomOctave.getNoteQueue().empty());
     REQUIRE(randomOctave.getActiveNotes().empty());
 };
-
+ 
 SCENARIO("a chromatic scale is played") { // NOLINT
     RandomOctave randomOctaveTestObject;
+    randomOctaveTestObject.setRange(NoteC0, NoteG10);
 
     THEN("all chromatic notes are processed without crashing") {
         // Play chromatic scale note-ons.
