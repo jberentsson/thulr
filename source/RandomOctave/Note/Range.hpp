@@ -17,9 +17,9 @@ public:
         , maxNotes_(calculateMaxNotes())
         , valid_(true) {}
 
-    Range(int rangeLow, int rangeHigh) 
-        : rangeLow_(MIDI::Note(rangeLow))
-        , rangeHigh_(MIDI::Note(rangeHigh))
+    Range(int rangeLow, int rangeHigh)      // NOLINT
+        : rangeLow_(MIDI::Note(rangeLow))   // NOLINT
+        , rangeHigh_(MIDI::Note(rangeHigh)) // NOLINT
         , maxNotes_(calculateMaxNotes())
         , valid_(false)
     {
@@ -57,16 +57,18 @@ public:
     }
     
     auto calculateMaxNotes() -> int {
+        // Calculate how many octaves we are working with.
         int noteCount = this->rangeHigh_ - this->rangeLow_;
 
-        // Calculate how many octaves we are working with.
+        int maxNotes = 0;
+
         if (noteCount <= MIDI::OCTAVE) {
-            return 1;
+            maxNotes = 1;
         } else if (MIDI::OCTAVE < noteCount) {
-            return (noteCount / MIDI::OCTAVE);
+            maxNotes = (noteCount / MIDI::OCTAVE);
         }
 
-        return 0;
+        return maxNotes;
     }
 
     [[nodiscard]] auto valid() const -> bool {
