@@ -34,8 +34,8 @@ auto Quantizer::quantize(MIDI::Note noteValue) -> int {
     int notePitch = noteValue.pitch();
     
     // 3. Fit the note inside the range.
-    notePitch = std::max(notePitch, (int) this->rangeLow_.pitch());
-    notePitch = std::min(notePitch, (int) this->rangeHigh_.pitch());
+    notePitch = std::max(notePitch, (int) this->rangeLow_);
+    notePitch = std::min(notePitch, (int) this->rangeHigh_);
     
     // 4. Check if this exact pitch exists in keyboard.
     bool noteFound = false;

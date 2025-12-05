@@ -23,7 +23,7 @@ public:
     auto addNote(MIDI::Note noteValue) -> int;
     auto deleteNote(MIDI::Note noteValue) -> int;
     auto getNote(MIDI::Note noteValue) -> MIDI::Note;
-    auto setRange(MIDI::Note rangeLow, MIDI::Note rangeHigh) -> int;
+    auto setRange(int rangeLow, int rangeHigh) -> int;
     auto getLastNote() -> std::shared_ptr<Note> { return this->lastNote_; }
 
     auto round(MIDI::Note noteValue) -> int;
@@ -57,8 +57,9 @@ public:
     [[nodiscard]] auto low() const -> int { return this->currentNoteLow_; }
 
 private:
-    MIDI::Note rangeLow_ = MIDI::Note(MIDI::RANGE_LOW);
-    MIDI::Note rangeHigh_ = MIDI::Note(MIDI::RANGE_HIGH);
+    int rangeLow_ = MIDI::Note(MIDI::RANGE_LOW);
+    int rangeHigh_ = MIDI::Note(MIDI::RANGE_HIGH);
+    
     MIDI::Note currentNoteLow_ = MIDI::Note(MIDI::RANGE_HIGH);
     MIDI::Note currentNoteHigh_ = MIDI::Note(MIDI::RANGE_LOW);
     
