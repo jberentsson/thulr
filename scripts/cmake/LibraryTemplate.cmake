@@ -8,32 +8,41 @@ macro(library_template PROJECT_LIBRARIES)
 
     message(STATUS "Configuring library: ${PROJECT_NAME}")
 
-    set(SOURCES 
-        ${PROJECT_NAME}.cpp
-        ${PROJECT_NAME}.hpp
-    )
+
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.cpp)
+        set(SOURCES 
+            ${PROJECT_NAME}.cpp
+            ${PROJECT_NAME}.hpp
+        )
+    else()
+        set(SOURCES 
+            ${PROJECT_NAME}.hpp
+        )
+    endif()
 
     #############################################################
     # SMART STATIC LIBRARY TARGET
     #############################################################
+    if(NOT TEST_ONLY)
     
-    add_library(${PROJECT_NAME}_static STATIC ${SOURCES})
+        add_library(${PROJECT_NAME}_static STATIC ${SOURCES})
 
-    # Force static runtime for MSVC.
-    if(MSVC)
-        set_target_properties(${PROJECT_NAME}_static PROPERTIES
-            MSVC_RUNTIME_LIBRARY "MultiThreaded"
+        # Force static runtime for MSVC.
+        if(MSVC)
+            set_target_properties(${PROJECT_NAME}_static PROPERTIES
+                MSVC_RUNTIME_LIBRARY "MultiThreaded"
+            )
+        endif()
+
+        target_include_directories(${PROJECT_NAME}_static PUBLIC 
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${CMAKE_CURRENT_SOURCE_DIR}/../thulr/source
+            ${CMAKE_CURRENT_SOURCE_DIR}/../Utils
         )
     endif()
 
-    target_include_directories(${PROJECT_NAME}_static PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/../thulr/source
-        ${CMAKE_CURRENT_SOURCE_DIR}/../Utils
-    )
-
     # IMPROVED DEPENDENCY HANDLING - Handle missing targets gracefully
-    if(DEFINED PROJECT_LIBRARIES AND PROJECT_LIBRARIES)
+    if(DEFINED PROJECT_LIBRARIES AND PROJECT_LIBRARIES AND NOT TEST_ONLY)
         foreach(PL ${PROJECT_LIBRARIES})
             # Skip if trying to link to itself
             if(PL STREQUAL ${PROJECT_NAME})
@@ -55,12 +64,14 @@ macro(library_template PROJECT_LIBRARIES)
         endforeach()
     endif()
 
-    set_target_properties(${PROJECT_NAME}_static PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        POSITION_INDEPENDENT_CODE ON
-        CXX_STANDARD 17
-        CXX_STANDARD_REQUIRED ON
-    )
+    if(NOT TEST_ONLY)
+        set_target_properties(${PROJECT_NAME}_static PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+            POSITION_INDEPENDENT_CODE ON
+            CXX_STANDARD 17
+            CXX_STANDARD_REQUIRED ON
+        )
+    endif()
 
     #############################################################
     # TEST EXECUTABLE
@@ -74,11 +85,18 @@ macro(library_template PROJECT_LIBRARIES)
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_test.cpp)
         add_executable(${PROJECT_NAME}_test ${TEST_SOURCES})
 
-        # Link with the main library
-        target_link_libraries(${PROJECT_NAME}_test
-            Catch2::Catch2WithMain 
-            ${PROJECT_NAME}_static
-        )
+        if(NOT TEST_ONLY)
+            # Link with the main library
+            target_link_libraries(${PROJECT_NAME}_test
+                Catch2::Catch2WithMain 
+                ${PROJECT_NAME}_static
+            )
+        else()
+            # Link with the main library
+            target_link_libraries(${PROJECT_NAME}_test
+                Catch2::Catch2WithMain 
+            )
+        endif()
 
         # CRITICAL: Also link test with all the same dependencies as the main library
         if(DEFINED PROJECT_LIBRARIES AND PROJECT_LIBRARIES)
@@ -134,11 +152,13 @@ macro(library_template PROJECT_LIBRARIES)
     else()
         message(STATUS "   No test file found for ${PROJECT_NAME}")
     endif()
-    
-    target_include_directories(${PROJECT_NAME}_static PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/..
-    )
+
+    if(NOT TEST_ONLY)
+        target_include_directories(${PROJECT_NAME}_static PUBLIC 
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${CMAKE_CURRENT_SOURCE_DIR}/..
+        )
+    endif()
 
     target_include_directories(${PROJECT_NAME}_test PUBLIC 
         ${CMAKE_CURRENT_SOURCE_DIR}

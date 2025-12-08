@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Utils/Exceptions.hpp"
+/*
+https://midi.org/summary-of-midi-1-0-messages
+*/
 
 #include <cstdint>
-#include <stdexcept>
+#include <sys/types.h>
 
 namespace MIDI {
 constexpr int OCTAVE = 12;
@@ -71,6 +73,62 @@ public:
 };
 
 class Velocity : public Note {};
+
+enum MessageTypes : uint8_t {
+    NOTE_OFF = 0x8,
+    NOTE_ON = 0x9,
+    POLYPHONIC_AFTERTOUCH = 0xA,
+    CONTROL_CHANGE = 0xB,
+    PROGRAM_CHANGE = 0xC,
+    CHANNEL_AFTERTOUCH = 0xD,
+    PITCH_WHEEL = 0xE,
+    SYSEX_START = 0xF0,
+    SYSEX_END = 0xF7
+};
+
+// This is the ID for Non-commercial/Educational.
+// Many manufacturers have their own ID.
+constexpr uint8_t SYSEX_ID = 0x7D;
+
+class Message {
+private:
+    MessageTypes type_;
+    uint8_t data_[2] = {0, 0};
+    u_int64_t mMessage_;
+    uint8_t channel_;
+
+public:
+    Message(u_int64_t mMessage) : mMessage_(mMessage) {
+        this->type_ = MessageTypes((mMessage >> 20) & 0xF); // NOLINT
+        this->channel_ = (this->mMessage_ >> 16) & 0xF; // NOLINT
+        this->data_[0] = 0xFF & (mMessage_ >> 8); // NOLINT
+        this->data_[1] = 0xfF & mMessage_; // NOLINT
+    }
+
+    Message(uint8_t mMessageHeader, uint8_t mData0, uint8_t mData1) { // NOLINT
+        this->type_ = MessageTypes((mMessageHeader >> 4) & 0xF); // NOLINT
+        this->channel_ = mMessageHeader & 0xF; // NOLINT
+        this->data_[0] = mData0;
+        this->data_[1] = mData1;
+        this->mMessage_ = (mMessageHeader << 20) | ((mData0 & 0xFF) << 8) | (mData1 & 0xFF); // NOLINT
+    }
+
+    auto type() -> MessageTypes {
+        return this->type_;
+    }
+
+    auto data(int index) -> u_int8_t {
+        return this->data_[index];
+    }
+
+    [[nodiscard]] auto message() const -> u_int64_t {
+        return this->mMessage_;
+    }
+
+    [[nodiscard]] auto channel() const -> u_int8_t {
+        return this->channel_;
+    }
+};
 
 namespace Notes {
 // Octave 0 (lowest octave)
