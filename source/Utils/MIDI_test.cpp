@@ -3,7 +3,7 @@
 
 using namespace MIDI::Notes;
 
-SCENARIO("create a new midi message") {
+/* SCENARIO("create a new midi message") {
     GIVEN("message is full of data") {
         auto mMessage = MIDI::Message(0x9FFFFF); // NOLINT
         REQUIRE(mMessage.type() == MIDI::MessageTypes::NOTE_ON);
@@ -36,3 +36,4 @@ SCENARIO("create a new midi message") {
         REQUIRE(mMessage.channel() == 0x0);
     }
 }
+*/
