@@ -1,6 +1,7 @@
 #include <memory>
 #include <algorithm>
 #include <iterator>
+#include <vector>
 #include "Utils/MIDI.hpp"
 #include "Chords.hpp"
 
