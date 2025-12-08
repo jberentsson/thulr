@@ -1,4 +1,5 @@
 #include <memory>
+#include <algorithm>
 #include "Utils/MIDI.hpp"
 #include "Chords.hpp"
 
