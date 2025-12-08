@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Quantizer.hpp"
 #include "QuantizerMisc.cpp" // NOLINT
 #include "QuantizerStrategies.cpp" // NOLINT
