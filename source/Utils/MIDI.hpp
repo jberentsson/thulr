@@ -90,6 +90,7 @@ enum MessageTypes : uint8_t {
 // Many manufacturers have their own ID.
 constexpr uint8_t SYSEX_ID = 0x7D;
 
+/* 
 class Message {
 private:
     MessageTypes type_;
@@ -129,6 +130,7 @@ public:
         return this->channel_;
     }
 };
+*/
 
 namespace Notes {
 // Octave 0 (lowest octave)
