@@ -134,7 +134,7 @@ SCENARIO("make sure we can trigger more than one key at a time") {
         REQUIRE(chordsTest.noteQueue().at(5)->velocity() == NOTE_ON);
     }
 
-    GIVEN("poulate couple of keys with overlaping notes") {
+    GIVEN("populate couple of keys with overlaping notes") {
         // We assign notes to the first key.
         REQUIRE(chordsTest.reciveNotes());
         REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
@@ -186,5 +186,64 @@ SCENARIO("make sure we can trigger more than one key at a time") {
         REQUIRE(chordsTest.noteQueue().at(3)->velocity() == NOTE_ON);
         REQUIRE(chordsTest.noteQueue().at(4)->velocity() == NOTE_ON);
         REQUIRE(chordsTest.noteQueue().at(5)->velocity() == NOTE_ON);
+    }
+
+    GIVEN("populate couple of keys with overlaping notes where we release the fist key after pressing the second") {
+        // We assign notes to the first key.
+        REQUIRE(chordsTest.reciveNotes());
+        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+
+        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
+
+        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
+
+        REQUIRE(chordsTest.noteQueue().empty());
+
+        // We assign notes to the second key.
+        REQUIRE(chordsTest.reciveNotes());
+        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteD4, NOTE_OFF) == 0);
+
+        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteF4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteA4, NOTE_ON) == 0);
+
+        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(NoteF4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(NoteA4, NOTE_OFF) == 0);
+
+        REQUIRE(chordsTest.noteQueue().empty());
+
+        // Try to press two at the same time.
+        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+
+        REQUIRE(!chordsTest.noteQueue().empty());
+        REQUIRE(chordsTest.noteQueue().size() == 8);
+
+        // Check the outputs.
+        REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteC4);
+        REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteE4);
+        REQUIRE(chordsTest.noteQueue().at(2)->pitch() == NoteG4);
+        REQUIRE(chordsTest.noteQueue().at(3)->pitch() == NoteC4);
+        REQUIRE(chordsTest.noteQueue().at(4)->pitch() == NoteF4);
+        REQUIRE(chordsTest.noteQueue().at(5)->pitch() == NoteA4);
+        REQUIRE(chordsTest.noteQueue().at(6)->pitch() == NoteE4);
+        REQUIRE(chordsTest.noteQueue().at(7)->pitch() == NoteG4);
+
+        REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(2)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(3)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(4)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(5)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(6)->velocity() == NOTE_OFF);
+        REQUIRE(chordsTest.noteQueue().at(7)->velocity() == NOTE_OFF);
     }
 }

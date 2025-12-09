@@ -8,6 +8,7 @@
 Chords::Chords() {
     for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
         this->keyboard_.push_back(std::make_shared<Key>(Key(i)));
+        this->noteCount_[i] = 0;
     }
 }
 
@@ -86,23 +87,27 @@ auto Chords::releaseChordNote(int pitchValue, int velocityValue) -> int { // NOL
 
 auto Chords::playNotes(int pitchValue, int velocityValue) -> int { // NOLINT
     // Take the notes from the key and add them to the note queue vector.
+
     if (!this->keyboard_[pitchValue]->notes().empty()) {
         const auto& sourceNotes = this->keyboard_[pitchValue]->notes();
         
         // Reserve space first.
         this->noteQueue_.reserve(this->noteQueue_.size() + sourceNotes.size());
-        
-        // Use copy which handles self-insertion better.
-        //std::copy(
-        //    sourceNotes.begin(),
-        //    sourceNotes.end(),
-        //    std::back_inserter(this->noteQueue_)
-        //);
 
         // TODO: Maybe we want to randomize the order of the notes.
         // TODO: Add some kind of velcity randomization, +/- values
         for(const auto& currentNote : sourceNotes) {
-            this->noteQueue_.push_back(std::make_shared<MIDI::Note>(MIDI::Note(currentNote->pitch(), velocityValue)));
+            if (velocityValue > 0) {
+                this->noteCount_[currentNote->pitch()]++;
+            } else {
+                this->noteCount_[currentNote->pitch()]--;
+            }
+
+            if (this->noteCount_[currentNote->pitch()] > 0 && velocityValue == 0) {
+                // TODO: Here we can add add a mode to retrigger or keep common active common notes.
+            } else {
+                this->noteQueue_.push_back(std::make_shared<MIDI::Note>(MIDI::Note(currentNote->pitch(), velocityValue)));
+            }
         }
     }
 

@@ -24,6 +24,8 @@ class Chords {
         std::vector<std::shared_ptr<Key>> keyboard_;
         std::vector<std::shared_ptr<int>> activeNotes_;
         std::vector<std::shared_ptr<MIDI::Note>> noteQueue_;
+        
+        int noteCount_[MIDI::KEYBOARD_SIZE] = {};
 
         bool isRecievingNotes_ = false;
         int activeKey_ = -1;
