@@ -98,8 +98,10 @@ auto Chords::playNotes(int pitchValue, int velocityValue) -> int { // NOLINT
         // TODO: Add some kind of velcity randomization, +/- values
         for(const auto& currentNote : sourceNotes) {
             if (velocityValue > 0) {
+                // Incrase on NOTE ON
                 this->noteCount_[currentNote->pitch()]++;
             } else {
+                // Incrase on NOTE OFF
                 this->noteCount_[currentNote->pitch()]--;
             }
 
