@@ -26,11 +26,11 @@ auto Chords::note(int pitchValue, int velocityValue) -> int {
         if (velocityValue > 0) {
             this->addChordNote(pitchValue, velocityValue);
         } else {
-            this->releaseChordNote(pitchValue, velocityValue);
+            this->releaseChordNote(pitchValue, 0);
         }
     } else if (!keyboard_[pitchValue]->notes().empty()) {
         // Play the notes that have been assigned to a key.
-        this->playNotes(pitchValue);
+        this->playNotes(pitchValue, velocityValue);
     }
     
     return 0;
@@ -84,7 +84,7 @@ auto Chords::releaseChordNote(int pitchValue, int velocityValue) -> int { // NOL
     return 0;
 }
 
-auto Chords::playNotes(int pitchValue) -> int{
+auto Chords::playNotes(int pitchValue, int velocityValue) -> int { // NOLINT
     // Take the notes from the key and add them to the note queue vector.
     if (!this->keyboard_[pitchValue]->notes().empty()) {
         const auto& sourceNotes = this->keyboard_[pitchValue]->notes();
@@ -93,11 +93,17 @@ auto Chords::playNotes(int pitchValue) -> int{
         this->noteQueue_.reserve(this->noteQueue_.size() + sourceNotes.size());
         
         // Use copy which handles self-insertion better.
-        std::copy(
-            sourceNotes.begin(),
-            sourceNotes.end(),
-            std::back_inserter(this->noteQueue_)
-        );
+        //std::copy(
+        //    sourceNotes.begin(),
+        //    sourceNotes.end(),
+        //    std::back_inserter(this->noteQueue_)
+        //);
+
+        // TODO: Maybe we want to randomize the order of the notes.
+        // TODO: Add some kind of velcity randomization, +/- values
+        for(const auto& currentNote : sourceNotes) {
+            this->noteQueue_.push_back(std::make_shared<MIDI::Note>(MIDI::Note(currentNote->pitch(), velocityValue)));
+        }
     }
 
     return 0;

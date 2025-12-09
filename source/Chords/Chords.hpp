@@ -11,7 +11,7 @@ class Chords {
         ~Chords() = default;
 
         auto note(int pitchValue, int velocityValue) -> int;
-        auto playNotes(int pitchValue) -> int;
+        auto playNotes(int pitchValue, int velocityValue) -> int;
         auto reciveNotes() -> bool;
         auto noteQueue() -> std::vector<std::shared_ptr<MIDI::Note>>& { return this->noteQueue_; }
         auto notesActive() -> std::vector<std::shared_ptr<int>>& { return this->activeNotes_; }

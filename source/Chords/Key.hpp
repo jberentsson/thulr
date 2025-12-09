@@ -45,7 +45,7 @@ public:
                 ++it;
             }
         }
-        
+
         return 0;
     }
 
