@@ -7,9 +7,21 @@
 
 class Chords {
     public:
+        // Do we want our active notes to retrigger?
+        enum NoteMode : uint8_t {
+            RETRIGGER = 0,
+            LEGATO = 1
+        };
+
+        // Change the order of the notes that are played.
+        enum NoteOrder : uint8_t {
+            AS_PLAYED = 0,
+            RANDOM = 1
+        };
+        
         Chords();
         ~Chords() = default;
-
+        
         auto note(int pitchValue, int velocityValue) -> int;
         auto playNotes(int pitchValue, int velocityValue) -> int;
         auto reciveNotes() -> bool;
@@ -17,7 +29,11 @@ class Chords {
         auto notesActive() -> std::vector<std::shared_ptr<int>>& { return this->activeNotes_; }
         auto addChordNote(int pitchValue, int velocityValue) -> int;
         auto releaseChordNote(int pitchValue, int velocityValue) -> int;
-
+        auto setNoteMode(NoteMode mode) -> NoteMode;
+        auto setNoteOrder(NoteOrder order) -> NoteOrder;
+        auto queueNote(int noteValue, int velocityValue) -> void;
+        auto clear() -> void;
+        auto clear(int noteValue) -> void;
         [[nodiscard]] auto isRecievingNotes() const -> bool { return this->isRecievingNotes_; }
 
     private:
@@ -26,7 +42,8 @@ class Chords {
         std::vector<std::shared_ptr<MIDI::Note>> noteQueue_;
         
         int noteCount_[MIDI::KEYBOARD_SIZE] = {};
-
+        NoteMode noteMode_ = NoteMode::RETRIGGER;
+        NoteOrder noteOrder_ = NoteOrder::AS_PLAYED;
         bool isRecievingNotes_ = false;
         int activeKey_ = -1;
 };
