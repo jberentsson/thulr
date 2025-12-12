@@ -157,14 +157,9 @@ macro(library_template PROJECT_LIBRARIES)
         target_include_directories(${PROJECT_NAME}_static PUBLIC 
             ${CMAKE_CURRENT_SOURCE_DIR}
             ${CMAKE_CURRENT_SOURCE_DIR}/..
+            ${CMAKE_SOURCE_DIR}/source/min-api/test
         )
     endif()
 
-    target_include_directories(${PROJECT_NAME}_test PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/..
-    )
-
     message(STATUS " Successfully configured ${PROJECT_NAME}")
-
 endmacro()

@@ -2,28 +2,34 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
-#include <iostream>
 #include "Utils/MIDI.hpp"
 #include "Chords.hpp"
 
 Chords::Chords() {
+    this->noteMode_ = NoteMode::RETRIGGER;
+
     for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
         this->keyboard_.push_back(std::make_shared<Key>(Key(i)));
         this->noteCount_[i] = 0;
     }
 }
 
+auto Chords::reciveNotes() -> bool {
+    this->isRecievingNotes_ = true;
+    return this->isRecievingNotes_;
+}
+
 auto Chords::note(int pitchValue, int velocityValue) -> int {
     // Handles note input.
 
-    // Finish if this is the active note off message.
-    if (this->keyboard_[pitchValue]->notes().empty() && 
-        (velocityValue == 0) && 
-        (this->activeKey_ == pitchValue)) {
-        return 0;
-    }
-
     if (this->isRecievingNotes_) {
+        // Finish if this is the active note off message.
+        if (this->keyboard_[pitchValue]->notes().empty() && 
+            (velocityValue == 0) && 
+            (this->activeKey_ == pitchValue)) {
+            return 0;
+        }
+
         // Add a note to a key.
         if (velocityValue > 0) {
             this->addChordNote(pitchValue, velocityValue);
@@ -36,11 +42,6 @@ auto Chords::note(int pitchValue, int velocityValue) -> int {
     }
     
     return 0;
-}
-
-auto Chords::reciveNotes() -> bool {
-    this->isRecievingNotes_ = true;
-    return this->isRecievingNotes_;
 }
 
 auto Chords::addChordNote(int pitchValue, int velocityValue) -> int {
@@ -57,27 +58,27 @@ auto Chords::addChordNote(int pitchValue, int velocityValue) -> int {
         this->keyboard_.at(this->activeKey_)->add(pitchValue, velocityValue);
 
         // Store the notes untill we have released them all.
-        this->activeNotes_.push_back(std::make_shared<int>(pitchValue));
+        this->activeNotes_[pitchValue]++;
     }
 
     return 0;
 }
 
-auto Chords::releaseChordNote(int pitchValue, int velocityValue) -> int { // NOLINT
-    // Here we remove the released note from active notes vector.
-    int count = 0;
+auto Chords::removeFromActive(int pitchValue) -> int {
+    int count = this->activeNotes_[pitchValue]--;
 
-    // Loop through the active notes and find our value.
-    for (auto it = this->activeNotes_.begin(); it != this->activeNotes_.end(); ) {
-        if (*(*it) == pitchValue) {
-            it = this->activeNotes_.erase(it);
-            count++;
-        } else {
-            ++it;
-        }
+    if (count > 0) {
+        return 0;
     }
 
-    if (this->activeNotes_.empty()) {
+    return count;
+}
+
+auto Chords::releaseChordNote(int pitchValue, int velocityValue) -> int { // NOLINT
+    // Here we remove the released note from active notes vector.
+    int count = this->removeFromActive(pitchValue);
+
+    if (this->activeNotes_[pitchValue] == 0) {
         // When all of the notes have been released we quit the recording mode.
         this->isRecievingNotes_ = false;
         this->activeKey_ = -1;
@@ -116,15 +117,14 @@ auto Chords::playNotes(int pitchValue, int velocityValue) -> int { // NOLINT
             bool isNoteOn = (velocityValue > 0);
             bool isNoteOff = (velocityValue == 0);
             bool wasNoteHeld = (this->noteCount_[currentNote->pitch()] > 0);
-            
+
             if (isNoteOff) {
                 // Only send NOTE OFF if note was actually held.
-                if (wasNoteHeld) {
+                if (wasNoteHeld && this->noteMode_ != Chords::NoteMode::LEGATO) {
                     this->queueNote(currentNote->pitch(), 0);
                     this->noteCount_[currentNote->pitch()]--;
                 }
-            } 
-            else if (isNoteOn) {
+            } else if (isNoteOn) {
                 // Update count first.
                 this->noteCount_[currentNote->pitch()]++;
                 
@@ -133,8 +133,7 @@ auto Chords::playNotes(int pitchValue, int velocityValue) -> int { // NOLINT
                     if (!wasNoteHeld) {
                         this->queueNote(currentNote->pitch(), velocityValue);
                     }
-                } 
-                else if (this->noteMode_ == NoteMode::RETRIGGER) {
+                } else if (this->noteMode_ == NoteMode::RETRIGGER) {
                     // Retrigger: Always trigger NOTE ON.
                     this->queueNote(currentNote->pitch(), velocityValue);
                 }

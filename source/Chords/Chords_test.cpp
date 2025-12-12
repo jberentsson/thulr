@@ -1,4 +1,6 @@
+#define CATCH_CONFIG_ENABLE_STRINGIFICATION
 #include <catch2/catch.hpp>
+#include "Utils/TestHelpers.hpp"
 #include "Chords.hpp"
 
 using namespace MIDI::Notes;
