@@ -1,17 +1,25 @@
 #pragma once
 
 #define CATCH_CONFIG_ENABLE_STRINGIFICATION
-#include <catch.hpp>
+#ifdef __has_include
+    #if __has_include(<catch2/catch.hpp>)
+        #include <catch2/catch.hpp>
+    #else
+        #include <catch.hpp>
+    #endif
+//#else
+//    #include <catch.hpp>
+#endif
 #include "Chords/Chords.hpp"
 
 namespace Catch {
     template<>
     struct StringMaker<Chords::NoteMode> {
-        static std::string convert(Chords::NoteMode mode) {
+        static auto convert(Chords::NoteMode mode) -> std::string {
             //using namespace Chords;
             switch(mode) {
-                case NoteMode::RETRIGGER: return "RETRIGGER";
-                case NoteMode::LEGATO: return "LEGATO";
+                case Chords::NoteMode::RETRIGGER: return "RETRIGGER";
+                case Chords::NoteMode::LEGATO: return "LEGATO";
                 default: 
                     return "UNKNOWN(" + std::to_string(static_cast<int>(mode)) + ")";
             }

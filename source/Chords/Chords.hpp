@@ -4,22 +4,24 @@
 #include <memory>
 #include <vector>
 
-// Do we want our active notes to retrigger?
-enum NoteMode : uint8_t {
-    RETRIGGER = 0,
-    LEGATO = 1
-};
+namespace ChordsEnums {
+    // Do we want our active notes to retrigger?
+    enum NoteMode : uint8_t {
+        RETRIGGER = 0,
+        LEGATO = 1
+    };
 
-// Change the order of the notes that are played.
-enum NoteOrder : uint8_t {
-    AS_PLAYED = 0,
-    RANDOM = 1
+    // Change the order of the notes that are played.
+    enum NoteOrder : uint8_t {
+        AS_PLAYED = 0,
+        RANDOM = 1
+    };
 };
 
 class Chords {
     public:
-        using NoteMode = NoteMode;
-        using NoteOrder = NoteOrder;
+        using NoteMode = ChordsEnums::NoteMode;
+        using NoteOrder = ChordsEnums::NoteOrder;
 
     private:
         std::vector<std::shared_ptr<Key>> keyboard_;

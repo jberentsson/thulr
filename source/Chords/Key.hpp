@@ -26,9 +26,7 @@ public:
     auto add(int pitchValue, int velocityValue) -> int { // NOLINT
         // Add a note to a key.
 
-        std::shared_ptr<MIDI::Note> newNote = std::make_shared<MIDI::Note>(
-            MIDI::Note(pitchValue, velocityValue)
-        );
+        std::shared_ptr<MIDI::Note> newNote = std::make_shared<MIDI::Note>(MIDI::Note(pitchValue, velocityValue));
 
         this->notes_.push_back(newNote);
 

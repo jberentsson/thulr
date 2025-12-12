@@ -42,23 +42,23 @@ inline auto intToNoteName(int noteValue) -> std::string {
             return "D#";
         case 4:
             return "E";
-        case 5:
+        case 5:          // NOLINT
             return "F";
-        case 6:
+        case 6:          // NOLINT
             return "F#";
-        case 7:
+        case 7:          // NOLINT
             return "G";
-        case 8:
+        case 8:          // NOLINT
             return "G#";
-        case 9:
+        case 9:          // NOLINT
             return "A";
-        case 10:
+        case 10:         // NOLINT
             return "A#";
-        case 11:
+        case 11:         // NOLINT
             return "B";
+        default:
+            return "";
     };
-
-    return NULL;
 }
 
 inline auto human(int noteValue) -> std::string {

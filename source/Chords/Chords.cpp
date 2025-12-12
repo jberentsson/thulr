@@ -24,9 +24,9 @@ auto Chords::note(int pitchValue, int velocityValue) -> int {
 
     if (this->isRecievingNotes_) {
         // Finish if this is the active note off message.
-        if (this->keyboard_[pitchValue]->notes().empty() && 
-            (velocityValue == 0) && 
-            (this->activeKey_ == pitchValue)) {
+        if ((velocityValue == 0) && 
+            (this->activeKey_ == pitchValue) &&
+            this->keyboard_[pitchValue]->notes().empty()) {
             return 0;
         }
 
@@ -45,6 +45,10 @@ auto Chords::note(int pitchValue, int velocityValue) -> int {
 }
 
 auto Chords::addChordNote(int pitchValue, int velocityValue) -> int {
+    if (0 >= pitchValue && pitchValue > MIDI::KEYBOARD_SIZE) {
+        return 1;
+    }
+
     if (this->activeKey_ < 0) {
         // Here we choose which key we want to assign the notes to.
         this->activeKey_ = pitchValue;
@@ -53,7 +57,7 @@ auto Chords::addChordNote(int pitchValue, int velocityValue) -> int {
         if (!this->keyboard_.at(pitchValue)->notes().empty()) {
             this->keyboard_.at(pitchValue)->notes().clear();
         }
-    } else {
+    } else if (pitchValue >= 0 && pitchValue < (MIDI::KEYBOARD_SIZE - 1)){
         // The rest of the notes are assigned to the key.
         this->keyboard_.at(this->activeKey_)->add(pitchValue, velocityValue);
 
@@ -66,17 +70,12 @@ auto Chords::addChordNote(int pitchValue, int velocityValue) -> int {
 
 auto Chords::removeFromActive(int pitchValue) -> int {
     int count = this->activeNotes_[pitchValue]--;
-
-    if (count > 0) {
-        return 0;
-    }
-
-    return count;
+    return std::max(count, 0);
 }
 
 auto Chords::releaseChordNote(int pitchValue, int velocityValue) -> int { // NOLINT
     // Here we remove the released note from active notes vector.
-    int count = this->removeFromActive(pitchValue);
+    this->removeFromActive(pitchValue);
 
     if (this->activeNotes_[pitchValue] == 0) {
         // When all of the notes have been released we quit the recording mode.
