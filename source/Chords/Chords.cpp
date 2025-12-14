@@ -141,7 +141,7 @@ auto Chords::releaseChordNote(int pitchValue) -> int {
     return 0;
 }
 
-auto Chords::playNotes(int pitchValue, int velocityValue) -> int {
+auto Chords::playNotes(int pitchValue, int velocityValue) -> int { // NOLINT
     if (!this->keyboard_[pitchValue]->notes().empty()) {
         const auto& sourceNotes = this->keyboard_[pitchValue]->notes();
         
@@ -151,7 +151,7 @@ auto Chords::playNotes(int pitchValue, int velocityValue) -> int {
             
             if (velocityValue == 0) { // NOTE OFF
                 if (count > 0) {
-                    bool multipleChordsUsingNote = (count > 1);
+                    //bool multipleChordsUsingNote = (count > 1);
                     count--;
                     
                     if (count == 0) {
@@ -236,7 +236,8 @@ auto Chords::clear(int noteValue) -> void {
 }
 
 auto Chords::clearActiveNotes() -> void {
-    for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
-        this->noteCount_[i] = 0;
+    for (const auto &currentNoteCount : this->noteCount_) {
+        this->noteCount_[currentNoteCount] = 0;
     }
 }
+
