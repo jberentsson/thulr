@@ -15,7 +15,7 @@ public:
     Key(int noteValue) : pitch_(noteValue) {}
     ~Key() = default;
 
-    auto notes() const -> const std::vector<std::shared_ptr<MIDI::Note>>& {
+    [[nodiscard]] auto notes() const -> const std::vector<std::shared_ptr<MIDI::Note>>& {
         return this->notes_;
     }
 

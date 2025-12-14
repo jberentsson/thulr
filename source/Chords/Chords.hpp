@@ -59,6 +59,6 @@ class Chords {
         auto clear(int noteValue) -> void;
         auto clearActiveNotes() -> void;
         auto setActiveKey(int keyValue) -> int;
-        auto getActiveKey() -> int { return this->activeKey_; }
+        [[nodiscard]] auto getActiveKey() const -> int { return this->activeKey_; }
         [[nodiscard]] auto isRecievingNotes() const -> bool { return this->isRecievingNotes_; }
 };

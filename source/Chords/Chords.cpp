@@ -35,16 +35,18 @@ auto Chords::note(int pitchValue, int velocityValue) -> int {
     
     // Play chord if key has one recorded.
     if (!this->keyboard_[pitchValue]->notes().empty()) {
-        const auto& chord = this->keyboard_[pitchValue]->notes();
-        for (const auto& note : chord) {
-            this->queueNote(note->pitch(), velocityValue);
-        }
+        //const auto& chord = this->keyboard_[pitchValue]->notes();
+        //std::cout << "are we here?\n";
+        //for (const auto& note : chord) {
+        //    this->queueNote(note->pitch(), velocityValue);
+        //}
+        this->playNotes(pitchValue, velocityValue);
     }
 
     return 0;
 }
 
-auto Chords::chordNote(int pitchValue, int velocityValue) -> int {
+auto Chords::chordNote(int pitchValue, int velocityValue) -> int { // NOLINT
      if (velocityValue > 0) {
         this->addChordNote(pitchValue);
     } else {
@@ -193,6 +195,8 @@ auto Chords::sendNoteOn(int pitch) -> bool {
     } else if (this->noteMode_ == NoteMode::LEGATO) {
         std::cout << "LEGATO MODE Note("<< pitch <<") Was Active"<< (noteWasActive ? "TRUE" : "FALSE") <<"\n";
         sendNoteOn = !noteWasActive; // Only if newly activated
+    } else {
+        std::cout << "sendNoteOn did not do anything\n";
     }
     // else: Normal mode - no duplicate NOTE_ON
     return sendNoteOn;
