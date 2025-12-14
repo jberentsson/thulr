@@ -3,6 +3,7 @@
 #include "Utils/MIDI.hpp"
 #include <cstdint>
 #include <memory>
+#include <iostream>
 #include <vector>
 
 class Key {
@@ -14,7 +15,11 @@ public:
     Key(int noteValue) : pitch_(noteValue) {}
     ~Key() = default;
 
-    auto notes() -> std::vector<std::shared_ptr<MIDI::Note>> {
+    auto notes() const -> const std::vector<std::shared_ptr<MIDI::Note>>& {
+        return this->notes_;
+    }
+
+    auto notes() -> std::vector<std::shared_ptr<MIDI::Note>>& {
         return this->notes_;
     }
 
@@ -23,13 +28,12 @@ public:
         return 0;
     }
 
-    auto add(int pitchValue, int velocityValue) -> int { // NOLINT
+    auto add(int pitchValue, int velocityValue = 0) -> int { // NOLINT
         // Add a note to a key.
 
-        std::shared_ptr<MIDI::Note> newNote = std::make_shared<MIDI::Note>(MIDI::Note(pitchValue, velocityValue));
-
-        this->notes_.push_back(newNote);
-
+        this->notes_.push_back(std::make_shared<MIDI::Note>(MIDI::Note(pitchValue, velocityValue)));
+        std::cout << "key: note puched back " << pitchValue << " "
+                  << velocityValue << " size:" << this->notes_.size() << "\n";
         return 0;
     }
 

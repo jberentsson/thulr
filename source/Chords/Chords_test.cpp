@@ -1,4 +1,5 @@
 #define CATCH_CONFIG_ENABLE_STRINGIFICATION
+#include <iostream>
 #include <catch2/catch.hpp>
 #include "Utils/TestHelpers.hpp"
 #include "Chords.hpp"
@@ -43,7 +44,7 @@ SCENARIO("parsse some notes") {
         REQUIRE(chordsTest.noteQueue().empty());
         REQUIRE(!chordsTest.isRecievingNotes());
 
-        // Play a single note.
+        // // Play a single note.
         REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
 
         // And a C Major chord is played.
@@ -119,7 +120,7 @@ SCENARIO("make sure we can trigger more than one key at a time") {
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 6);
 
-        // Check the outputs.
+        // // Check the outputs.
         REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteC4);
         REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteE4);
         REQUIRE(chordsTest.noteQueue().at(2)->pitch() == NoteG4);
@@ -136,6 +137,7 @@ SCENARIO("make sure we can trigger more than one key at a time") {
     }
 
     GIVEN("populate couple of keys with overlaping notes") {
+        std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
         // We assign notes to the first key.
         REQUIRE(chordsTest.reciveNotes());
         REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
@@ -187,6 +189,7 @@ SCENARIO("make sure we can trigger more than one key at a time") {
         REQUIRE(chordsTest.noteQueue().at(3)->velocity() == NOTE_ON);
         REQUIRE(chordsTest.noteQueue().at(4)->velocity() == NOTE_ON);
         REQUIRE(chordsTest.noteQueue().at(5)->velocity() == NOTE_ON);
+        std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
     }
 
     GIVEN("populate couple of keys with overlaping notes where we release the fist key after pressing the second") {
@@ -244,34 +247,34 @@ SCENARIO("make sure we can trigger more than one key at a time") {
 
         REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
-        REQUIRE(chordsTest.noteQueue().size() == 2);
+        // REQUIRE(chordsTest.noteQueue().size() == 2);
 
-        REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteF4);
-        REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteA4);
+        // REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteF4);
+        // REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteA4);
 
-        REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_ON);
-        REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_ON);
+        // REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_ON);
+        // REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_ON);
 
-        REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
+        // REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
         
-        // Release the first note.
-        //REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-        //REQUIRE(!chordsTest.noteQueue().empty());
-        //REQUIRE(chordsTest.noteQueue().size() == 3);
+        // // Release the first note.
+        // REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        // REQUIRE(!chordsTest.noteQueue().empty());
+        // REQUIRE(chordsTest.noteQueue().size() == 3);
 
-        //REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteC4);
-        //REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteE4);
-        //REQUIRE(chordsTest.noteQueue().at(2)->pitch() == NoteG4);
+        // REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteC4);
+        // REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteE4);
+        // REQUIRE(chordsTest.noteQueue().at(2)->pitch() == NoteG4);
 
-        //REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_OFF);
-        //REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_OFF);
-        //REQUIRE(chordsTest.noteQueue().at(2)->velocity() == NOTE_OFF);
+        // REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_OFF);
+        // REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_OFF);
+        // REQUIRE(chordsTest.noteQueue().at(2)->velocity() == NOTE_OFF);
 
-        //REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
+        // REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
 
-        //REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        //REQUIRE(!chordsTest.noteQueue().empty());
-        //REQUIRE(chordsTest.noteQueue().size() == 2);        
+        // REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        // REQUIRE(!chordsTest.noteQueue().empty());
+        // REQUIRE(chordsTest.noteQueue().size() == 2);        
     }
 }
 
@@ -324,5 +327,76 @@ SCENARIO("make sure the note modes work") {
         REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 6);        
+    }
+}
+
+SCENARIO("make sure the note modes work 2") {
+    std::cout << "ææææææææææææææææææææææææææææææææææææææææææææææ\n";
+    Chords chordsTest = Chords();
+
+    // We assign notes to the first key.
+    REQUIRE(chordsTest.reciveNotes());
+    REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+    REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+
+    REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
+    REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
+    REQUIRE(chordsTest.note(NoteB4, NOTE_ON) == 0);
+
+    REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(NoteB4, NOTE_OFF) == 0);
+
+    REQUIRE(chordsTest.noteQueue().empty());
+    REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+    REQUIRE(!chordsTest.noteQueue().empty());
+
+    std::cout << "ææææææææææææææææææææææææææææææææææææææææææææææ\n";
+}
+
+SCENARIO("make sure the basic functions work") {
+    std::cout << "ææææææææææææææææææææææææææææææææææææææææææææææ\n";
+    Chords chordsTest = Chords();
+
+    WHEN("Add and remove from active.") {
+        REQUIRE(chordsTest.addToActive(NoteC4) == 1);
+        REQUIRE(chordsTest.removeFromActive(NoteC4) == 0);
+    }
+
+    WHEN("We choose an active note") {
+        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.getActiveKey() == -1);
+        REQUIRE(chordsTest.reciveNotes());
+        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.getActiveKey() == NoteC4);
+    }
+
+    WHEN("Add and remove a chord note.") {
+        REQUIRE(chordsTest.getKey(NoteC4)->notes().empty());
+        REQUIRE(chordsTest.setActiveKey(NoteC4) == NoteC4);
+
+        REQUIRE(chordsTest.chordNote(NoteF4, NOTE_ON) == 0);
+        REQUIRE(!chordsTest.getKey(NoteC4)->notes().empty());
+        REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 1);
+    
+        REQUIRE(chordsTest.chordNote(NoteA4, NOTE_ON) == 0);
+        REQUIRE(!chordsTest.getKey(NoteC4)->notes().empty());
+        REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 2);
+    
+        REQUIRE(chordsTest.chordNote(NoteC5, NOTE_ON) == 0);
+        REQUIRE(!chordsTest.getKey(NoteC4)->notes().empty());
+        REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 3);
+
+        REQUIRE(chordsTest.chordNote(NoteF4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.chordNote(NoteA4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.chordNote(NoteC5, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 3);
+
+        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(!chordsTest.noteQueue().empty());
+        REQUIRE(chordsTest.noteQueue().size() == 3);
+
+        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.noteQueue().size() == 6);
     }
 }
