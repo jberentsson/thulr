@@ -1,36 +1,18 @@
 #include <memory>
+#include <algorithm>
+#include <iterator>
+#include <vector>
+#include <iostream>
 #include "Utils/MIDI.hpp"
 #include "Chords.hpp"
 
 Chords::Chords() {
+    this->noteMode_ = NoteMode::RETRIGGER;
+
     for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
         this->keyboard_.push_back(std::make_shared<Key>(Key(i)));
+        this->noteCount_[i] = 0;
     }
-}
-
-auto Chords::note(int pitchValue, int velocityValue) -> int {
-    // Handles note input.
-
-    // Finish if this is the active note off message.
-    if (this->keyboard_[pitchValue]->notes().empty() && 
-        (velocityValue == 0) && 
-        (this->activeKey_ == pitchValue)) {
-        return 0;
-    }
-
-    if (this->isRecievingNotes_) {
-        // Add a note to a key.
-        if (velocityValue > 0) {
-            this->addChordNote(pitchValue, velocityValue);
-        } else {
-            this->releaseChordNote(pitchValue, velocityValue);
-        }
-    } else if (!keyboard_[pitchValue]->notes().empty()) {
-        // Play the notes that have been assigned to a key.
-        this->playNotes(pitchValue);
-    }
-    
-    return 0;
 }
 
 auto Chords::reciveNotes() -> bool {
@@ -38,64 +20,219 @@ auto Chords::reciveNotes() -> bool {
     return this->isRecievingNotes_;
 }
 
-auto Chords::addChordNote(int pitchValue, int velocityValue) -> int {
-    if (this->activeKey_ < 0) {
+auto Chords::note(int pitchValue, int velocityValue) -> int {
+    if (this->isRecievingNotes_) {
+        if (this->activeKey_ < MIDI::RANGE_LOW) {
+            this->setActiveKey(pitchValue);
+            std::cout << "Active NOTE ON: " << this->activeKey_ << "\n";
+        } else if (pitchValue == this->activeKey_ && velocityValue == 0 && this->keyboard_[pitchValue]->notes().empty()) {
+            std::cout << "Active NOTE OFF: " << this->activeKey_ << "\n";
+        } else {
+            this->chordNote(pitchValue, velocityValue);
+        }
+        return 0;
+    }
+    
+    // Play chord if key has one recorded.
+    if (!this->keyboard_[pitchValue]->notes().empty()) {
+        const auto& chord = this->keyboard_[pitchValue]->notes();
+        for (const auto& note : chord) {
+            this->queueNote(note->pitch(), velocityValue);
+        }
+    }
+
+    return 0;
+}
+
+auto Chords::chordNote(int pitchValue, int velocityValue) -> int {
+     if (velocityValue > 0) {
+        this->addChordNote(pitchValue);
+    } else {
+        this->releaseChordNote(pitchValue);
+    }
+
+    return 0;
+}
+
+auto Chords::setActiveKey(int keyValue) -> int {
+    if (this->activeKey_ < MIDI::RANGE_LOW) {
         // Here we choose which key we want to assign the notes to.
-        this->activeKey_ = pitchValue;
+        this->activeKey_ = keyValue;
 
         // Clear any old notes from the key.
-        if (!this->keyboard_.at(pitchValue)->notes().empty()) {
-            this->keyboard_.at(pitchValue)->notes().clear();
+        auto& keyPtr = this->keyboard_.at(keyValue);
+        if (!keyPtr->notes().empty()) {
+            keyPtr->notes().clear();
         }
-    } else {
+        
+        std::cout << "added key " << keyValue << "\n";
+    }
+    
+    return this->activeKey_;
+}
+
+auto Chords::addChordNote(int pitchValue) -> int {
+    if (0 >= pitchValue && pitchValue > MIDI::KEYBOARD_SIZE) {
+        return 1;
+    }
+    
+    if (pitchValue >= MIDI::RANGE_LOW && pitchValue <= MIDI::RANGE_HIGH){
         // The rest of the notes are assigned to the key.
-        this->keyboard_.at(this->activeKey_)->add(pitchValue, velocityValue);
+        this->keyboard_.at(this->activeKey_)->add(pitchValue);
 
-        // Store the notes untill we have released them all.
-        this->activeNotes_.push_back(std::make_shared<int>(pitchValue));
+        this->addToActive(pitchValue);
+        std::cout << "added chord note " << pitchValue << " " 
+                  << this->keyboard_.at(this->activeKey_)->notes().size() << " " << this->noteCount_[pitchValue] << "\n";
     }
 
     return 0;
 }
 
-auto Chords::releaseChordNote(int pitchValue, int velocityValue) -> int { // NOLINT
-    // Here we remove the released note from active notes vector.
-    int count = 0;
+auto Chords::addToActive(int pitchValue) -> int {
+    // Store the notes untill we have released them all.
+    this->noteCount_[pitchValue]++;
+    return this->noteCount_[pitchValue];
+}
 
-    // Loop through the active notes and find our value.
-    for (auto it = this->activeNotes_.begin(); it != this->activeNotes_.end(); ) {
-        if (*(*it) == pitchValue) {
-            it = this->activeNotes_.erase(it);
-            count++;
-        } else {
-            ++it;
+auto Chords::removeFromActive(int pitchValue) -> int {
+    // Just update the count
+    if (this->noteCount_[pitchValue] > 0) {
+        this->noteCount_[pitchValue]--;
+    }
+    
+    std::cout << "removeFromActive: pitch=" << pitchValue 
+              << ", count=" << this->noteCount_[pitchValue] << "\n";
+    
+    return this->noteCount_[pitchValue];
+}
+
+auto Chords::releaseChordNote(int pitchValue) -> int {
+    this->removeFromActive(pitchValue);
+
+    std::cout << "DEBUG releaseChordNote - pitch: " << pitchValue 
+              << ", count: " << this->noteCount_[pitchValue] << "\n";
+
+    // Check if all released
+    if (this->activeKey_ >= 0) {
+        bool allReleased = true;
+        auto& chordNotes = this->keyboard_[this->activeKey_]->notes();
+        
+        for (const auto& note : chordNotes) {
+            int pitch = note->pitch();
+            if (this->noteCount_[pitch] > 0) {
+                allReleased = false;
+                std::cout << "Note " << pitch << " still active (count: " 
+                          << this->noteCount_[pitch] << ")\n";
+                break;
+            }
+        }
+        
+        if (allReleased) {
+            auto& chordToPlay = this->keyboard_[this->activeKey_]->notes();
+            std::cout << "All chord notes released! Notes Added: "<< chordToPlay.size() << "\n";
+            
+            this->isRecievingNotes_ = false;
+            this->activeKey_ = -1;
         }
     }
-
-    if (this->activeNotes_.empty()) {
-        // When all of the notes have been released we quit the recording mode.
-        this->isRecievingNotes_ = false;
-        this->activeKey_ = -1;
-    }
-
+    
     return 0;
 }
 
-auto Chords::playNotes(int pitchValue) -> int{
-    // Take the notes from the key and add them to the note queue vector.
+auto Chords::playNotes(int pitchValue, int velocityValue) -> int {
     if (!this->keyboard_[pitchValue]->notes().empty()) {
         const auto& sourceNotes = this->keyboard_[pitchValue]->notes();
         
-        // Reserve space first.
-        this->noteQueue_.reserve(this->noteQueue_.size() + sourceNotes.size());
-        
-        // Use copy which handles self-insertion better.
-        std::copy(
-            sourceNotes.begin(),
-            sourceNotes.end(),
-            std::back_inserter(this->noteQueue_)
-        );
+        for(const auto& currentNote : sourceNotes) {
+            int pitch = (int) currentNote->pitch();
+            int& count = this->noteCount_[pitch];
+            
+            if (velocityValue == 0) { // NOTE OFF
+                if (count > 0) {
+                    bool multipleChordsUsingNote = (count > 1);
+                    count--;
+                    
+                    if (count == 0) {
+                        // Only send NOTE_OFF when no chords need this note
+                        this->queueNote(pitch, 0);
+                    }else {
+                        std::cout << "Not sending NOTE OFF " << (int) currentNote->pitch() << "\n";
+                    }
+                    // Note: count < 0 shouldn't happen with correct logic
+                }
+            } else { // NOTE ON
+                if (this->sendNoteOn(pitch)) {
+                    std::cout << "Sending NOTE ON " << (int) currentNote->pitch() << "\n";
+                    this->queueNote(pitch, velocityValue);
+                } else {
+                    std::cout << "Not sending NOTE ON " << (int) currentNote->pitch() << "\n";
+                }
+            }
+        }
+    } else {
+        std::cout << "There are notes on that key("<< pitchValue <<")!\n";
     }
 
     return 0;
+}
+
+auto Chords::sendNoteOn(int pitch) -> bool {
+    int& count = this->noteCount_[pitch];
+
+    bool sendNoteOn = false;
+    bool noteWasActive = (count > 0);
+    
+    count++;
+
+    if (count == 1) {
+        std::cout << "First activation\n";
+        sendNoteOn = true; // First activation
+    } else if (this->noteMode_ == NoteMode::RETRIGGER) {
+        std::cout << "RETRIGGER MODE\n";
+        sendNoteOn = true; // Always retrigger
+    } else if (this->noteMode_ == NoteMode::LEGATO) {
+        std::cout << "LEGATO MODE Note("<< pitch <<") Was Active"<< (noteWasActive ? "TRUE" : "FALSE") <<"\n";
+        sendNoteOn = !noteWasActive; // Only if newly activated
+    }
+    // else: Normal mode - no duplicate NOTE_ON
+    return sendNoteOn;
+}
+
+auto Chords::queueNote(int noteValue, int velocityValue) -> void {
+    std::cout << ">>>> QUEUE NOTE CALLED: " << noteValue << " " << velocityValue << "\n";
+    this->noteQueue_.push_back(std::make_shared<MIDI::Note>(MIDI::Note(noteValue, velocityValue)));
+}
+
+auto Chords::setNoteMode(NoteMode mode) -> NoteMode {
+    this->noteMode_ = mode;
+    return this->noteMode_;
+}
+
+auto Chords::setNoteOrder(NoteOrder order) -> NoteOrder {
+    this->noteOrder_ = order;
+    return this->noteOrder_;
+}
+
+auto Chords::clear() -> void {
+    // Clear all notes from every key.
+    for (const auto &currentNote : this->keyboard_) {
+        currentNote->clear();
+    }
+    
+    this->clearActiveNotes();
+}
+
+auto Chords::clear(int noteValue) -> void {
+    // Clear notes from a specific key.
+    
+    if ((noteValue >= MIDI::RANGE_LOW) && (noteValue <= MIDI::RANGE_HIGH)) {
+        this->keyboard_[noteValue]->clear();
+        this->noteCount_[noteValue] = 0;
+    }
+}
+
+auto Chords::clearActiveNotes() -> void {
+    for (int i = 0; i < MIDI::KEYBOARD_SIZE; i++) {
+        this->noteCount_[i] = 0;
+    }
 }
