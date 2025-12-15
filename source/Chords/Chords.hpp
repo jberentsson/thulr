@@ -50,7 +50,7 @@ class Chords {
         auto addToActive(int notePitch) -> int;
         auto noteQueue() -> std::vector<std::shared_ptr<MIDI::Note>>& { return this->noteQueue_; }
         auto chordNote(MIDI::Note note) -> int;
-        auto addChordNote(MIDI::Note) -> int;
+        auto addChordNote(MIDI::Note note) -> int;
         auto releaseChordNote(MIDI::Note note) -> int;
         auto setNoteMode(NoteMode mode) -> NoteMode;
         auto getNoteMode() -> NoteMode { return this->noteMode_; }
