@@ -1,5 +1,7 @@
 #include <memory>
 #include <vector>
+#include <iostream>
+#include <random>
 #include "Utils/MIDI.hpp"
 #include "Chords.hpp"
 
@@ -31,7 +33,11 @@ auto Chords::note(int pitchValue, int velocityValue) -> int {
         }
     } else if (!this->keyboard_[pitchValue]->notes().empty()) {
         // Play chord if key has one recorded.
-        this->playNotes(pitchValue, velocityValue);
+        if (this->noteOrder_ == NoteOrder::RANDOM) {
+            this->playNotesRandom(pitchValue, velocityValue);
+        } else {
+            this->playNotesInOrder(pitchValue, velocityValue);
+        }
     }
 
     return 0;
@@ -118,33 +124,59 @@ auto Chords::releaseChordNote(int pitchValue) -> int {
     return 0;
 }
 
-auto Chords::playNotes(int pitchValue, int velocityValue) -> int { // NOLINT
+auto Chords::playNotesRandom(int pitchValue, int velocityValue) -> int { // NOLINT
+    if (!this->keyboard_[pitchValue]->notes().empty()) {
+        std::vector<std::shared_ptr<MIDI::Note>> currentNotes = this->keyboard_[pitchValue]->notes();
+        int notesRemaining = currentNotes.size();
+
+        while (notesRemaining > 0) {
+            std::uniform_int_distribution<> dis(0, currentNotes.size() - 1);
+            int randomIndex = dis(this->gen);
+            notesRemaining--;
+
+            std::shared_ptr<MIDI::Note> currentNote = currentNotes.at(randomIndex);
+            int pitch = (int) currentNote->pitch();
+
+            currentNotes.erase(currentNotes.begin() + randomIndex);
+
+            this->handleNoteOut(pitch, velocityValue);
+        }
+    }
+
+    return 0;
+}
+
+auto Chords::playNotesInOrder(int pitchValue, int velocityValue) -> int { // NOLINT
     if (!this->keyboard_[pitchValue]->notes().empty()) {
         const auto& sourceNotes = this->keyboard_[pitchValue]->notes();
         
         for(const auto& currentNote : sourceNotes) {
             int pitch = (int) currentNote->pitch();
-            int& count = this->noteCount_[pitch];
-            
-            if (velocityValue == 0) { // NOTE OFF
-                if (count > 0) {
-                    //bool multipleChordsUsingNote = (count > 1);
-                    count--;
-                    
-                    if (count == 0) {
-                        // Only send NOTE_OFF when no chords need this note
-                        this->queueNote(pitch, 0);
-                    }
-                }
-            } else { // NOTE ON
-                if (this->sendNoteOn(pitch)) {
-                    this->queueNote(pitch, velocityValue);
-                }
-            }
+
+            this->handleNoteOut(pitch, velocityValue);
         }
     }
 
     return 0;
+}
+
+auto Chords::handleNoteOut(int pitch, int velocity) -> void {
+    int& count = this->noteCount_[pitch];
+
+    if (velocity == 0) { // NOTE OFF
+        if (count > 0) {
+            count--;
+            
+            if (count == 0) {
+                // Only send NOTE_OFF when no chords need this note
+                this->queueNote(pitch, 0);
+            }
+        }
+    } else { // NOTE ON
+        if (this->sendNoteOn(pitch)) {
+            this->queueNote(pitch, velocity);
+        }
+    }
 }
 
 auto Chords::sendNoteOn(int pitch) -> bool {

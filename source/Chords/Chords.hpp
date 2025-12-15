@@ -3,6 +3,7 @@
 #include "Key.hpp"
 #include <memory>
 #include <vector>
+#include <random>
 
 namespace ChordsEnums {
     // Do we want our active notes to retrigger?
@@ -33,14 +34,18 @@ class Chords {
         NoteOrder noteOrder_ = NoteOrder::AS_PLAYED;
         bool isRecievingNotes_ = false;
         int activeKey_ = -1;
+        std::mt19937 gen{std::random_device{}()}; 
 
     public:        
         Chords();
         ~Chords() = default;
 
+        auto handleNoteOut(int pitch, int velocity) -> void;
         auto removeFromActive(int pitchValue) -> int;
         auto note(int pitchValue, int velocityValue) -> int;
         auto playNotes(int pitchValue, int velocityValue) -> int;
+        auto playNotesInOrder(int pitchValue, int velocityValue) -> int;
+        auto playNotesRandom(int pitchValue, int velocityValue) -> int;
         auto reciveNotes() -> bool;
         auto addToActive(int pitchValue) -> int;
         auto noteQueue() -> std::vector<std::shared_ptr<MIDI::Note>>& { return this->noteQueue_; }

@@ -351,6 +351,8 @@ SCENARIO("make sure the note modes work 2") {
 SCENARIO("make sure the basic functions work") {
     Chords chordsTest = Chords();
 
+    chordsTest.setNoteOrder(Chords::NoteOrder::RANDOM);
+
     WHEN("Add and remove from active.") {
         REQUIRE(chordsTest.addToActive(NoteC4) == 1);
         REQUIRE(chordsTest.removeFromActive(NoteC4) == 0);
