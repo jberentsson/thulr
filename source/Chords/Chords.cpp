@@ -238,4 +238,3 @@ auto Chords::clearActiveNotes() -> void {
         this->noteCount_[currentNoteCount] = 0;
     }
 }
-
