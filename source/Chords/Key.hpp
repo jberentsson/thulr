@@ -3,7 +3,6 @@
 #include "Utils/MIDI.hpp"
 #include <cstdint>
 #include <memory>
-#include <iostream>
 #include <vector>
 
 class Key {
@@ -32,8 +31,6 @@ public:
         // Add a note to a key.
 
         this->notes_.push_back(std::make_shared<MIDI::Note>(MIDI::Note(pitchValue, velocityValue)));
-        std::cout << "key: note puched back " << pitchValue << " "
-                  << velocityValue << " size:" << this->notes_.size() << "\n";
         return 0;
     }
 

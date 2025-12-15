@@ -1,5 +1,4 @@
 #define CATCH_CONFIG_ENABLE_STRINGIFICATION
-#include <iostream>
 #include <catch2/catch.hpp>
 #include "Utils/TestHelpers.hpp"
 #include "Chords.hpp"
@@ -137,7 +136,6 @@ SCENARIO("make sure we can trigger more than one key at a time") {
     }
 
     GIVEN("populate couple of keys with overlaping notes") {
-        std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
         // We assign notes to the first key.
         REQUIRE(chordsTest.reciveNotes());
         REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
@@ -189,7 +187,6 @@ SCENARIO("make sure we can trigger more than one key at a time") {
         REQUIRE(chordsTest.noteQueue().at(3)->velocity() == NOTE_ON);
         REQUIRE(chordsTest.noteQueue().at(4)->velocity() == NOTE_ON);
         REQUIRE(chordsTest.noteQueue().at(5)->velocity() == NOTE_ON);
-        std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
     }
 
     GIVEN("populate couple of keys with overlaping notes where we release the fist key after pressing the second") {
@@ -314,13 +311,11 @@ SCENARIO("make sure the note modes work") {
     REQUIRE(chordsTest.noteQueue().empty());
 
     GIVEN("legato mode is on"){
-        std::cout << "??????????????????????????????????????????????????????????\n";
         REQUIRE(chordsTest.setNoteMode(Chords::NoteMode::LEGATO) == Chords::NoteMode::LEGATO);
         REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
         REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 5);
-        std::cout << "??????????????????????????????????????????????????????????\n";
     }
 
     GIVEN("retrigger mod is on"){
@@ -333,7 +328,6 @@ SCENARIO("make sure the note modes work") {
 }
 
 SCENARIO("make sure the note modes work 2") {
-    std::cout << "ææææææææææææææææææææææææææææææææææææææææææææææ\n";
     Chords chordsTest = Chords();
 
     // We assign notes to the first key.
@@ -352,12 +346,9 @@ SCENARIO("make sure the note modes work 2") {
     REQUIRE(chordsTest.noteQueue().empty());
     REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
     REQUIRE(!chordsTest.noteQueue().empty());
-
-    std::cout << "ææææææææææææææææææææææææææææææææææææææææææææææ\n";
 }
 
 SCENARIO("make sure the basic functions work") {
-    std::cout << "ææææææææææææææææææææææææææææææææææææææææææææææ\n";
     Chords chordsTest = Chords();
 
     WHEN("Add and remove from active.") {

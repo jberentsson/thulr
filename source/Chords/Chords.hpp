@@ -2,7 +2,6 @@
 #include "Utils/MIDI.hpp"
 #include "Key.hpp"
 #include <memory>
-#include <iostream>
 #include <vector>
 
 namespace ChordsEnums {
