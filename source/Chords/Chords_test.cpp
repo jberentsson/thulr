@@ -191,7 +191,7 @@ SCENARIO("make sure we can trigger more than one key at a time") {
 
     GIVEN("populate couple of keys with overlaping notes where we release the fist key after pressing the second") {
         // Make sure we have the right mode enabled.
-        REQUIRE(chordsTest.setNoteMode(Chords::NoteMode::LEGATO));
+        REQUIRE(chordsTest.setNoteMode(Chords::NoteMode::LEGATO) == Chords::NoteMode::LEGATO);
         
         // We assign notes to the first key.
         REQUIRE(chordsTest.reciveNotes());

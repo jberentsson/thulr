@@ -7,9 +7,9 @@
 namespace ChordsEnums {
     // Do we want our active notes to retrigger?
     enum NoteMode : uint8_t {
-        NORMAL = 0,
+        LEGATO = 0,
         RETRIGGER = 1,
-        LEGATO = 2
+        //NORMAL = 2
     };
 
     // Change the order of the notes that are played.
