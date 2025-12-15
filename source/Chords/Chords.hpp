@@ -40,29 +40,29 @@ class Chords {
         Chords();
         ~Chords() = default;
 
-        auto handleNoteOut(int pitch, int velocity) -> void;
+        auto handleNoteOut(MIDI::Note note) -> void;
         auto removeFromActive(int pitchValue) -> int;
-        auto note(int pitchValue, int velocityValue) -> int;
-        auto playNotes(int pitchValue, int velocityValue) -> int;
-        auto playNotesInOrder(int pitchValue, int velocityValue) -> int;
-        auto playNotesRandom(int pitchValue, int velocityValue) -> int;
+        auto note(MIDI::Note note) -> int;
+        auto playNotes(MIDI::Note note) -> int;
+        auto playNotesInOrder(MIDI::Note note) -> int;
+        auto playNotesRandom(MIDI::Note note) -> int;
         auto reciveNotes() -> bool;
-        auto addToActive(int pitchValue) -> int;
+        auto addToActive(int notePitch) -> int;
         auto noteQueue() -> std::vector<std::shared_ptr<MIDI::Note>>& { return this->noteQueue_; }
-        auto chordNote(int pitchValue, int velocityValue) -> int;
-        auto addChordNote(int pitchValue) -> int;
-        auto releaseChordNote(int pitchValue) -> int;
+        auto chordNote(MIDI::Note note) -> int;
+        auto addChordNote(MIDI::Note) -> int;
+        auto releaseChordNote(MIDI::Note note) -> int;
         auto setNoteMode(NoteMode mode) -> NoteMode;
         auto getNoteMode() -> NoteMode { return this->noteMode_; }
         auto setNoteOrder(NoteOrder order) -> NoteOrder;
         auto getNoteOrder() -> NoteOrder { return this->noteOrder_; }
-        auto queueNote(int noteValue, int velocityValue) -> void;
+        auto queueNote(MIDI::Note note) -> void;
         auto getKey(int keyValue) -> std::shared_ptr<Key>& { return this->keyboard_[keyValue]; }
         auto sendNoteOn(int pitch) -> bool;
         auto clear() -> void;
         auto clear(int noteValue) -> void;
         auto clearActiveNotes() -> void;
-        auto setActiveKey(int keyValue) -> int;
+        auto setActiveKey(int key) -> int;
         [[nodiscard]] auto getActiveKey() const -> int { return this->activeKey_; }
         [[nodiscard]] auto isRecievingNotes() const -> bool { return this->isRecievingNotes_; }
 };

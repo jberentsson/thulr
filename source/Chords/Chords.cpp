@@ -1,6 +1,5 @@
 #include <memory>
 #include <vector>
-#include <iostream>
 #include <random>
 #include "Utils/MIDI.hpp"
 #include "Chords.hpp"
@@ -19,47 +18,47 @@ auto Chords::reciveNotes() -> bool {
     return this->isRecievingNotes_;
 }
 
-auto Chords::note(int pitchValue, int velocityValue) -> int {
+auto Chords::note(MIDI::Note note) -> int {
     if (this->isRecievingNotes_) {
         if (this->activeKey_ < MIDI::RANGE_LOW) {
             // Active key ON.
-            this->setActiveKey(pitchValue);
-        } else if (pitchValue == this->activeKey_ && 
-                   velocityValue == 0 && 
-                   this->keyboard_[pitchValue]->notes().empty()) {
+            this->setActiveKey(note);
+        } else if (note.pitch() == this->activeKey_ && 
+                   note.velocity() == 0 && 
+                   this->keyboard_[note.pitch()]->notes().empty()) {
             // Active key OFF.
         } else {
-            this->chordNote(pitchValue, velocityValue);
+            this->chordNote(note);
         }
-    } else if (!this->keyboard_[pitchValue]->notes().empty()) {
+    } else if (!this->keyboard_[note.pitch()]->notes().empty()) {
         // Play chord if key has one recorded.
         if (this->noteOrder_ == NoteOrder::RANDOM) {
-            this->playNotesRandom(pitchValue, velocityValue);
+            this->playNotesRandom(note);
         } else {
-            this->playNotesInOrder(pitchValue, velocityValue);
+            this->playNotesInOrder(note);
         }
     }
 
     return 0;
 }
 
-auto Chords::chordNote(int pitchValue, int velocityValue) -> int { // NOLINT
-     if (velocityValue > 0) {
-        this->addChordNote(pitchValue);
+auto Chords::chordNote(MIDI::Note note) -> int { // NOLINT
+     if (note.velocity() > 0) {
+        this->addChordNote(note);
     } else {
-        this->releaseChordNote(pitchValue);
+        this->releaseChordNote(note);
     }
 
     return 0;
 }
 
-auto Chords::setActiveKey(int keyValue) -> int {
+auto Chords::setActiveKey(int key) -> int {
     if (this->activeKey_ < MIDI::RANGE_LOW) {
         // Here we choose which key we want to assign the notes to.
-        this->activeKey_ = keyValue;
+        this->activeKey_ = key;
 
         // Clear any old notes from the key.
-        auto& keyPtr = this->keyboard_.at(keyValue);
+        auto& keyPtr = this->keyboard_.at(key);
         if (!keyPtr->notes().empty()) {
             keyPtr->notes().clear();
         }
@@ -68,25 +67,22 @@ auto Chords::setActiveKey(int keyValue) -> int {
     return this->activeKey_;
 }
 
-auto Chords::addChordNote(int pitchValue) -> int {
-    if (0 >= pitchValue && pitchValue > MIDI::KEYBOARD_SIZE) {
+auto Chords::addChordNote(MIDI::Note note) -> int {
+    if (!note.valid()) {
         return 1;
     }
     
-    if (pitchValue >= MIDI::RANGE_LOW && pitchValue <= MIDI::RANGE_HIGH){
-        // The rest of the notes are assigned to the key.
-        this->keyboard_.at(this->activeKey_)->add(pitchValue);
-
-        this->addToActive(pitchValue);
-    }
+    // The rest of the notes are assigned to the key.
+    this->keyboard_.at(this->activeKey_)->add(note.pitch());
+    this->addToActive(note.pitch());
 
     return 0;
 }
 
-auto Chords::addToActive(int pitchValue) -> int {
+auto Chords::addToActive(int notePitch) -> int {
     // Store the notes untill we have released them all.
-    this->noteCount_[pitchValue]++;
-    return this->noteCount_[pitchValue];
+    this->noteCount_[notePitch]++;
+    return this->noteCount_[notePitch];
 }
 
 auto Chords::removeFromActive(int pitchValue) -> int {
@@ -98,16 +94,16 @@ auto Chords::removeFromActive(int pitchValue) -> int {
     return this->noteCount_[pitchValue];
 }
 
-auto Chords::releaseChordNote(int pitchValue) -> int {
-    this->removeFromActive(pitchValue);
+auto Chords::releaseChordNote(MIDI::Note note) -> int {
+    this->removeFromActive(note.pitch());
 
     // Check if all released
     if (this->activeKey_ >= 0) {
         bool allReleased = true;
         auto& chordNotes = this->keyboard_[this->activeKey_]->notes();
         
-        for (const auto& note : chordNotes) {
-            int pitch = note->pitch();
+        for (const auto& chordNote : chordNotes) {
+            int pitch = chordNote->pitch();
             if (this->noteCount_[pitch] > 0) {
                 allReleased = false;
                 break;
@@ -124,9 +120,9 @@ auto Chords::releaseChordNote(int pitchValue) -> int {
     return 0;
 }
 
-auto Chords::playNotesRandom(int pitchValue, int velocityValue) -> int { // NOLINT
-    if (!this->keyboard_[pitchValue]->notes().empty()) {
-        std::vector<std::shared_ptr<MIDI::Note>> currentNotes = this->keyboard_[pitchValue]->notes();
+auto Chords::playNotesRandom(MIDI::Note note) -> int { // NOLINT
+    if (!this->keyboard_[note.pitch()]->notes().empty()) {
+        std::vector<std::shared_ptr<MIDI::Note>> currentNotes = this->keyboard_[note.pitch()]->notes();
         int notesRemaining = currentNotes.size();
 
         while (notesRemaining > 0) {
@@ -139,42 +135,40 @@ auto Chords::playNotesRandom(int pitchValue, int velocityValue) -> int { // NOLI
 
             currentNotes.erase(currentNotes.begin() + randomIndex);
 
-            this->handleNoteOut(pitch, velocityValue);
+            this->handleNoteOut(MIDI::Note(currentNote->pitch(), note.velocity()));
         }
     }
 
     return 0;
 }
 
-auto Chords::playNotesInOrder(int pitchValue, int velocityValue) -> int { // NOLINT
-    if (!this->keyboard_[pitchValue]->notes().empty()) {
-        const auto& sourceNotes = this->keyboard_[pitchValue]->notes();
+auto Chords::playNotesInOrder(MIDI::Note note) -> int { // NOLINT
+    if (!this->keyboard_[note.pitch()]->notes().empty()) {
+        const auto& sourceNotes = this->keyboard_[note.pitch()]->notes();
         
         for(const auto& currentNote : sourceNotes) {
-            int pitch = (int) currentNote->pitch();
-
-            this->handleNoteOut(pitch, velocityValue);
+            this->handleNoteOut(MIDI::Note(currentNote->pitch(), note.velocity()));
         }
     }
 
     return 0;
 }
 
-auto Chords::handleNoteOut(int pitch, int velocity) -> void {
-    int& count = this->noteCount_[pitch];
+auto Chords::handleNoteOut(MIDI::Note note) -> void {
+    int& count = this->noteCount_[note.pitch()];
 
-    if (velocity == 0) { // NOTE OFF
+    if (note.velocity() == 0) { // NOTE OFF
         if (count > 0) {
             count--;
             
             if (count == 0) {
                 // Only send NOTE_OFF when no chords need this note
-                this->queueNote(pitch, 0);
+                this->queueNote(note);
             }
         }
     } else { // NOTE ON
-        if (this->sendNoteOn(pitch)) {
-            this->queueNote(pitch, velocity);
+        if (this->sendNoteOn(note)) {
+            this->queueNote(note);
         }
     }
 }
@@ -201,8 +195,8 @@ auto Chords::sendNoteOn(int pitch) -> bool {
     return sendNoteOn;
 }
 
-auto Chords::queueNote(int noteValue, int velocityValue) -> void {
-    this->noteQueue_.push_back(std::make_shared<MIDI::Note>(MIDI::Note(noteValue, velocityValue)));
+auto Chords::queueNote(MIDI::Note note) -> void {
+    this->noteQueue_.push_back(std::make_shared<MIDI::Note>(note));
 }
 
 auto Chords::setNoteMode(NoteMode mode) -> NoteMode {

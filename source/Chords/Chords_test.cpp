@@ -18,7 +18,7 @@ SCENARIO("parsse some notes") {
     REQUIRE(true);
 
     GIVEN("we play a note with no notes added") {
-        REQUIRE(chordsTest.note(NoteC4, 100) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, 100)) == 0);
         REQUIRE(chordsTest.noteQueue().empty());
     }
 
@@ -27,24 +27,24 @@ SCENARIO("parsse some notes") {
         REQUIRE(chordsTest.isRecievingNotes());
 
         // Assign a chord to C4.
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
 
         // Play a C Major chord.
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_ON)) == 0);
 
         // Release the notes.
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_OFF)) == 0);
 
         REQUIRE(chordsTest.noteQueue().empty());
         REQUIRE(!chordsTest.isRecievingNotes());
 
         // // Play a single note.
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
 
         // And a C Major chord is played.
         REQUIRE(!chordsTest.noteQueue().empty());
@@ -61,7 +61,7 @@ SCENARIO("parsse some notes") {
         REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
         REQUIRE(chordsTest.noteQueue().empty());
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
 
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 3);
@@ -84,37 +84,37 @@ SCENARIO("make sure we can trigger more than one key at a time") {
     GIVEN("poulate couple of keys") {
         // We assign notes to the first key.
         REQUIRE(chordsTest.reciveNotes());
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_ON)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_OFF)) == 0);
 
         REQUIRE(chordsTest.noteQueue().empty());
 
         // We assign notes to the second key.
         REQUIRE(chordsTest.reciveNotes());
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteD4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_OFF)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC5, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteE5, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteG5, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC5, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE5, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG5, NOTE_ON)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC5, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteE5, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteG5, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC5, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE5, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG5, NOTE_OFF)) == 0);
 
         REQUIRE(chordsTest.noteQueue().empty());
 
         // Try to press two at the same time.
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
 
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 6);
@@ -138,37 +138,37 @@ SCENARIO("make sure we can trigger more than one key at a time") {
     GIVEN("populate couple of keys with overlaping notes") {
         // We assign notes to the first key.
         REQUIRE(chordsTest.reciveNotes());
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_ON)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_OFF)) == 0);
 
         REQUIRE(chordsTest.noteQueue().empty());
 
         // We assign notes to the second key.
         REQUIRE(chordsTest.reciveNotes());
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteD4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_OFF)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC5, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteF5, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteA5, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC5, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteF5, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteA5, NOTE_ON)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC5, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteF5, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteA5, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC5, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteF5, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteA5, NOTE_OFF)) == 0);
 
         REQUIRE(chordsTest.noteQueue().empty());
 
         // Try to press two at the same time.
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
 
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 6);
@@ -195,38 +195,38 @@ SCENARIO("make sure we can trigger more than one key at a time") {
         
         // We assign notes to the first key.
         REQUIRE(chordsTest.reciveNotes());
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
 
         // C Major
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_ON)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_OFF)) == 0);
 
         REQUIRE(chordsTest.noteQueue().empty());
 
         // We assign notes to the second key.
         REQUIRE(chordsTest.reciveNotes());
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteD4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_OFF)) == 0);
 
         // F Major
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteF4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteA4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteF4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteA4, NOTE_ON)) == 0);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteF4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.note(NoteA4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteF4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteA4, NOTE_OFF)) == 0);
 
         REQUIRE(chordsTest.noteQueue().empty());
 
         // Try to press two at the same time.
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 3);
 
@@ -242,7 +242,7 @@ SCENARIO("make sure we can trigger more than one key at a time") {
 
         REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
 
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
         // REQUIRE(chordsTest.noteQueue().size() == 2);
 
@@ -280,48 +280,48 @@ SCENARIO("make sure the note modes work") {
 
     // We assign notes to the first key.
     REQUIRE(chordsTest.reciveNotes());
-    REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
 
     // C Major
-    REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_ON)) == 0);
 
-    REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-    REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
-    REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_OFF)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_OFF)) == 0);
 
     REQUIRE(chordsTest.noteQueue().empty());
 
     // We assign notes to the second key.
     REQUIRE(chordsTest.reciveNotes());
-    REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteD4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_OFF)) == 0);
 
     // F Major
-    REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteF4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteA4, NOTE_ON) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteF4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteA4, NOTE_ON)) == 0);
 
-    REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-    REQUIRE(chordsTest.note(NoteF4, NOTE_OFF) == 0);
-    REQUIRE(chordsTest.note(NoteA4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteF4, NOTE_OFF)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteA4, NOTE_OFF)) == 0);
 
     REQUIRE(chordsTest.noteQueue().empty());
 
     GIVEN("legato mode is on"){
         REQUIRE(chordsTest.setNoteMode(Chords::NoteMode::LEGATO) == Chords::NoteMode::LEGATO);
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 5);
     }
 
     GIVEN("retrigger mod is on"){
         REQUIRE(chordsTest.setNoteMode(Chords::NoteMode::RETRIGGER) == Chords::NoteMode::RETRIGGER);
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        REQUIRE(chordsTest.note(NoteD4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 6);
     }
@@ -332,19 +332,19 @@ SCENARIO("make sure the note modes work 2") {
 
     // We assign notes to the first key.
     REQUIRE(chordsTest.reciveNotes());
-    REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
 
-    REQUIRE(chordsTest.note(NoteE4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteG4, NOTE_ON) == 0);
-    REQUIRE(chordsTest.note(NoteB4, NOTE_ON) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_ON)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteB4, NOTE_ON)) == 0);
 
-    REQUIRE(chordsTest.note(NoteE4, NOTE_OFF) == 0);
-    REQUIRE(chordsTest.note(NoteG4, NOTE_OFF) == 0);
-    REQUIRE(chordsTest.note(NoteB4, NOTE_OFF) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteE4, NOTE_OFF)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteG4, NOTE_OFF)) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteB4, NOTE_OFF)) == 0);
 
     REQUIRE(chordsTest.noteQueue().empty());
-    REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+    REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
     REQUIRE(!chordsTest.noteQueue().empty());
 }
 
@@ -354,44 +354,44 @@ SCENARIO("make sure the basic functions work") {
     chordsTest.setNoteOrder(Chords::NoteOrder::RANDOM);
 
     WHEN("Add and remove from active.") {
-        REQUIRE(chordsTest.addToActive(NoteC4) == 1);
-        REQUIRE(chordsTest.removeFromActive(NoteC4) == 0);
+        REQUIRE(chordsTest.addToActive(MIDI::Note(NoteC4)) == 1);
+        REQUIRE(chordsTest.removeFromActive(MIDI::Note(NoteC4)) == 0);
     }
 
     WHEN("We choose an active note") {
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
         REQUIRE(chordsTest.getActiveKey() == -1);
         REQUIRE(chordsTest.reciveNotes());
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
         REQUIRE(chordsTest.getActiveKey() == NoteC4);
     }
 
     WHEN("Add and remove a chord note.") {
         REQUIRE(chordsTest.getKey(NoteC4)->notes().empty());
-        REQUIRE(chordsTest.setActiveKey(NoteC4) == NoteC4);
+        REQUIRE(chordsTest.setActiveKey(MIDI::Note(NoteC4)) == NoteC4);
 
-        REQUIRE(chordsTest.chordNote(NoteF4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.chordNote(MIDI::Note(NoteF4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.getKey(NoteC4)->notes().empty());
         REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 1);
     
-        REQUIRE(chordsTest.chordNote(NoteA4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.chordNote(MIDI::Note(NoteA4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.getKey(NoteC4)->notes().empty());
         REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 2);
     
-        REQUIRE(chordsTest.chordNote(NoteC5, NOTE_ON) == 0);
+        REQUIRE(chordsTest.chordNote(MIDI::Note(NoteC5, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.getKey(NoteC4)->notes().empty());
         REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 3);
 
-        REQUIRE(chordsTest.chordNote(NoteF4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.chordNote(NoteA4, NOTE_OFF) == 0);
-        REQUIRE(chordsTest.chordNote(NoteC5, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.chordNote(MIDI::Note(NoteF4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.chordNote(MIDI::Note(NoteA4, NOTE_OFF)) == 0);
+        REQUIRE(chordsTest.chordNote(MIDI::Note(NoteC5, NOTE_OFF)) == 0);
         REQUIRE(chordsTest.getKey(NoteC4)->notes().size() == 3);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
         REQUIRE(chordsTest.noteQueue().size() == 3);
 
-        REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
         REQUIRE(chordsTest.noteQueue().size() == 6);
     }
 }
