@@ -157,12 +157,14 @@ auto Chords::sendNoteOn(int pitch) -> bool {
 
     if (count == 1) {
         sendNoteOn = true; // First activation
-    } else if (this->noteMode_ == NoteMode::RETRIGGER) {
-        sendNoteOn = true; // Always retrigger
-    } else if (this->noteMode_ == NoteMode::LEGATO) {
-        sendNoteOn = !noteWasActive;
+    } else {
+        if (this->noteMode_ == NoteMode::RETRIGGER) {
+            sendNoteOn = true; // Always retrigger
+        } else if (this->noteMode_ == NoteMode::LEGATO) {
+            sendNoteOn = !noteWasActive;
+        }
+        // else NORMAL mode.
     }
-    // else NORMAL mode.
 
     return sendNoteOn;
 }
