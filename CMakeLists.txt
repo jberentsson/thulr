@@ -4,6 +4,7 @@ project("Thula" VERSION 1.0.0 LANGUAGES C CXX)
 # The binaries that will be made.
 set(SHARED_DIRS 
     BinaryCounter
+    Chords
     Counter
     RandomOctave
     NCounter
@@ -11,6 +12,7 @@ set(SHARED_DIRS
     ShiftRegister
     Multiplex
     Constants
+    Utils
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
