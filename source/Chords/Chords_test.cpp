@@ -358,15 +358,15 @@ SCENARIO("make sure the basic functions work") {
 
     WHEN("We choose an active note") {
         REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
-        REQUIRE(chordsTest.getActiveKey() == -1);
+        REQUIRE(chordsTest.getActiveKey() == nullptr);
         REQUIRE(chordsTest.reciveNotes());
         REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
-        REQUIRE(chordsTest.getActiveKey() == NoteC4);
+        REQUIRE(chordsTest.getActiveKey()->pitch() == NoteC4);
     }
 
     WHEN("Add and remove a chord note.") {
         REQUIRE(chordsTest.getKey(NoteC4)->notes().empty());
-        REQUIRE(chordsTest.setActiveKey(MIDI::Note(NoteC4)) == NoteC4);
+        REQUIRE(chordsTest.setActiveKey(MIDI::Note(NoteC4))->pitch() == NoteC4);
 
         REQUIRE(chordsTest.chordNote(MIDI::Note(NoteF4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.getKey(NoteC4)->notes().empty());
@@ -392,4 +392,50 @@ SCENARIO("make sure the basic functions work") {
         REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
         REQUIRE(chordsTest.noteQueue().size() == 6);
     }
+}
+
+TEST_CASE("Simple chord recording") {
+    Chords chordsTest;
+    
+    REQUIRE(chordsTest.reciveNotes());
+    
+    // Record C4 as the target key.
+    chordsTest.note(MIDI::Note(NoteC4, NOTE_ON));
+    chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF));
+    
+    // Queue should be empty during recording.
+    REQUIRE(chordsTest.noteQueue().empty());
+    
+    // Add chord notes
+    chordsTest.note(MIDI::Note(NoteC4, NOTE_ON));
+    chordsTest.note(MIDI::Note(NoteE4, NOTE_ON));
+    chordsTest.note(MIDI::Note(NoteG4, NOTE_ON));
+    
+    // Queue should STILL be empty during recording.
+    REQUIRE(chordsTest.noteQueue().empty());
+    
+    // Release notes
+    chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF));
+    chordsTest.note(MIDI::Note(NoteE4, NOTE_OFF));
+    chordsTest.note(MIDI::Note(NoteG4, NOTE_OFF));
+    
+    // Queue should STILL be empty after recording.
+    REQUIRE(chordsTest.noteQueue().empty());
+    
+    // NOW play the chord.
+    chordsTest.note(MIDI::Note(NoteC4, NOTE_ON));
+    
+    // Should have 3 notes in queue.
+    REQUIRE(chordsTest.noteQueue().size() == 3);
+    REQUIRE(chordsTest.playbackNoteCount() == 3);
+}
+
+TEST_CASE("Check default state") {
+    Chords chords;
+    
+    // Check if C4 has any notes.
+    auto& key = chords.getKey(NoteC4);
+    
+    // Send a note to C4.
+    chords.note(MIDI::Note(NoteC4, NOTE_ON));
 }

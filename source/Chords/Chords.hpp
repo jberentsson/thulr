@@ -34,7 +34,7 @@ class Chords {
         NoteMode noteMode_ = NoteMode::RETRIGGER;
         NoteOrder noteOrder_ = NoteOrder::AS_PLAYED;
         bool isRecievingNotes_ = false;
-        int activeKey_ = -1;
+        std::shared_ptr<Key>activeKey_ = nullptr;
         std::mt19937 gen{std::random_device{}()}; 
 
     public:        
@@ -63,7 +63,9 @@ class Chords {
         auto clear() -> void;
         auto clear(int noteValue) -> void;
         auto clearActiveNotes() -> void;
-        auto setActiveKey(int key) -> int;
-        [[nodiscard]] auto getActiveKey() const -> int { return this->activeKey_; }
+        auto playbackNoteCount() -> int;
+        auto recordingNoteCount() -> int;
+        auto setActiveKey(int key) -> std::shared_ptr<Key>&;
+        auto getActiveKey() -> std::shared_ptr<Key>& { return this->activeKey_; }
         [[nodiscard]] auto isRecievingNotes() const -> bool { return this->isRecievingNotes_; }
 };
