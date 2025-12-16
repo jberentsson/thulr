@@ -244,34 +244,32 @@ SCENARIO("make sure we can trigger more than one key at a time") {
 
         REQUIRE(chordsTest.note(MIDI::Note(NoteD4, NOTE_ON)) == 0);
         REQUIRE(!chordsTest.noteQueue().empty());
-        // REQUIRE(chordsTest.noteQueue().size() == 2);
+        REQUIRE(chordsTest.noteQueue().size() == 2);
 
-        // REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteF4);
-        // REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteA4);
+        REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteF4);
+        REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteA4);
 
-        // REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_ON);
-        // REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_ON);
+        REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_ON);
 
-        // REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
+        REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
         
-        // // Release the first note.
-        // REQUIRE(chordsTest.note(NoteC4, NOTE_OFF) == 0);
-        // REQUIRE(!chordsTest.noteQueue().empty());
-        // REQUIRE(chordsTest.noteQueue().size() == 3);
+        // Release the first note.
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_OFF)) == 0);
+        REQUIRE(!chordsTest.noteQueue().empty());
+        REQUIRE(chordsTest.noteQueue().size() == 2);
 
-        // REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteC4);
-        // REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteE4);
-        // REQUIRE(chordsTest.noteQueue().at(2)->pitch() == NoteG4);
+        REQUIRE(chordsTest.noteQueue().at(0)->pitch() == NoteE4);
+        REQUIRE(chordsTest.noteQueue().at(1)->pitch() == NoteG4);
 
-        // REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_OFF);
-        // REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_OFF);
-        // REQUIRE(chordsTest.noteQueue().at(2)->velocity() == NOTE_OFF);
+        REQUIRE(chordsTest.noteQueue().at(0)->velocity() == NOTE_OFF);
+        REQUIRE(chordsTest.noteQueue().at(1)->velocity() == NOTE_OFF);
 
-        // REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
+        REQUIRE_NOTHROW(chordsTest.noteQueue().clear());
 
-        // REQUIRE(chordsTest.note(NoteC4, NOTE_ON) == 0);
-        // REQUIRE(!chordsTest.noteQueue().empty());
-        // REQUIRE(chordsTest.noteQueue().size() == 2);        
+        REQUIRE(chordsTest.note(MIDI::Note(NoteC4, NOTE_ON)) == 0);
+        REQUIRE(!chordsTest.noteQueue().empty());
+        REQUIRE(chordsTest.noteQueue().size() == 2);
     }
 }
 
