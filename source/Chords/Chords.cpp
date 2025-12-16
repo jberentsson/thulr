@@ -39,6 +39,7 @@ auto Chords::note(MIDI::Note note) -> int {
             }
         }
     }
+
     return 0;
 }
 
@@ -156,6 +157,7 @@ auto Chords::playNotesInOrder(MIDI::Note note) -> int {
         return 0;
     }
     
+    // Play the notes in the order they were recorded in.
     if (!this->keyboard_[note.pitch()]->notes().empty()) {
         const auto& sourceNotes = this->keyboard_[note.pitch()]->notes();
         
@@ -164,6 +166,7 @@ auto Chords::playNotesInOrder(MIDI::Note note) -> int {
             this->handleNoteOut(currentNoteOut);
         }
     }
+
     return 0;
 }
 
@@ -181,7 +184,8 @@ auto Chords::handleNoteOut(MIDI::Note note) -> void {
             count--;
             
             if (count == 0) {
-                // Only send NOTE_OFF when no chords need this note
+                // Only send NOTE_OFF when 
+                // no chords need this note.
                 this->queueNote(note);
             }
         }
