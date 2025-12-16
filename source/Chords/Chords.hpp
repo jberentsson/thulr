@@ -29,7 +29,8 @@ class Chords {
         std::vector<std::shared_ptr<Key>> keyboard_;
         std::vector<std::shared_ptr<MIDI::Note>> noteQueue_;
         
-        int noteCount_[MIDI::KEYBOARD_SIZE] = {};
+        int playbackNoteCount_[MIDI::KEYBOARD_SIZE] = {};
+        int recordingNoteCount_[MIDI::KEYBOARD_SIZE] = {};
         NoteMode noteMode_ = NoteMode::RETRIGGER;
         NoteOrder noteOrder_ = NoteOrder::AS_PLAYED;
         bool isRecievingNotes_ = false;
@@ -58,7 +59,7 @@ class Chords {
         auto getNoteOrder() -> NoteOrder { return this->noteOrder_; }
         auto queueNote(MIDI::Note note) -> void;
         auto getKey(int keyValue) -> std::shared_ptr<Key>& { return this->keyboard_[keyValue]; }
-        auto sendNoteOn(int pitch) -> bool;
+        auto sendNoteOn(MIDI::Note note) -> bool;
         auto clear() -> void;
         auto clear(int noteValue) -> void;
         auto clearActiveNotes() -> void;
