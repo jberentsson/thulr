@@ -14,13 +14,15 @@ Chords::Chords() {
 }
 
 auto Chords::reciveNotes() -> bool {
+    // Trigger the note assign mode.
     this->isRecievingNotes_ = true;
     return this->isRecievingNotes_;
 }
 
 auto Chords::note(MIDI::Note note) -> int {
+    // Handle the note input.
     if (this->isRecievingNotes_) {
-        if (this->activeKey_ < MIDI::RANGE_LOW) {
+        if (this->activeKey_ <= MIDI::RANGE_LOW) {
             // Active key ON.
             this->setActiveKey(note);
         } else if (note.pitch() == this->activeKey_ && 
@@ -45,6 +47,7 @@ auto Chords::note(MIDI::Note note) -> int {
 }
 
 auto Chords::chordNote(MIDI::Note note) -> int { // NOLINT
+    // Handle chord note assignment.
      if (note.velocity() > 0) {
         this->addChordNote(note);
     } else {
@@ -55,6 +58,7 @@ auto Chords::chordNote(MIDI::Note note) -> int { // NOLINT
 }
 
 auto Chords::setActiveKey(int key) -> int {
+    // Set the current active key we want to assign notes to.
     if (this->activeKey_ < MIDI::RANGE_LOW) {
         // Here we choose which key we want to assign the notes to.
         this->activeKey_ = key;
@@ -70,6 +74,7 @@ auto Chords::setActiveKey(int key) -> int {
 }
 
 auto Chords::addChordNote(MIDI::Note note) -> int {
+    // Handle adding a note to a key.
     if (!note.valid()) {
         return 1;
     }
@@ -83,9 +88,12 @@ auto Chords::addChordNote(MIDI::Note note) -> int {
 
 auto Chords::addToActive(int notePitch) -> int {
     // Store the notes untill we have released them all.
-    if (notePitch >= MIDI::RANGE_LOW && notePitch <= MIDI::RANGE_HIGH)
-    this->noteCount_[notePitch]++;
-    return this->noteCount_[notePitch];
+    if ((notePitch <= MIDI::RANGE_HIGH) && (notePitch >= MIDI::RANGE_LOW)) {
+        this->noteCount_[notePitch]++;
+        return this->noteCount_[notePitch];
+    }
+
+    return -1;
 }
 
 auto Chords::removeFromActive(int pitchValue) -> int {
@@ -98,6 +106,7 @@ auto Chords::removeFromActive(int pitchValue) -> int {
 }
 
 auto Chords::releaseChordNote(MIDI::Note note) -> int {
+    // Handle when we release a chord note.
     this->removeFromActive(note.pitch());
 
     // Check if all released
@@ -123,13 +132,14 @@ auto Chords::releaseChordNote(MIDI::Note note) -> int {
     return 0;
 }
 
-auto Chords::playNotesRandom(MIDI::Note note) -> int { // NOLINT
+auto Chords::playNotesRandom(MIDI::Note note) -> int {
+    // Play the key notes in a random order.
     if (!this->keyboard_[note.pitch()]->notes().empty()) {
         std::vector<std::shared_ptr<MIDI::Note>> currentNotes = this->keyboard_[note.pitch()]->notes();
-        size_t notesRemaining = currentNotes.size();
+        int notesRemaining = (int) currentNotes.size();
 
         while (notesRemaining > 0) {
-            std::uniform_int_distribution<> dis(0, currentNotes.size() - 1);
+            std::uniform_int_distribution<> dis(0, (int) currentNotes.size() - 1);
             int randomIndex = dis(this->gen);
             notesRemaining--;
 
@@ -144,7 +154,8 @@ auto Chords::playNotesRandom(MIDI::Note note) -> int { // NOLINT
     return 0;
 }
 
-auto Chords::playNotesInOrder(MIDI::Note note) -> int { // NOLINT
+auto Chords::playNotesInOrder(MIDI::Note note) -> int {
+    // Play the key notes in the order they were originally played in.
     if (!this->keyboard_[note.pitch()]->notes().empty()) {
         const auto& sourceNotes = this->keyboard_[note.pitch()]->notes();
         
@@ -158,6 +169,8 @@ auto Chords::playNotesInOrder(MIDI::Note note) -> int { // NOLINT
 }
 
 auto Chords::handleNoteOut(MIDI::Note note) -> void {
+    // Handle note out messages.
+
     if (!note.valid()) {
         return;
     }
@@ -181,6 +194,8 @@ auto Chords::handleNoteOut(MIDI::Note note) -> void {
 }
 
 auto Chords::sendNoteOn(int pitch) -> bool {
+    // Handle what happens when we send notes out depending on note mode.
+
     int& count = this->noteCount_[pitch];
 
     bool sendNoteOn = false;
@@ -203,6 +218,7 @@ auto Chords::sendNoteOn(int pitch) -> bool {
 }
 
 auto Chords::queueNote(MIDI::Note note) -> void {
+    // Push a note to the note queue.
     this->noteQueue_.push_back(std::make_shared<MIDI::Note>(note));
 }
 
