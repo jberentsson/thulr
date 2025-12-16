@@ -1,6 +1,5 @@
 #include <memory>
 #include <vector>
-#include <iostream>
 #include <random>
 #include "Utils/MIDI.hpp"
 #include "Chords.hpp"
@@ -173,7 +172,6 @@ auto Chords::handleNoteOut(MIDI::Note note) -> void {
     // Handle note out messages.
 
     if (!note.valid()) {
-        std::cout << "something note not valid" << std::endl;
         return;
     }
 
@@ -186,17 +184,11 @@ auto Chords::handleNoteOut(MIDI::Note note) -> void {
             if (count == 0) {
                 // Only send NOTE_OFF when no chords need this note
                 this->queueNote(note);
-            } else {
-                std::cout << "something 0 " << (int) note.pitch() << " " << count << std::endl;
             }
-        } else {
-            std::cout << "something 1" << std::endl;
         }
     } else { // NOTE ON
         if (this->sendNoteOn(note)) {
             this->queueNote(note);
-        } else {
-            std::cout << "something 2" << std::endl;
         }
     }
 }
