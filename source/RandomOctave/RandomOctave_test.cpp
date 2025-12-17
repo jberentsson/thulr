@@ -10,15 +10,35 @@ SCENARIO("test the range") {
     Range range = Range();
 
     REQUIRE(range.maxNotes() == 10);
-    
     REQUIRE(range.inRange(MIDI::Note(NoteC4)));
     REQUIRE(!range.inRange(MIDI::Note(128)));
+
+    REQUIRE(range.octaveLow() == 0);
+    REQUIRE(range.octaveHigh() == 9);
 
     for(int note = MIDI::RANGE_LOW; note <= MIDI::RANGE_HIGH; note++){
         REQUIRE(range.inRange(MIDI::Note(note)));
     }
 
     REQUIRE(range.set(MIDI::Note(NoteC5), MIDI::Note(NoteC6)));
+
+    REQUIRE(range.octaveLow() == 5);
+    REQUIRE(range.octaveHigh() == 5);
+}
+
+SCENARIO("test a smaller range") {
+    Range range = Range();
+
+    REQUIRE(range.maxNotes() == 10);
+    REQUIRE(range.set(MIDI::Note(NoteC4), MIDI::Note(NoteC6)));
+    REQUIRE(range.maxNotes() == 2);
+    
+    REQUIRE(range.inRange(MIDI::Note(NoteC4)));
+    REQUIRE(!range.inRange(MIDI::Note(128)));
+
+    for(int note = NoteC4; note <= NoteC6; note++){
+        REQUIRE(range.inRange(MIDI::Note(note)));
+    }
 }
 
 SCENARIO("test the note class") {
@@ -413,5 +433,24 @@ SCENARIO("a chromatic scale is played") { // NOLINT
         for (int i = 13; i < 26; i++) { // NOLINT
             REQUIRE(noteQueue[i]->velocity() == 0);
         }
+    }
+};
+
+SCENARIO("test the range of some notes"){
+    RandomOctave randomOctave;
+
+    REQUIRE_NOTHROW(randomOctave.setRange(NoteC4, NoteC6));
+
+    int notes[] = { NoteC4, NoteG5, NoteE4, NoteD5 };
+
+    for (const auto& note : notes) {
+        REQUIRE_NOTHROW(randomOctave.note( note, 100 ));
+        REQUIRE_NOTHROW(randomOctave.note( note, 0 ));
+
+        REQUIRE(randomOctave.getNoteQueue().size() == 2);
+        REQUIRE(MIDI::getPitchClass(randomOctave.getNoteQueue().at(0)->pitch()) == MIDI::getPitchClass(note));
+        REQUIRE(MIDI::getPitchClass(randomOctave.getNoteQueue().at(1)->pitch()) == MIDI::getPitchClass(note));
+        REQUIRE(randomOctave.getNoteQueue().at(0)->pitch() == randomOctave.getNoteQueue().at(1)->pitch());
+        REQUIRE_NOTHROW(randomOctave.getNoteQueue().clear());
     }
 };
