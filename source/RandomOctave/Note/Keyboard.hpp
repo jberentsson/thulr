@@ -101,7 +101,7 @@ public:
 
     auto containsNote(int noteValue) -> bool {
         // Check if a key has an active note with a specific pitch.
-        for (int i = MIDI::getPitchClass(noteValue); i < keyboard_.size(); i += MIDI::OCTAVE) { // NOLINT
+        for (int i = MIDI::getPitchClass(noteValue); i < keyboard_.size(); i += MIDI::OCTAVE) {
             // Check each of the active notes for every key.
             for (const auto &currentActiveNote : keyboard_[i].getActiveNotes()) {
                 if (currentActiveNote->pitchClass() == MIDI::getPitchClass(noteValue)) {

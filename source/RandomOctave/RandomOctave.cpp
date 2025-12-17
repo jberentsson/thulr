@@ -31,8 +31,10 @@ auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
     return 0;
 }
 
-auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) -> int {        
-    std::uniform_int_distribution<> dist(0, 9); // NOLINT
+auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) -> int {      
+    int rLow = this->range_.octaveLow();
+    int rHigh = this->range_.octaveHigh();
+    std::uniform_int_distribution<> dist(rLow, rHigh); // NOLINT
     int randomInt = dist(gen);
     int randomPitch = MIDI::valueInOctave(pitch, randomInt);
     return clampPitchToRange(randomPitch);
