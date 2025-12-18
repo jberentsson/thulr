@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <iostream>
 #include <vector>
 #include <Utils/MIDI.hpp>
 #include "RandomOctave/Note/ActiveNote.hpp"
@@ -46,6 +47,11 @@ public:
             // Add the note.
             auto result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
             if (result == nullptr) {
+                std::cout << "something went wrong: " << originalPitch << " " << randomPitch << "\n";
+                for (const auto& cn : this->keyboard_[originalPitch].getActiveNotes()) {
+                    std::cout << " - " << cn->originalPitch() << " " << cn->pitch() << "\n";
+                }
+
                 return NoteReturnCodes::SOMETHING_ELSE;
             }
             
@@ -77,24 +83,24 @@ public:
         return NoteReturnCodes::OK;
     }
 
-    auto remove(int originalPitch) -> std::vector<std::shared_ptr<ActiveNote>> {
+    auto remove(int originalPitch) -> std::vector<std::shared_ptr<ActiveNote>>& {
         // Create a note-off message.
         this->add(originalPitch, originalPitch, 0);
         return this->noteQueue_;
     }
 
-    auto getActiveNotes(int note) -> std::vector<std::shared_ptr<ActiveNote>> {
+    auto getActiveNotes(int note) -> std::vector<std::shared_ptr<ActiveNote>>& {
         // Get all active notes from each of the notes of the keyboard.
         static std::vector<std::shared_ptr<ActiveNote>> empty;
         
         if (note >= 0 && note < keyboard_.size()) {
-            return keyboard_[note].getActiveNotes();
+            return this->keyboard_[note].getActiveNotes();
         }
         
         return empty;
     }
 
-    [[nodiscard]] auto getNote(int noteValue) const -> const Key& {
+    auto getNote(int noteValue) -> Key& {
         // Get the note data from each of the keys.
         return keyboard_[noteValue];
     }

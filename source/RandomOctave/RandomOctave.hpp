@@ -25,7 +25,7 @@ class RandomOctave {
         auto clampPitchToRange(int pitch) -> int;
 
         auto randomizeNote(int pitch, std::mt19937& gen) -> int;
-        auto note(int pitch, int velocity) -> NoteReturnCodes;
+        auto note(MIDI::Note note) -> NoteReturnCodes;
         auto removeAll() -> size_t;
         auto setRange(int low, int high) -> int;
 
