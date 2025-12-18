@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include <iostream>
 #include <vector>
 #include <Utils/MIDI.hpp>
 #include "RandomOctave/Note/ActiveNote.hpp"
@@ -46,12 +45,8 @@ public:
             
             // Add the note.
             auto result = keyboard_[originalPitch].add(originalPitch, randomPitch, velocity);
-            if (result == nullptr) {
-                std::cout << "something went wrong: " << originalPitch << " " << randomPitch << "\n";
-                for (const auto& cn : this->keyboard_[originalPitch].getActiveNotes()) {
-                    std::cout << " - " << cn->originalPitch() << " " << cn->pitch() << "\n";
-                }
 
+            if (result == nullptr) {
                 return NoteReturnCodes::SOMETHING_ELSE;
             }
             
