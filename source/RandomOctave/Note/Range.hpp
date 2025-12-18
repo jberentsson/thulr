@@ -36,6 +36,14 @@ public:
         return this->rangeHigh_;
     }
 
+    auto octaveLow() -> int {
+        return this->rangeLow_ / MIDI::OCTAVE;
+    }
+
+    auto octaveHigh() -> int {
+        return (this->rangeHigh_ / MIDI::OCTAVE) - 1;
+    }
+
     auto inRange(MIDI::Note note) -> bool {
         // Check if a note is in the correct range.
         return this->low() <= note && note <= this->high();

@@ -3,6 +3,7 @@
 #include "Key.hpp"
 #include <memory>
 #include <vector>
+#include <random>
 
 namespace ChordsEnums {
     // Do we want our active notes to retrigger?
@@ -28,36 +29,43 @@ class Chords {
         std::vector<std::shared_ptr<Key>> keyboard_;
         std::vector<std::shared_ptr<MIDI::Note>> noteQueue_;
         
-        int noteCount_[MIDI::KEYBOARD_SIZE] = {};
+        int playbackNoteCount_[MIDI::KEYBOARD_SIZE] = {};
+        int recordingNoteCount_[MIDI::KEYBOARD_SIZE] = {};
         NoteMode noteMode_ = NoteMode::RETRIGGER;
         NoteOrder noteOrder_ = NoteOrder::AS_PLAYED;
         bool isRecievingNotes_ = false;
-        int activeKey_ = -1;
+        std::shared_ptr<Key>activeKey_ = nullptr;
+        std::mt19937 gen{std::random_device{}()}; 
 
     public:        
         Chords();
         ~Chords() = default;
 
+        auto handleNoteOut(MIDI::Note note) -> void;
         auto removeFromActive(int pitchValue) -> int;
-        auto note(int pitchValue, int velocityValue) -> int;
-        auto playNotes(int pitchValue, int velocityValue) -> int;
+        auto note(MIDI::Note note) -> int;
+        auto playNotes(MIDI::Note note) -> int;
+        auto playNotesInOrder(MIDI::Note note) -> int;
+        auto playNotesRandom(MIDI::Note note) -> int;
         auto reciveNotes() -> bool;
-        auto addToActive(int pitchValue) -> int;
+        auto addToActive(int notePitch) -> int;
         auto noteQueue() -> std::vector<std::shared_ptr<MIDI::Note>>& { return this->noteQueue_; }
-        auto chordNote(int pitchValue, int velocityValue) -> int;
-        auto addChordNote(int pitchValue) -> int;
-        auto releaseChordNote(int pitchValue) -> int;
+        auto chordNote(MIDI::Note note) -> int;
+        auto addChordNote(MIDI::Note note) -> int;
+        auto releaseChordNote(MIDI::Note note) -> int;
         auto setNoteMode(NoteMode mode) -> NoteMode;
         auto getNoteMode() -> NoteMode { return this->noteMode_; }
         auto setNoteOrder(NoteOrder order) -> NoteOrder;
         auto getNoteOrder() -> NoteOrder { return this->noteOrder_; }
-        auto queueNote(int noteValue, int velocityValue) -> void;
+        auto queueNote(MIDI::Note note) -> void;
         auto getKey(int keyValue) -> std::shared_ptr<Key>& { return this->keyboard_[keyValue]; }
-        auto sendNoteOn(int pitch) -> bool;
+        auto sendNoteOn(MIDI::Note note) -> bool;
         auto clear() -> void;
         auto clear(int noteValue) -> void;
         auto clearActiveNotes() -> void;
-        auto setActiveKey(int keyValue) -> int;
-        [[nodiscard]] auto getActiveKey() const -> int { return this->activeKey_; }
+        auto playbackNoteCount() -> int;
+        auto recordingNoteCount() -> int;
+        auto setActiveKey(int key) -> std::shared_ptr<Key>&;
+        auto getActiveKey() -> std::shared_ptr<Key>& { return this->activeKey_; }
         [[nodiscard]] auto isRecievingNotes() const -> bool { return this->isRecievingNotes_; }
 };

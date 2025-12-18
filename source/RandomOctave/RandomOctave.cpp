@@ -7,13 +7,18 @@ RandomOctave::RandomOctave() {
     this->range_ = Range(MIDI::RANGE_LOW, MIDI::RANGE_HIGH);
 };
 
-auto RandomOctave::note(int pitch, int velocity) -> NoteReturnCodes { // NOLINT
+auto RandomOctave::note(MIDI::Note note) -> NoteReturnCodes { // NOLINT
     // Check if the pitch is in the correct pitch range.
-    if (!MIDI::Note(pitch, velocity).valid() || !this->range_.inRange(MIDI::Note(pitch))) {
+    if (!note.valid() || !this->range_.inRange(note)) {
         return NoteReturnCodes::OUT_OF_RANGE;
     }
 
-    this->keyboard_.add(pitch, this->randomizeNote(pitch, gen), velocity);
+    NoteReturnCodes result = this->keyboard_.add(note.pitch(), this->randomizeNote(note.pitch(), gen), note.velocity());
+
+    if ((result == NoteReturnCodes::SOMETHING_ELSE) &&
+        (this->keyboard_.getNote((int) note.pitch()).getActiveNotes().size() < this->range_.maxNotes())){
+        return this->note(note);
+    }
 
     return NoteReturnCodes::OK;
 }
@@ -31,9 +36,11 @@ auto RandomOctave::setRange(int low, int high) -> int { // NOLINT
     return 0;
 }
 
-auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) -> int {        
-    std::uniform_int_distribution<> dist(0, 9); // NOLINT
+auto RandomOctave::randomizeNote(int pitch, std::mt19937& gen) -> int {      
+    int rLow = this->range_.octaveLow();
+    int rHigh = this->range_.octaveHigh();
+    std::uniform_int_distribution<> dist(rLow, rHigh); // NOLINT
     int randomInt = dist(gen);
     int randomPitch = MIDI::valueInOctave(pitch, randomInt);
-    return clampPitchToRange(randomPitch);
+    return this->clampPitchToRange(randomPitch);
 }
